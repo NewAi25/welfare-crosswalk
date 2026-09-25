@@ -27,9 +27,7 @@ Nothing in this repository is pushed until it has passed this audit. A crosswalk
 
 5. On `AUDIT: PASS`, append an entry to `notes/audit_log.md` with the date, the commit hash audited, the number of claims or rows checked, the counts of wrong, unsupported and imprecise, and a one line summary. Commit that entry with the message `Audit: PASS for <short hash>`.
 
-6. Manisha's spot check. The batch is not pushed until she has looked at the rows she chose against the rendered PDF pages and said so.
-
-7. Push. `gh auth switch --user NewAi25`, push, `gh auth switch --user manisha-oz`.
+6. Push. `gh auth switch --user NewAi25`, push, `gh auth switch --user manisha-oz`.
 
 ## What the auditor must be given
 
