@@ -29,6 +29,8 @@ Nothing in this repository is pushed until it has passed this audit. A crosswalk
 
 6. Push. `gh auth switch --user NewAi25`, push, `gh auth switch --user manisha-oz`.
 
+7. Manisha's spot check of ten rows against the rendered PDF pages, after the push and before the next batch starts. Findings are corrected with a decisions entry and re-audited.
+
 ## What the auditor must be given
 
 The diff or row list, and nothing else. Do not pass it a summary of what the changes say; it would audit the summary rather than the files.
