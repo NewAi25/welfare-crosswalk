@@ -19,7 +19,7 @@ Empty means: EFSA columns empty on a Welfare Quality only row, and the reverse; 
 
 ## products.csv
 
-Copied unchanged from plf-audit. The 20 products plus the AI4Animals comparator, with Stygar validation levels. See the predecessor's data dictionary for the columns.
+Copied unchanged from plf-audit. The 20 products plus the AI4Animals comparator; 17 carry Stygar validation levels, the 3 ICAR systems are not in Stygar's appendix. See the predecessor's data dictionary for the columns.
 
 ## sensor_coverage.csv
 
@@ -43,7 +43,7 @@ Empty means: market_breadth empty until market_breadth.py has run; product_ids a
 
 ## crosswalk.csv
 
-One row per indicator per scheme, column 3. An indicator no scheme requires still has four rows.
+One row per indicator per scheme, column 3. An indicator no scheme requires still gets four rows by rule; the validator does not enforce grid completeness, so stats.py prints the row count and the extraction session checks it is 57 times 4.
 
 | Column | Values | Meaning |
 |---|---|---|

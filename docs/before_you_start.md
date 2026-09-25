@@ -18,7 +18,7 @@ In this order. About seven hours in total, most of it the sources. The point of 
 | Step | Read | Time | Why |
 |---|---|---|---|
 | 7 | Maroto Molina et al. 2020, `corpus/maroto_molina_2020.pdf`, 6 pages | 40 min | Table 1 is the Welfare Quality spine. The text after it says, measure by measure, what technology exists. This fills research_only and none, and the hardware class for measures with no product |
-| 8 | Stygar et al. 2021, `corpus/stygar_2021.pdf`, pages 1 to 7 | 60 min | Page 3, the two definitions of external validation. Page 6, Table 1, the 18 validated technologies with reference numbers in two columns. Page 7, Table 2, which traits each was validated on. This fills validated_commercial. Look at Table 1 on the rendered page, not extracted text; the columns matter |
+| 8 | Stygar et al. 2021, `corpus/stygar_2021.pdf`, pages 1 to 7 | 60 min | Page 3, the two definitions of external validation. Page 6, Table 1, the externally validated technologies with reference numbers in two columns; it lists 23 named commercial technologies plus prototype rows, and the headline 18 is the subset among the 129 retailed products. Page 7, Table 2, which traits each was validated on. This fills validated_commercial. Look at Table 1 on the rendered page, not extracted text; the columns matter |
 | 9 | `corpus/stygar_2021_supplementary.xlsx`, sheet 1 | 20 min | The 129 products and their stated aims. This is the source of commercial_unvalidated and of market breadth. Skim the AIM column so the keywords you will approve make sense |
 | 10 | `data/products.csv` | 10 min | The 20 products already carrying Stygar validation levels and the notes on each |
 
