@@ -11,7 +11,8 @@ Which welfare indicators are (a) measurable by AI, (b) acceptable to industry fo
 | 3 | [`docs/kevin_answers.md`](docs/kevin_answers.md) | The mentor's steer that made the criteria soft factors rather than filters |
 | 4 | [`docs/PLF_Handover_2026-09-23.md`](docs/PLF_Handover_2026-09-23.md) | What the larger predecessor project attempted, what blocked it, and what was kept |
 | 5 | [`notes/decisions.md`](notes/decisions.md) | Every judgement call in date order |
-| 6 | [`docs/reading_order.md`](docs/reading_order.md) | The reading order for the sources, inherited from the predecessor; its Part 1 refers to that repository's files |
+| 6 | [`docs/before_you_start.md`](docs/before_you_start.md) | What to read before the work starts, in order, with why |
+| 7 | [`docs/reading_order.md`](docs/reading_order.md) | The full source reading order inherited from the predecessor; its Part 1 refers to that repository's files |
 
 ## Deliverables
 

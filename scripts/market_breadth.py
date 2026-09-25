@@ -34,7 +34,8 @@ def appendix_rows():
             v = c.find(M + "v")
             if v is not None:
                 d[ref] = shared[int(v.text)] if c.get("t") == "s" else v.text
-        if d.get("A") and d.get("A") != "NAME" and d.get("A").strip() != "129":
+        name = (d.get("A") or "").strip()
+        if name and name != "NAME" and name != "129" and not name.startswith("Number of"):
             rows.append({"name": d.get("A", ""), "provider": d.get("B", ""), "aim": d.get("E", "")})
     return rows
 
