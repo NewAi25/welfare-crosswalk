@@ -45,7 +45,7 @@ Filenames matter: sessions look for these exact names. The "File" link is the UR
 | `certified_humane_dairy.pdf` | Humane Farm Animal Care standards for dairy cattle, Edition 23, 67 pages | [Certified Humane PDF](https://certifiedhumane.org/wp-content/uploads/DAIRY_CATTLE_STANDARDS.pdf) | [Certified Humane standards page](https://certifiedhumane.org/our-standards/) |
 | `iso_ts_34700_summary.md` | ISO/TS 34700:2016, the public catalogue abstract and the informative sections from the Online Browsing Platform (foreword, introduction, scope, normative references, terms). Clauses 4, 5 and Annex A are paid and not included | [ISO catalogue page](https://www.iso.org/standard/64749.html), [OBP preview](https://www.iso.org/obp/ui/#iso:std:iso:ts:34700:ed-1:v1:en) | same |
 
-## Legal templates (column 4)
+## Legal templates (the predecessor's column 4; not read in this scope)
 
 | Filename | Document | File | Canonical |
 |---|---|---|---|
@@ -66,7 +66,7 @@ Filenames matter: sessions look for these exact names. The "File" link is the UR
 
 ## Vendor documentation
 
-Saved during weeks 1 and 2 into `vendors/<vendor>/`, named `<product_id>_<YYYY-MM-DD>_<short_name>.<ext>`, on the day each source is captured. Public pages only. Each one gets a manifest row.
+Not collected in this scope. The predecessor planned a `vendors/` folder for its claims register; this repository reads product facts from the Stygar appendix only.
 
 ## Missing files, 16 September 2026
 

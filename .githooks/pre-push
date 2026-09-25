@@ -1,5 +1,5 @@
 #!/bin/sh
-# Pre push gate for the PLF audit repository.
+# Pre push gate for the welfare crosswalk repository.
 # Refuses the push unless the mechanical checks pass and the commit being
 # pushed (or its parent, when HEAD is the audit log commit itself) has a
 # PASS entry in notes/audit_log.md. Enable once per clone with:

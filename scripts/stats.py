@@ -103,7 +103,7 @@ def main():
     print(f"sensor_coverage rows: {len(coverage)} by grade {dict(Counter(r['ai_grade'] for r in coverage))}")
     print(f"  by hardware class {dict(Counter(r['hardware_class'] for r in coverage))}")
     print(f"crosswalk rows: {len(crosswalk)}, with a requirement: {sum(1 for r in crosswalk if r['requirement_text'].strip())}")
-    print(f"adoption table: {len(table)} rows; scored 8 or more: {sum(1 for r in table if r['adoption_score_heuristic'] >= 8)}")
+    print(f"adoption table: {len(table)} rows; score distribution {dict(sorted(Counter(r['adoption_score_heuristic'] for r in table).items()))}")
     print(f"instrumented but not required: {len(instrumented)}; required but manually audited: {len(manual)} scheme rows")
     print("the adoption score is a heuristic sort order, see standard/definitions.md")
 

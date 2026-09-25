@@ -19,7 +19,22 @@ Empty means: EFSA columns empty on a Welfare Quality only row, and the reverse; 
 
 ## products.csv
 
-Copied unchanged from plf-audit. The 20 products plus the AI4Animals comparator; 17 carry Stygar validation levels, the 3 ICAR systems are not in Stygar's appendix. See the predecessor's data dictionary for the columns.
+Copied from plf-audit with three notes cells edited to remove the predecessor's plans (see decisions.md, 25 September). The 20 products plus the AI4Animals comparator; 17 carry Stygar validation levels, the 3 ICAR systems and the comparator are not in Stygar's appendix.
+
+| Column | Values | Meaning |
+|---|---|---|
+| product_id | P001 onwards | Identifier used in sensor_coverage.csv product_ids |
+| vendor, product | text | Company as it trades today, product as the vendor names it |
+| sensor_type | collar_accelerometer, ear_tag, bolus, camera, milking_system, other | Main sensing hardware; other covers leg tags, the load cell plate and milk analysers |
+| measures_claimed | text | The stated aim, copied from the Stygar appendix for Stygar rows |
+| species, country | text | |
+| stygar_listed | yes, no | In the Stygar appendix of 129 |
+| stygar_validation | none, external_self, external_independent, not_listed | Stygar's finding: none means listed with no external study; external_self means every cited study had a developer or company author; external_independent means at least one had none; not_listed means not in the appendix |
+| icar_validated | yes, no | On the ICAR validated sensor systems list |
+| source | stygar, icar, market_scan, course | How the product entered the predecessor's list; market_scan is kept in the enum for the copied file, no market scan happens here |
+| marketing_url, manual_url, devdocs_url, patent_urls | URLs | marketing_url is the Stygar 2021 link, not re-verified; the other three are empty and stay empty in this scope |
+| comparator | yes, no | yes only for AI4Animals |
+| notes | text | Provenance and the reference numbers behind the validation value |
 
 ## sensor_coverage.csv
 
