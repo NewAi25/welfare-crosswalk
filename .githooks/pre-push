@@ -1,0 +1,19 @@
+#!/bin/sh
+# Pre push gate for the PLF audit repository.
+# Refuses the push unless the mechanical checks pass and the commit being
+# pushed (or its parent, when HEAD is the audit log commit itself) has a
+# PASS entry in notes/audit_log.md. Enable once per clone with:
+#   git config core.hooksPath .githooks
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+python scripts/validate_csv.py || { echo "pre-push: validate_csv.py failed"; exit 1; }
+python scripts/check_corpus.py --local || { echo "pre-push: check_corpus.py --local failed"; exit 1; }
+
+head=$(git rev-parse --short=7 HEAD)
+parent=$(git rev-parse --short=7 HEAD~1 2>/dev/null)
+if grep -Eq "PASS.*($head|$parent)|($head|$parent).*PASS" notes/audit_log.md 2>/dev/null; then
+  exit 0
+fi
+echo "pre-push: no AUDIT PASS entry in notes/audit_log.md for $head or $parent. Run /audit first."
+exit 1

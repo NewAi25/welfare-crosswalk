@@ -1,0 +1,58 @@
+indicator_id,tier,efsa_abm,wq_measure,ai_grade,hardware_class,market_breadth,industry_naming,scheme_count,schemes_requiring,audit_methods,sensor_points,hardware_points,breadth_points,naming_points,coverage_points,adoption_score_heuristic,rank
+I001,joined,Gait assessment,Lameness,,,0,,0,,,0,0,0,0,0,0,1
+I002,efsa_only,Digital dermatitis,,,,0,,0,,,0,0,0,0,0,0,2
+I003,efsa_only,Lesions of the claws,,,,0,,0,,,0,0,0,0,0,0,3
+I004,joined,Hock alterations,Integument alterations,,,0,,0,,,0,0,0,0,0,0,4
+I005,joined,Knee alterations,Integument alterations,,,0,,0,,,0,0,0,0,0,0,5
+I006,efsa_only,Clinical cases,,,,0,,0,,,0,0,0,0,0,0,6
+I007,efsa_only,Bulk milk somatic cell count,,,,0,,0,,,0,0,0,0,0,0,7
+I008,efsa_only,Step activity,,,,0,,0,,,0,0,0,0,0,0,8
+I009,efsa_only,Walking distance,,,,0,,0,,,0,0,0,0,0,0,9
+I010,efsa_only,Speed,,,,0,,0,,,0,0,0,0,0,0,10
+I011,joined,Agonistic interactions,Agonistic behaviours,,,0,,0,,,0,0,0,0,0,0,11
+I012,efsa_only,Lying time,,,,0,,0,,,0,0,0,0,0,0,12
+I013,efsa_only,Frequency of lying bouts,,,,0,,0,,,0,0,0,0,0,0,13
+I014,joined,Duration of lying down movement,Time needed to lie down,,,0,,0,,,0,0,0,0,0,0,14
+I015,efsa_only,"Deviation from normal, uninterrupted getting up movement",,,,0,,0,,,0,0,0,0,0,0,15
+I016,efsa_only,Lying behaviour synchronisation,,,,0,,0,,,0,0,0,0,0,0,16
+I017,efsa_only,Self-grooming,,,,0,,0,,,0,0,0,0,0,0,17
+I018,efsa_only,Brush use,,,,0,,0,,,0,0,0,0,0,0,18
+I019,efsa_only,Allo-grooming,,,,0,,0,,,0,0,0,0,0,0,19
+I020,efsa_only,Clinical ketosis: clinical case incidence rate,,,,0,,0,,,0,0,0,0,0,0,20
+I021,efsa_only,Subclinical ketosis: individual cow milk constituents,,,,0,,0,,,0,0,0,0,0,0,21
+I022,efsa_only,Subclinical ketosis: individual cow beta-hydroxybutyrate or ketones,,,,0,,0,,,0,0,0,0,0,0,22
+I023,joined,Subclinical ketosis: body condition scoring,Body condition score,,,0,,0,,,0,0,0,0,0,0,23
+I024,efsa_only,Left displaced abomasum: clinical case incidence rate,,,,0,,0,,,0,0,0,0,0,0,24
+I025,efsa_only,Subacute ruminal acidosis: individual cow milk constituents,,,,0,,0,,,0,0,0,0,0,0,25
+I026,efsa_only,Subacute ruminal acidosis: rumen pH by rumenocentesis,,,,0,,0,,,0,0,0,0,0,0,26
+I027,efsa_only,Subacute ruminal acidosis: rumen pH by rumen bolus,,,,0,,0,,,0,0,0,0,0,0,27
+I028,efsa_only,Clinical hypocalcaemia: clinical case incidence rate,,,,0,,0,,,0,0,0,0,0,0,28
+I029,efsa_only,Subclinical hypocalcaemia: incidence rate,,,,0,,0,,,0,0,0,0,0,0,29
+I030,wq_only,,Water provision,,,0,,0,,,0,0,0,0,0,0,30
+I031,wq_only,,Cleanliness of water points,,,0,,0,,,0,0,0,0,0,0,31
+I032,wq_only,,Water flow,,,0,,0,,,0,0,0,0,0,0,32
+I033,wq_only,,Functioning of water points,,,0,,0,,,0,0,0,0,0,0,33
+I034,wq_only,,Animals colliding with housing equipment during lying down,,,0,,0,,,0,0,0,0,0,0,34
+I035,wq_only,,Animals lying partly or completely outside the lying area,,,0,,0,,,0,0,0,0,0,0,35
+I036,wq_only,,Cleanliness of udders,,,0,,0,,,0,0,0,0,0,0,36
+I037,wq_only,,Cleanliness of flank/upper legs,,,0,,0,,,0,0,0,0,0,0,37
+I038,wq_only,,Cleanliness of lower legs,,,0,,0,,,0,0,0,0,0,0,38
+I039,wq_only,,,,,0,,0,,,0,0,0,0,0,0,39
+I040,wq_only,,Presence of tethering,,,0,,0,,,0,0,0,0,0,0,40
+I041,wq_only,,Access to outdoor loafing area or pasture,,,0,,0,,,0,0,0,0,0,0,41
+I042,wq_only,,Coughing,,,0,,0,,,0,0,0,0,0,0,42
+I043,wq_only,,Nasal discharge,,,0,,0,,,0,0,0,0,0,0,43
+I044,wq_only,,Ocular discharge,,,0,,0,,,0,0,0,0,0,0,44
+I045,wq_only,,Hampered respiration,,,0,,0,,,0,0,0,0,0,0,45
+I046,wq_only,,Diarrhoea,,,0,,0,,,0,0,0,0,0,0,46
+I047,wq_only,,Vulvar discharge,,,0,,0,,,0,0,0,0,0,0,47
+I048,wq_only,,Mortality,,,0,,0,,,0,0,0,0,0,0,48
+I049,wq_only,,Dystocia,,,0,,0,,,0,0,0,0,0,0,49
+I050,wq_only,,Downer cows,,,0,,0,,,0,0,0,0,0,0,50
+I051,wq_only,,Disbudding/Dehorning,,,0,,0,,,0,0,0,0,0,0,51
+I052,wq_only,,Tail docking,,,0,,0,,,0,0,0,0,0,0,52
+I053,wq_only,,Access to pasture,,,0,,0,,,0,0,0,0,0,0,53
+I054,wq_only,,Avoidance distance,,,0,,0,,,0,0,0,0,0,0,54
+I055,wq_only,,Qualitative behaviour assessment,,,0,,0,,,0,0,0,0,0,0,55
+I056,efsa_only,Subclinical hypocalcaemia: blood calcium levels within days post-calving,,,,0,,0,,,0,0,0,0,0,0,56
+I057,wq_only,,Milk somatic cell count,,,0,,0,,,0,0,0,0,0,0,57

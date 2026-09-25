@@ -1,0 +1,7 @@
+# Corpus files are large and some are copyrighted. Only the source list and the manifest are committed.
+corpus/*
+!corpus/README.md
+!corpus/manifest.csv
+__pycache__/
+*.pyc
+.DS_Store
