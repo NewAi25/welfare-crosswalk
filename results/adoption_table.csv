@@ -1,14 +1,14 @@
 indicator_id,tier,efsa_abm,wq_measure,ai_grade,hardware_class,market_breadth,industry_naming,scheme_count,schemes_requiring,audit_methods,sensor_points,hardware_points,breadth_points,naming_points,coverage_points,adoption_score_heuristic,rank
-I001,joined,Gait assessment,Lameness,,,0,,0,,,0,0,0,0,0,0,1
-I002,efsa_only,Digital dermatitis,,,,0,,0,,,0,0,0,0,0,0,2
-I003,efsa_only,Lesions of the claws,,,,0,,0,,,0,0,0,0,0,0,3
-I004,joined,Hock alterations,Integument alterations,,,0,,0,,,0,0,0,0,0,0,4
-I005,joined,Knee alterations,Integument alterations,,,0,,0,,,0,0,0,0,0,0,5
-I006,efsa_only,Clinical cases,,,,0,,0,,,0,0,0,0,0,0,6
-I007,efsa_only,Bulk milk somatic cell count,,,,0,,0,,,0,0,0,0,0,0,7
-I008,efsa_only,Step activity,,,,0,,0,,,0,0,0,0,0,0,8
-I009,efsa_only,Walking distance,,,,0,,0,,,0,0,0,0,0,0,9
-I010,efsa_only,Speed,,,,0,,0,,,0,0,0,0,0,0,10
+I001,joined,Gait assessment,Lameness,validated_commercial,farm_fixed,8,,0,,,3,2,2,0,0,7,1
+I008,efsa_only,Step activity,,validated_commercial,animal_mounted,39,,0,,,3,1,3,0,0,7,2
+I006,efsa_only,Clinical cases,,unsure,routine_data,13,,0,,,0,3,3,0,0,6,3
+I004,joined,Hock alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,4
+I005,joined,Knee alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,5
+I007,efsa_only,Bulk milk somatic cell count,,none,routine_data,0,,0,,,0,3,0,0,0,3,6
+I009,efsa_only,Walking distance,,unsure,animal_mounted,3,,0,,,0,1,2,0,0,3,7
+I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,8
+I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,9
+I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,10
 I011,joined,Agonistic interactions,Agonistic behaviours,,,0,,0,,,0,0,0,0,0,0,11
 I012,efsa_only,Lying time,,,,0,,0,,,0,0,0,0,0,0,12
 I013,efsa_only,Frequency of lying bouts,,,,0,,0,,,0,0,0,0,0,0,13

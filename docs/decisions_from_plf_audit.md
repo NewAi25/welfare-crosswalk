@@ -1,5 +1,7 @@
 # Decisions
 
+> Read only history from the predecessor repository plf-audit, copied 25 September 2026. Its decisions about the claims register, rubric and scorecard do not apply here; the entries on how indicators.csv and products.csv were built, and the audit corrections, do.
+
 Every coding or scoring decision not already covered by the coding frame or the rubric is entered here, dated, before it is applied. The frame or rubric is then updated so the next case is covered.
 
 ## 2026-09-16: repository created from spec

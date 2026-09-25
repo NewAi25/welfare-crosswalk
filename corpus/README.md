@@ -1,5 +1,7 @@
 # Corpus
 
+Inherited from the predecessor repository. The files this scope reads from are: Stygar 2021 and its supplementary spreadsheet, Maroto Molina 2020, the four dairy certification standards (RSPCA and its justification document, FARM v5, GAP, Certified Humane), the ICAR page, and the Welfare Quality protocol and EFSA opinion behind indicators.csv. The legal texts, course materials and the other papers stay listed and verified because they are cited in the predecessor's history, but nothing in this scope is extracted from them.
+
 The source documents live here locally and are not committed. Every file has a row in [`manifest.csv`](manifest.csv) recording the exact URL its bytes came from, the SHA256 of those bytes, and the date. `python scripts/check_corpus.py` re-fetches every URL and confirms it still serves the same bytes, so each link below points at precisely the document that was read, not a landing page that might serve a revised version. Run it before citing anything from a file for the first time.
 
 Filenames matter: sessions look for these exact names. The "File" link is the URL the bytes came from. The "Canonical" link is the DOI or publisher page, for citations.

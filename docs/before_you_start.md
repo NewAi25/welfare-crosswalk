@@ -33,7 +33,7 @@ In this order. About seven hours in total, most of it the sources. The point of 
 
 ## Not needed for this scope
 
-The EFSA opinion in full (its ABM tables are already in indicators.csv), the legal texts, the course essays, the coding frame and rubric from the predecessor. `docs/reading_order.md` lists them if the larger project is ever picked up again.
+The EFSA opinion in full (its ABM tables are already in indicators.csv), the legal texts, the course essays, the coding frame and rubric from the predecessor. The predecessor's full reading order is in its own repository, docs/reading_order.md, if the larger project is ever picked up again.
 
 ## What to do after reading
 

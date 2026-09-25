@@ -1,5 +1,7 @@
 # Questions for Kevin
 
+> Read only history from the predecessor repository plf-audit, copied 25 September 2026. Questions 1 to 6 were answered or made moot by the scope change and Kevin's reply of 25 September (docs/kevin_answers.md). Questions 7 to 11 are the welfare science calls the predecessor parked; under this scope they are handled by the tier column and the unsure rule in standard/definitions.md, not by asking Kevin.
+
 Steering questions, and every welfare science call I will not make myself. Unsure claim mappings are appended under Open with their claim_id on the day they are coded. When Kevin answers, the question moves to Answered and the answer goes into `decisions.md`.
 
 ## Open

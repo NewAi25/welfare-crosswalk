@@ -1,1 +1,3 @@
 indicator_id,tier,efsa_abm,wq_measure,ai_grade,hardware_class,market_breadth,industry_naming,scheme_count,schemes_requiring,audit_methods,sensor_points,hardware_points,breadth_points,naming_points,coverage_points,adoption_score_heuristic,rank
+I001,joined,Gait assessment,Lameness,validated_commercial,farm_fixed,8,,0,,,3,2,2,0,0,7,1
+I008,efsa_only,Step activity,,validated_commercial,animal_mounted,39,,0,,,3,1,3,0,0,7,2
