@@ -1,6 +1,6 @@
 # Definitions
 
-Version 0.1, 25 September 2026. Fixed before any extraction. Every column in the adoption table is defined here, with the rule that fills it and the source it is read from. Kevin's steer of 25 September is that the three criteria in the question are factors that make adoption easier, not filters, so each factor is a graded column, every indicator stays in the table, and the rank is a stated heuristic that any reader can re sort. Changes to this file get a dated entry in notes/decisions.md and a row in the change log at the end.
+Version 0.1.2, 29 September 2026; first fixed as 0.1 on 25 September. Fixed before any extraction. Every column in the adoption table is defined here, with the rule that fills it and the source it is read from. Kevin's steer of 25 September is that the three criteria in the question are factors that make adoption easier, not filters, so each factor is a graded column, every indicator stays in the table, and the rank is a stated heuristic that any reader can re sort. Changes to this file get a dated entry in notes/decisions.md and a row in the change log at the end.
 
 ## Unit
 
