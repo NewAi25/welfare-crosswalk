@@ -1,24 +1,24 @@
 indicator_id,tier,efsa_abm,wq_measure,ai_grade,hardware_class,market_breadth,industry_naming,scheme_count,schemes_requiring,audit_methods,sensor_points,hardware_points,breadth_points,naming_points,coverage_points,adoption_score_heuristic,rank
 I001,joined,Gait assessment,Lameness,validated_commercial,farm_fixed,8,,0,,,3,2,2,0,0,7,1
 I008,efsa_only,Step activity,,validated_commercial,animal_mounted,39,,0,,,3,1,3,0,0,7,2
-I006,efsa_only,Clinical cases,,unsure,routine_data,13,,0,,,0,3,3,0,0,6,3
-I004,joined,Hock alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,4
-I005,joined,Knee alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,5
-I007,efsa_only,Bulk milk somatic cell count,,none,routine_data,0,,0,,,0,3,0,0,0,3,6
-I009,efsa_only,Walking distance,,unsure,animal_mounted,3,,0,,,0,1,2,0,0,3,7
-I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,8
-I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,9
-I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,10
-I011,joined,Agonistic interactions,Agonistic behaviours,,,0,,0,,,0,0,0,0,0,0,11
-I012,efsa_only,Lying time,,,,0,,0,,,0,0,0,0,0,0,12
-I013,efsa_only,Frequency of lying bouts,,,,0,,0,,,0,0,0,0,0,0,13
-I014,joined,Duration of lying down movement,Time needed to lie down,,,0,,0,,,0,0,0,0,0,0,14
-I015,efsa_only,"Deviation from normal, uninterrupted getting up movement",,,,0,,0,,,0,0,0,0,0,0,15
-I016,efsa_only,Lying behaviour synchronisation,,,,0,,0,,,0,0,0,0,0,0,16
-I017,efsa_only,Self-grooming,,,,0,,0,,,0,0,0,0,0,0,17
-I018,efsa_only,Brush use,,,,0,,0,,,0,0,0,0,0,0,18
-I019,efsa_only,Allo-grooming,,,,0,,0,,,0,0,0,0,0,0,19
-I020,efsa_only,Clinical ketosis: clinical case incidence rate,,,,0,,0,,,0,0,0,0,0,0,20
+I012,efsa_only,Lying time,,validated_commercial,animal_mounted,7,,0,,,3,1,2,0,0,6,3
+I006,efsa_only,Clinical cases,,unsure,farm_fixed,13,,0,,,0,2,3,0,0,5,4
+I004,joined,Hock alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,5
+I005,joined,Knee alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,6
+I007,efsa_only,Bulk milk somatic cell count,,none,routine_data,0,,0,,,0,3,0,0,0,3,7
+I009,efsa_only,Walking distance,,unsure,animal_mounted,3,,0,,,0,1,2,0,0,3,8
+I011,joined,Agonistic interactions,Agonistic behaviours,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,9
+I013,efsa_only,Frequency of lying bouts,,unsure,animal_mounted,6,,0,,,0,1,2,0,0,3,10
+I014,joined,Duration of lying down movement,Time needed to lie down,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,11
+I020,efsa_only,Clinical ketosis: clinical case incidence rate,,unsure,farm_fixed,1,,0,,,0,2,1,0,0,3,12
+I019,efsa_only,Allo-grooming,,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,13
+I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,14
+I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,15
+I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,16
+I015,efsa_only,"Deviation from normal, uninterrupted getting up movement",,none,none,0,,0,,,0,0,0,0,0,0,17
+I016,efsa_only,Lying behaviour synchronisation,,none,none,0,,0,,,0,0,0,0,0,0,18
+I017,efsa_only,Self-grooming,,none,none,0,,0,,,0,0,0,0,0,0,19
+I018,efsa_only,Brush use,,none,none,0,,0,,,0,0,0,0,0,0,20
 I021,efsa_only,Subclinical ketosis: individual cow milk constituents,,,,0,,0,,,0,0,0,0,0,0,21
 I022,efsa_only,Subclinical ketosis: individual cow beta-hydroxybutyrate or ketones,,,,0,,0,,,0,0,0,0,0,0,22
 I023,joined,Subclinical ketosis: body condition scoring,Body condition score,,,0,,0,,,0,0,0,0,0,0,23

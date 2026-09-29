@@ -16,7 +16,7 @@ Open: the poultry unit's sources. Candidates verified on Crossref on 23 Septembe
 
 Manisha asked to continue without changes, so definitions v0.1 is the frame for the extraction. Two conventions added during the first batch. First, a product that is in the Stygar appendix but not in data/products.csv is cited in product_ids as appendix:Provider|Name, so the row still names its evidence; the validator checks only that the field is filled. Second, a keyword that also matches generic aims, such as activity, is kept and the note says so, because the count is reproducible and visible, and removing it would be a judgement about what vendors mean.
 
-Two rows in the first batch are unsure, I006 and I009, and are listed in notes/unsure.md with their candidates. One observation for the write up: rumination, the trait Stygar validate most often, maps to no EFSA or Welfare Quality measure at all.
+Two rows in the first batch are unsure, I006 and I009, and are listed in notes/unsure.md with their candidates. One observation for the write up: rumination maps to no EFSA or Welfare Quality measure at all (corrected 29 September, see below: it is the second most validated trait, not the first).
 
 ## 2026-09-25: corrections from the first audit under this scope
 
@@ -27,3 +27,19 @@ Scope: the pre push hook comment, two corpus README headings and three products.
 ## 2026-09-26: working mode, spot check after the push
 
 Manisha asked for batches to be pushed on AUDIT PASS with her ten row spot check done afterwards, before the next batch starts, rather than before the push. CLAUDE.md and the audit skill are updated. The auditor remains the gate; her check is the second reader on the rendered pages.
+
+## 2026-09-29: correction, which trait is validated most often
+
+The entry of 25 September called rumination the trait Stygar validate most often. That is wrong. Stygar page 5 to 6: non active behavior (lying, lying and standing, and standing) as well as rumination and feeding time were the most often validated attributes, with 20, 15 and 11 trials respectively. Lying and standing is first, rumination second, feeding time third. By sensor type, page 5: accelerometer based systems have the highest validation rate, 30% of tools on the market, against cameras 10%, load cells 8%, milk sensors 8% and boluses 7%, and, on page 4, 26 of the validation trials were on accelerometers. The observation that stands: rumination, with 15 trials, maps to no EFSA or Welfare Quality measure, and non active behaviour (lying, lying and standing, and standing), the most validated, maps only to lying time, an EFSA measure with no Welfare Quality equivalent. The first audit confirmed only that rumination maps to no indicator and did not check the ranking claim; found when Manisha asked which was most validated. To be re-verified by the auditor with batch 2.
+
+## 2026-09-29: batch 2 of sensor coverage, I011 to I020
+
+Ten rows graded under definitions 0.1.1. One correction to batch 1 made with it: I006's hardware class was routine_data on the reasoning that the candidate is sensed in the milking system, but an inline milk analyser is an added device installed at the milking point, so the class is farm_fixed; routine_data is kept for data the farm already has with no added device. I020 follows the same reading.
+
+Two patterns now recur and are left unsure rather than decided. First, measures that are a component of a behaviour vendors name more broadly: lying bouts within lying behaviour (I013), walking distance within walking (I009). Second, EFSA measures that are incidence rates from records where products claim detection of the condition: clinical mastitis (I006), clinical ketosis (I020), and the remaining clinical case measures in Table 46 will follow. Each pattern could be settled by one added rule in definitions.md. That is Manisha's decision; until then the rows stay unsure and score 0 on sensor coverage.
+
+## 2026-09-29: two video files kept out of the repository; corrections from the batch 2 audit
+
+The batch 2 audit found two video files in the repository root, Future_of_Dairy_Welfare.mp4 and PLF__Expectation_vs_Reality.mp4, swept into an unpushed commit by a blanket git add. They are generated summaries, not sources, and at least one on screen figure does not match Stygar (1086 where the paper says 1,111 titles). They were removed from the unpushed history before anything was pushed, left on disk, and media files are now ignored by git. Nothing reached GitHub. From now on files are staged by name, not with a blanket add.
+
+Row corrections: IceTag is cited as its own appendix product on I008, I009 and I012; I013 lists all six products whose aims name lying and quotes Maroto Molina as written, without the words commercial or same; the 26 accelerometer trials are on page 4 of Stygar; the most validated trait is non active behaviour, of which lying time is the indicator. Definitions 0.1.2 adds the tie break for the hardware class when no technology is commercial and states that an inline milk analyser is farm_fixed.
