@@ -1,34 +1,34 @@
 indicator_id,tier,efsa_abm,wq_measure,ai_grade,hardware_class,market_breadth,industry_naming,scheme_count,schemes_requiring,audit_methods,sensor_points,hardware_points,breadth_points,naming_points,coverage_points,adoption_score_heuristic,rank
 I001,joined,Gait assessment,Lameness,validated_commercial,farm_fixed,8,,0,,,3,2,2,0,0,7,1
 I008,efsa_only,Step activity,,validated_commercial,animal_mounted,39,,0,,,3,1,3,0,0,7,2
-I012,efsa_only,Lying time,,validated_commercial,animal_mounted,7,,0,,,3,1,2,0,0,6,3
-I006,efsa_only,Clinical cases,,unsure,farm_fixed,13,,0,,,0,2,3,0,0,5,4
-I004,joined,Hock alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,5
-I005,joined,Knee alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,6
-I007,efsa_only,Bulk milk somatic cell count,,none,routine_data,0,,0,,,0,3,0,0,0,3,7
-I009,efsa_only,Walking distance,,unsure,animal_mounted,3,,0,,,0,1,2,0,0,3,8
-I011,joined,Agonistic interactions,Agonistic behaviours,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,9
-I013,efsa_only,Frequency of lying bouts,,unsure,animal_mounted,6,,0,,,0,1,2,0,0,3,10
-I014,joined,Duration of lying down movement,Time needed to lie down,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,11
-I020,efsa_only,Clinical ketosis: clinical case incidence rate,,unsure,farm_fixed,1,,0,,,0,2,1,0,0,3,12
-I019,efsa_only,Allo-grooming,,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,13
-I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,14
-I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,15
-I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,16
-I015,efsa_only,"Deviation from normal, uninterrupted getting up movement",,none,none,0,,0,,,0,0,0,0,0,0,17
-I016,efsa_only,Lying behaviour synchronisation,,none,none,0,,0,,,0,0,0,0,0,0,18
-I017,efsa_only,Self-grooming,,none,none,0,,0,,,0,0,0,0,0,0,19
-I018,efsa_only,Brush use,,none,none,0,,0,,,0,0,0,0,0,0,20
-I021,efsa_only,Subclinical ketosis: individual cow milk constituents,,,,0,,0,,,0,0,0,0,0,0,21
-I022,efsa_only,Subclinical ketosis: individual cow beta-hydroxybutyrate or ketones,,,,0,,0,,,0,0,0,0,0,0,22
-I023,joined,Subclinical ketosis: body condition scoring,Body condition score,,,0,,0,,,0,0,0,0,0,0,23
-I024,efsa_only,Left displaced abomasum: clinical case incidence rate,,,,0,,0,,,0,0,0,0,0,0,24
-I025,efsa_only,Subacute ruminal acidosis: individual cow milk constituents,,,,0,,0,,,0,0,0,0,0,0,25
-I026,efsa_only,Subacute ruminal acidosis: rumen pH by rumenocentesis,,,,0,,0,,,0,0,0,0,0,0,26
-I027,efsa_only,Subacute ruminal acidosis: rumen pH by rumen bolus,,,,0,,0,,,0,0,0,0,0,0,27
-I028,efsa_only,Clinical hypocalcaemia: clinical case incidence rate,,,,0,,0,,,0,0,0,0,0,0,28
-I029,efsa_only,Subclinical hypocalcaemia: incidence rate,,,,0,,0,,,0,0,0,0,0,0,29
-I030,wq_only,,Water provision,,,0,,0,,,0,0,0,0,0,0,30
+I021,efsa_only,Subclinical ketosis: individual cow milk constituents,,validated_commercial,routine_data,2,,0,,,3,3,1,0,0,7,3
+I023,joined,Subclinical ketosis: body condition scoring,Body condition score,validated_commercial,farm_fixed,3,,0,,,3,2,2,0,0,7,4
+I025,efsa_only,Subacute ruminal acidosis: individual cow milk constituents,,validated_commercial,routine_data,2,,0,,,3,3,1,0,0,7,5
+I012,efsa_only,Lying time,,validated_commercial,animal_mounted,7,,0,,,3,1,2,0,0,6,6
+I027,efsa_only,Subacute ruminal acidosis: rumen pH by rumen bolus,,validated_commercial,animal_mounted,7,,0,,,3,1,2,0,0,6,7
+I006,efsa_only,Clinical cases,,unsure,farm_fixed,13,,0,,,0,2,3,0,0,5,8
+I022,efsa_only,Subclinical ketosis: individual cow beta-hydroxybutyrate or ketones,,commercial_unvalidated,farm_fixed,1,,0,,,2,2,1,0,0,5,9
+I030,wq_only,,Water provision,research_only,farm_fixed,1,,0,,,1,2,1,0,0,4,10
+I004,joined,Hock alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,11
+I005,joined,Knee alterations,Integument alterations,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,12
+I007,efsa_only,Bulk milk somatic cell count,,none,routine_data,0,,0,,,0,3,0,0,0,3,13
+I009,efsa_only,Walking distance,,unsure,animal_mounted,3,,0,,,0,1,2,0,0,3,14
+I011,joined,Agonistic interactions,Agonistic behaviours,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,15
+I013,efsa_only,Frequency of lying bouts,,unsure,animal_mounted,6,,0,,,0,1,2,0,0,3,16
+I014,joined,Duration of lying down movement,Time needed to lie down,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,17
+I020,efsa_only,Clinical ketosis: clinical case incidence rate,,unsure,farm_fixed,1,,0,,,0,2,1,0,0,3,18
+I019,efsa_only,Allo-grooming,,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,19
+I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,20
+I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,21
+I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,22
+I015,efsa_only,"Deviation from normal, uninterrupted getting up movement",,none,none,0,,0,,,0,0,0,0,0,0,23
+I016,efsa_only,Lying behaviour synchronisation,,none,none,0,,0,,,0,0,0,0,0,0,24
+I017,efsa_only,Self-grooming,,none,none,0,,0,,,0,0,0,0,0,0,25
+I018,efsa_only,Brush use,,none,none,0,,0,,,0,0,0,0,0,0,26
+I024,efsa_only,Left displaced abomasum: clinical case incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,27
+I026,efsa_only,Subacute ruminal acidosis: rumen pH by rumenocentesis,,none,sample_or_procedure,0,,0,,,0,0,0,0,0,0,28
+I028,efsa_only,Clinical hypocalcaemia: clinical case incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,29
+I029,efsa_only,Subclinical hypocalcaemia: incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,30
 I031,wq_only,,Cleanliness of water points,,,0,,0,,,0,0,0,0,0,0,31
 I032,wq_only,,Water flow,,,0,,0,,,0,0,0,0,0,0,32
 I033,wq_only,,Functioning of water points,,,0,,0,,,0,0,0,0,0,0,33
