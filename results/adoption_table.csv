@@ -26,8 +26,8 @@ I036,wq_only,,Cleanliness of udders,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,
 I037,wq_only,,Cleanliness of flank/upper legs,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,25
 I038,wq_only,,Cleanliness of lower legs,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,26
 I019,efsa_only,Allo-grooming,,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,27
-I039,wq_only,,,unsure,farm_fixed,0,,0,,,0,2,0,0,0,2,28
-I040,wq_only,,Presence of tethering,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,29
+I040,wq_only,,Presence of tethering,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,28
+I039,wq_only,,,unsure,animal_mounted,0,,0,,,0,1,0,0,0,1,29
 I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,30
 I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,31
 I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,32
