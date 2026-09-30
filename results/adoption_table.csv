@@ -17,28 +17,28 @@ I011,joined,Agonistic interactions,Agonistic behaviours,research_only,farm_fixed
 I013,efsa_only,Frequency of lying bouts,,unsure,animal_mounted,6,,0,,,0,1,2,0,0,3,16
 I014,joined,Duration of lying down movement,Time needed to lie down,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,17
 I020,efsa_only,Clinical ketosis: clinical case incidence rate,,unsure,farm_fixed,1,,0,,,0,2,1,0,0,3,18
-I019,efsa_only,Allo-grooming,,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,19
-I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,20
-I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,21
-I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,22
-I015,efsa_only,"Deviation from normal, uninterrupted getting up movement",,none,none,0,,0,,,0,0,0,0,0,0,23
-I016,efsa_only,Lying behaviour synchronisation,,none,none,0,,0,,,0,0,0,0,0,0,24
-I017,efsa_only,Self-grooming,,none,none,0,,0,,,0,0,0,0,0,0,25
-I018,efsa_only,Brush use,,none,none,0,,0,,,0,0,0,0,0,0,26
-I024,efsa_only,Left displaced abomasum: clinical case incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,27
-I026,efsa_only,Subacute ruminal acidosis: rumen pH by rumenocentesis,,none,sample_or_procedure,0,,0,,,0,0,0,0,0,0,28
-I028,efsa_only,Clinical hypocalcaemia: clinical case incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,29
-I029,efsa_only,Subclinical hypocalcaemia: incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,30
-I031,wq_only,,Cleanliness of water points,,,0,,0,,,0,0,0,0,0,0,31
-I032,wq_only,,Water flow,,,0,,0,,,0,0,0,0,0,0,32
-I033,wq_only,,Functioning of water points,,,0,,0,,,0,0,0,0,0,0,33
-I034,wq_only,,Animals colliding with housing equipment during lying down,,,0,,0,,,0,0,0,0,0,0,34
-I035,wq_only,,Animals lying partly or completely outside the lying area,,,0,,0,,,0,0,0,0,0,0,35
-I036,wq_only,,Cleanliness of udders,,,0,,0,,,0,0,0,0,0,0,36
-I037,wq_only,,Cleanliness of flank/upper legs,,,0,,0,,,0,0,0,0,0,0,37
-I038,wq_only,,Cleanliness of lower legs,,,0,,0,,,0,0,0,0,0,0,38
-I039,wq_only,,,,,0,,0,,,0,0,0,0,0,0,39
-I040,wq_only,,Presence of tethering,,,0,,0,,,0,0,0,0,0,0,40
+I031,wq_only,,Cleanliness of water points,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,19
+I032,wq_only,,Water flow,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,20
+I033,wq_only,,Functioning of water points,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,21
+I034,wq_only,,Animals colliding with housing equipment during lying down,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,22
+I035,wq_only,,Animals lying partly or completely outside the lying area,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,23
+I036,wq_only,,Cleanliness of udders,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,24
+I037,wq_only,,Cleanliness of flank/upper legs,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,25
+I038,wq_only,,Cleanliness of lower legs,research_only,farm_fixed,0,,0,,,1,2,0,0,0,3,26
+I019,efsa_only,Allo-grooming,,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,27
+I039,wq_only,,,unsure,farm_fixed,0,,0,,,0,2,0,0,0,2,28
+I040,wq_only,,Presence of tethering,research_only,animal_mounted,0,,0,,,1,1,0,0,0,2,29
+I002,efsa_only,Digital dermatitis,,none,none,0,,0,,,0,0,0,0,0,0,30
+I003,efsa_only,Lesions of the claws,,none,none,0,,0,,,0,0,0,0,0,0,31
+I010,efsa_only,Speed,,none,none,0,,0,,,0,0,0,0,0,0,32
+I015,efsa_only,"Deviation from normal, uninterrupted getting up movement",,none,none,0,,0,,,0,0,0,0,0,0,33
+I016,efsa_only,Lying behaviour synchronisation,,none,none,0,,0,,,0,0,0,0,0,0,34
+I017,efsa_only,Self-grooming,,none,none,0,,0,,,0,0,0,0,0,0,35
+I018,efsa_only,Brush use,,none,none,0,,0,,,0,0,0,0,0,0,36
+I024,efsa_only,Left displaced abomasum: clinical case incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,37
+I026,efsa_only,Subacute ruminal acidosis: rumen pH by rumenocentesis,,none,sample_or_procedure,0,,0,,,0,0,0,0,0,0,38
+I028,efsa_only,Clinical hypocalcaemia: clinical case incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,39
+I029,efsa_only,Subclinical hypocalcaemia: incidence rate,,none,none,0,,0,,,0,0,0,0,0,0,40
 I041,wq_only,,Access to outdoor loafing area or pasture,,,0,,0,,,0,0,0,0,0,0,41
 I042,wq_only,,Coughing,,,0,,0,,,0,0,0,0,0,0,42
 I043,wq_only,,Nasal discharge,,,0,,0,,,0,0,0,0,0,0,43
