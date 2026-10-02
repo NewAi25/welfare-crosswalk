@@ -144,14 +144,14 @@ def compute():
                   vendor_points(vendors), FARM_POINTS.get(farm, 0), scheme_points(len(required))]
 
         # Kevin's list 1: Tested or Claimed in column (a), and no scheme requires it.
-        if not s:
+        if required:
+            list1 = "No"  # one scheme that requires it settles the list, whatever the sensor evidence
+        elif not s:
             list1 = NOT_YET
         elif grade == "unsure":
             list1 = "Unclear: sensor evidence unsure (see open questions)"
         elif grade not in ("validated_commercial", "commercial_unvalidated"):
             list1 = "No"
-        elif required:
-            list1 = "No"  # one scheme that requires it settles the list, even before all four are read
         elif not schemes_done:
             list1 = "Not yet known: schemes not yet checked"
         else:
@@ -183,7 +183,8 @@ def compute():
             "farm": FARM_LABEL.get(farm, NOT_YET),
             "schemes_n": len(required) if schemes_done else NOT_YET,
             "schemes_seen": len(rows),
-            "schemes_how": "; ".join(f"{SCHEME_NAMES[k]}: {HOW_CHECKED_LABEL[rows[k]['how_checked']]}" for k in required) if rows else NOT_YET,
+            "schemes_how": ("; ".join(f"{SCHEME_NAMES[k]}: {HOW_CHECKED_LABEL[rows[k]['how_checked']]}" for k in required)
+                            if required else f"No scheme read so far requires it ({len(rows)} of 4 read)" if rows else NOT_YET),
             "list1": list1, "list2": list2,
             "score": sum(points), "parts": " + ".join(str(p) for p in points), "status": status,
             "where": s["where_to_check"] if s else "", "reasoning": s["reasoning"] if s else "",
@@ -262,9 +263,11 @@ def schemes_status(d):
         return "The certification schemes have not been read yet, so Kevin's two lists are not yet known."
     if n_all == len(a):
         return "The certification schemes have been read for every indicator."
-    return (f"The certification schemes have been read in full for {n_all} of {len(a)} indicators and in part for "
-            f"{n_any - n_all}. A 'Yes' on list 2, or a 'No' on list 1 because a scheme requires the indicator, is "
-            f"already final; every other answer on the two lists is complete only for the {n_all} read in full.")
+    part = f" and in part for {n_any - n_all}" if n_any > n_all else ""
+    return (f"The certification schemes have been read in full for {n_all} of {len(a)} indicators{part}. A 'Yes' on "
+            f"list 2, and a 'No' on list 1 because a scheme requires the indicator or because its sensor evidence is "
+            f"not Tested or Claimed, are already final; every other answer on the two lists is complete only for the "
+            f"{n_all} read in full.")
 
 
 def write(d, path=OUTPUT):

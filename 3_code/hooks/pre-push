@@ -3,8 +3,9 @@
 #   1. the commit being pushed is the one checked out, with no uncommitted changes, so the
 #      checks below test exactly what is pushed;
 #   2. the four research tables pass 3_code/check_tables.py;
-#   3. every source file present matches its fingerprint, or for the stamped paper its text; a saved
-#      web page that is not the snapshot is reported, not refused (3_code/check_sources.py --local);
+#   3. every source file present matches its fingerprint, or for the stamped paper its text (when pypdf
+#      is installed; without it a changed stamped copy is a warning); a saved web page that is not the
+#      snapshot is reported, not refused (3_code/check_sources.py --local);
 #   4. the Excel file in 4_output matches the tables (3_code/build_output.py --check);
 #   5. the committed 2_research/audit_log.md has a row whose Result column is PASS for the
 #      commit being pushed, or for its parent when the pushed commit changes nothing but the
