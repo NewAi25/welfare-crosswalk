@@ -5,9 +5,13 @@ In plain words
     from and a fingerprint (a SHA256 hash: a long code computed from the file's bytes; if
     one character of the file changes, the fingerprint changes completely). This script
     recomputes the fingerprints and compares them, so anyone can confirm they are reading
-    the identical file. Documents whose licence does not allow us to republish them are not
-    in the repository (in_repository = no): download them from the link, put them in
-    1_sources/ with the file name given, and this script will confirm the copy is identical.
+    the identical file. Documents not stored here (in_repository = no), for licence or privacy
+    reasons, can be downloaded from their link and saved in 1_sources/ under the file name
+    given. For an ordinary file this script then confirms the copy is byte for byte identical.
+    For the one paper whose publisher stamps every download with the date, time and
+    downloader's IP address (kind binary_stamped), it compares the text with the stamp lines
+    removed. For the two web pages saved as text (kind text), a fresh copy cannot match; the
+    network check confirms only that the live page still contains a set phrase.
 
 Technical detail follows.
 
@@ -109,19 +113,28 @@ def check_row(r, network):
     if r["status"] == "browser_only" and network:
         network = False
         browser_note = "; source refuses scripted requests, retrieved in a browser, so only the local hash is checked"
-    if r["kind"] not in ("binary", "binary_stamped", "text"):
-        return "FAIL", f"unknown kind {r['kind']!r}"
     if r["kind"] == "text" and not r["check_phrase"]:
         return "FAIL", "text source with no check phrase"
     if not path.exists():
         if r.get("in_repository") == "no":
-            return "absent", "not republished here (licence); download it from the url to check it"
+            return "absent", "not stored here (licence or privacy); download it from the url to check it"
         return "FAIL", "file not in 1_sources/"
     local = path.read_bytes()
     if not r["sha256"]:
         return "FAIL", "no sha256 recorded; run --record"
     if sha256(local) != r["sha256"]:
-        return "FAIL", "local file has changed since the manifest was recorded"
+        if r["kind"] != "binary_stamped":
+            return "FAIL", "local file has changed since the manifest was recorded"
+        # A fresh download of a stamped paper carries a new stamp, so compare the text without it.
+        local_text = pdf_text_hash(local)
+        if local_text is None:
+            return "WARN", "stamped download; pypdf not installed, so the text could not be compared"
+        if not r["text_sha256"]:
+            return "FAIL", "stamped download; no text_sha256 recorded, run --record"
+        if local_text != r["text_sha256"]:
+            return "FAIL", "the document text differs from the one the research read"
+        if not network:
+            return "ok", "stamped copy; the document text, without the stamp, matches the manifest"
     if not network:
         return "ok", "local hash matches" + browser_note
     try:

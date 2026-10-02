@@ -65,7 +65,7 @@ def scheme_points(n):
 # Plain English for every code, shown in the Excel file. Same meanings as 2_research/rules.md.
 SENSOR_LABEL = {
     "validated_commercial": "Tested: a product in the Stygar list was tested for this in a published study; "
-                            "the column 'What was tested, and how well' says how it did",
+                            "the Answer sheet column 'What was tested, and how well' says how it did",
     "commercial_unvalidated": "Claimed: a product's own description names it; Stygar 2021 coded no validation study",
     "research_only": "Research only: no product in the Stygar list claims this measure; researchers propose a "
                      "method or a substitute measure",
@@ -142,7 +142,7 @@ def compute():
         points = [SENSOR_POINTS.get(grade, 0), DEVICE_POINTS.get(s["device_needed"], 0) if s else 0,
                   vendor_points(vendors), FARM_POINTS.get(farm, 0), scheme_points(len(required))]
 
-        # Kevin's list 1: a sensor measures it, and no scheme requires it.
+        # Kevin's list 1: Tested or Claimed in column (a), and no scheme requires it.
         if not s:
             list1 = NOT_YET
         elif grade == "unsure":
@@ -244,6 +244,17 @@ def summary_lines(d):
     return lines
 
 
+def schemes_status(d):
+    a = d["answer"]
+    n = sum(1 for r in a if r["schemes_n"] != NOT_YET)
+    if n == 0:
+        return "The certification schemes have not been read yet, so Kevin's two lists are not yet known."
+    if n < len(a):
+        return (f"The certification schemes have been read for {n} of {len(a)} indicators, so Kevin's two lists are "
+                "complete only for those.")
+    return "The certification schemes have been read for every indicator."
+
+
 def write(d, path=OUTPUT):
     wb = Workbook()
 
@@ -266,9 +277,10 @@ def write(d, path=OUTPUT):
         ("How to read this file", "Answer: one row per indicator, sorted by the ease of adoption score. The score is a "
          "rule of thumb used only as a sort order, not a recommendation; every factor has its own column, so you can "
          "sort by any of them. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
-         "name it in their own description and which a published study tested. Schemes: what each certification scheme "
+         "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
-        ("Status", "Work in progress. Rows marked 'Not yet checked' have no sensor or scheme research yet; their score is not "
+        ("Status", "Work in progress. Rows marked 'Not yet checked' have no sensor evidence grade and no scheme rows yet (their "
+         "Maroto Molina rating is coded in 2_research/indicators.csv); their score is not "
          "meaningful and the ranking is provisional until every row is complete."),
         ("", ""),
         ("THE ANSWERS SO FAR", ""),
@@ -294,9 +306,9 @@ def write(d, path=OUTPUT):
          "in those two papers, not nothing anywhere."),
         ("", "'Tested' means a published study tested the product for the measure, as Stygar 2021 coded it; many of "
          "those tests fell below Stygar's high performance bar, which the column 'What was tested, and how well' shows."),
-        ("", "The certification schemes have not been read yet, so Kevin's two lists are not yet known."),
-        ("", "The score is a rule of thumb used as a sort order. It is not a welfare judgement, and no welfare scientist "
-         "has reviewed the table yet."),
+        ("", schemes_status(d)),
+        ("", "The score is a rule of thumb used as a sort order. It is not a welfare judgement, and no review by a "
+         "welfare scientist is recorded in the repository."),
         ("", ""),
         ("HOW TO CHECK ANY CELL", "Every checked row of the Answer sheet has a 'Where to check' column naming the "
          "documents, with pages where a passage is cited. The documents are listed in the Sources sheet and in "
