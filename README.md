@@ -28,7 +28,7 @@ For the 40 checked rows, the cheapest device needed is nothing extra on 7, one d
 
 The schemes are not started, so neither of Kevin's two lists is known yet. On the first list, 8 indicators have a product that a published study tested for them (7) or whose own description claims them (1), and are waiting for the scheme check, and 5 more show unclear because the rules do not yet settle their sensor evidence. The order is provisional until every row is complete.
 
-Every audited version has a PASS row in [audit_log.md](2_research/audit_log.md). The push gate allows a push only when that file has a PASS row for the commit pushed, or for its parent when the push only adds that row. The numbers on this page are updated with each batch of work. The Read me sheet of the Excel file is always current, because a script writes it from the tables.
+Every push has been allowed by a PASS row in [audit_log.md](2_research/audit_log.md). The push gate allows a push only when that file has a PASS row for the commit pushed, or for its parent when the push only adds that row. The numbers on this page are updated with each batch of work. The Read me sheet of the Excel file is always current, because a script writes it from the tables.
 
 ## What this does not show
 

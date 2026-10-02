@@ -3,9 +3,10 @@
 In plain words
     The research is recorded in four tables in 2_research/. This script reads them,
     adds up the ease of adoption score exactly as 2_research/rules.md says, and writes
-    4_output/welfare_crosswalk_dairy.xlsx. Nothing in the Excel file is typed by hand:
-    every cell comes from a table row or from the Stygar product list, so the Excel file
-    and the tables can never disagree.
+    4_output/welfare_crosswalk_dairy.xlsx. Nothing in the Excel file is edited by hand:
+    every value comes from the tables, the manifest or the Stygar product list, and the
+    explanatory text and labels are written by this script, so the Excel file and the
+    tables can never disagree.
 
 The sheets it writes
     Read me             the question, how to read the file, the answers so far, how to check
@@ -178,6 +179,7 @@ def compute():
             "device": DEVICE_LABEL[s["device_needed"]] if s else NOT_YET,
             "farm": FARM_LABEL.get(farm, NOT_YET),
             "schemes_n": len(required) if schemes_done else NOT_YET,
+            "schemes_seen": len(rows),
             "schemes_how": "; ".join(f"{SCHEME_NAMES[k]}: {HOW_CHECKED_LABEL[rows[k]['how_checked']]}" for k in required) if rows else NOT_YET,
             "list1": list1, "list2": list2,
             "score": sum(points), "parts": " + ".join(str(p) for p in points), "status": status,
@@ -246,13 +248,15 @@ def summary_lines(d):
 
 def schemes_status(d):
     a = d["answer"]
-    n = sum(1 for r in a if r["schemes_n"] != NOT_YET)
-    if n == 0:
+    n_all = sum(1 for r in a if r["schemes_n"] != NOT_YET)
+    n_any = sum(1 for r in a if r["schemes_seen"] > 0)
+    if n_any == 0:
         return "The certification schemes have not been read yet, so Kevin's two lists are not yet known."
-    if n < len(a):
-        return (f"The certification schemes have been read for {n} of {len(a)} indicators, so Kevin's two lists are "
-                "complete only for those.")
-    return "The certification schemes have been read for every indicator."
+    if n_all == len(a):
+        return "The certification schemes have been read for every indicator."
+    part = f" and in part for {n_any - n_all} more" if n_any > n_all else ""
+    return (f"The certification schemes have been read in full for {n_all} of {len(a)} indicators{part}, so Kevin's "
+            f"two lists are complete only for those {n_all}.")
 
 
 def write(d, path=OUTPUT):
@@ -279,8 +283,8 @@ def write(d, path=OUTPUT):
          "sort by any of them. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
          "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
-        ("Status", "Work in progress. Rows marked 'Not yet checked' have no sensor evidence grade and no scheme rows yet (their "
-         "Maroto Molina rating is coded in 2_research/indicators.csv); their score is not "
+        ("Status", "Work in progress. Rows marked 'Not yet checked' have no row in 2_research/sensor_coverage.csv yet, so "
+         "no sensor evidence grade (their Maroto Molina rating is coded in 2_research/indicators.csv); their score is not "
          "meaningful and the ranking is provisional until every row is complete."),
         ("", ""),
         ("THE ANSWERS SO FAR", ""),
@@ -313,7 +317,8 @@ def write(d, path=OUTPUT):
         ("HOW TO CHECK ANY CELL", "Every checked row of the Answer sheet has a 'Where to check' column naming the "
          "documents, with pages where a passage is cited. The documents are listed in the Sources sheet and in "
          "1_sources/. The rules that turn what a page says into a label are in 2_research/rules.md, and section 2 of "
-         "that file explains the codes, abbreviations and terms used in the cells. "
+         "that file explains the codes and the abbreviations used in the cells, other than product names, which are "
+         "given as the Stygar list writes them. "
          "2_research/README.md explains the three kinds of check: read the page, apply the rule, or count again."),
         ("Who checked it", "Before each push, an AI auditing agent checks the changes against the source pages; "
          "2_research/audit_log.md lists the versions that passed. The author plans to spot check ten rows after each "

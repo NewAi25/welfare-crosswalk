@@ -19,7 +19,11 @@ Technical detail follows.
 1_sources/manifest.csv records, for each file, the exact URL its bytes came from
 and the SHA256 of those bytes. This script checks three things:
 
-  1. the local file exists and its SHA256 matches the manifest;
+  1. the local file exists and its SHA256 matches the manifest; for a binary_stamped row
+     whose bytes differ, its text with the stamp lines removed must match text_sha256
+     (needs pypdf); for a text row (a saved web page) whose copy is absent or differs, the
+     snapshot cannot be compared, so the network check looks for the check phrase on the
+     live page instead;
   2. the URL is live, and for binary files the bytes it serves today hash to
      the same value, so the link points at exactly the document in 1_sources.
      Some publishers stamp every download with the date and IP address, so the
@@ -32,7 +36,7 @@ A URL that answers without a PDF (a bot protection page, a login page) is a
 WARN, not a FAIL: the link is not proven, and must be opened in a browser.
 
     python 3_code/check_sources.py                 verify everything, exit 1 on any FAIL
-    python 3_code/check_sources.py --local         hash check only, no network
+    python 3_code/check_sources.py --local         local check only (hash, or stamped text), no network
     python 3_code/check_sources.py --record        write current local hashes into the manifest
     python 3_code/check_sources.py --only a.pdf b.pdf   restrict to named files
 
@@ -78,12 +82,15 @@ def pdf_text_hash(data):
         from pypdf import PdfReader
     except ImportError:
         return None
-    reader = PdfReader(io.BytesIO(data))
-    lines = []
-    for page in reader.pages:
-        for line in (page.extract_text() or "").splitlines():
-            if not STAMP.search(line):
-                lines.append(re.sub(r"\s+", " ", line).strip())
+    try:
+        reader = PdfReader(io.BytesIO(data))
+        lines = []
+        for page in reader.pages:
+            for line in (page.extract_text() or "").splitlines():
+                if not STAMP.search(line):
+                    lines.append(re.sub(r"\s+", " ", line).strip())
+    except Exception as e:  # a damaged or non PDF file is reported, not a crash
+        raise ValueError(f"could not read the PDF text: {e}")
     return sha256("\n".join(lines).encode("utf-8"))
 
 
@@ -115,6 +122,17 @@ def check_row(r, network):
         browser_note = "; source refuses scripted requests, retrieved in a browser, so only the local hash is checked"
     if r["kind"] == "text" and not r["check_phrase"]:
         return "FAIL", "text source with no check phrase"
+    if r["kind"] == "text" and (not path.exists() or sha256(path.read_bytes()) != r["sha256"]):
+        # A saved web page: a copy saved today cannot match the snapshot, so check the live page.
+        if not network:
+            return "absent", "saved web page not here or not the snapshot; run without --local to check the live page"
+        try:
+            status, remote = fetch(r["url"])
+        except Exception as e:
+            return "WARN", f"url not reachable: {e}"
+        if r["check_phrase"].encode("utf-8") in remote:
+            return "ok", "live page contains the check phrase; the snapshot itself was not compared"
+        return "WARN", "url live but the check phrase no longer appears on the page"
     if not path.exists():
         if r.get("in_repository") == "no":
             return "absent", "not stored here (licence or privacy); download it from the url to check it"
@@ -126,7 +144,12 @@ def check_row(r, network):
         if r["kind"] != "binary_stamped":
             return "FAIL", "local file has changed since the manifest was recorded"
         # A fresh download of a stamped paper carries a new stamp, so compare the text without it.
-        local_text = pdf_text_hash(local)
+        if not local.startswith(b"%PDF"):
+            return "FAIL", "stamped file is not a PDF"
+        try:
+            local_text = pdf_text_hash(local)
+        except ValueError as e:
+            return "FAIL", str(e)
         if local_text is None:
             return "WARN", "stamped download; pypdf not installed, so the text could not be compared"
         if not r["text_sha256"]:
@@ -152,7 +175,10 @@ def check_row(r, network):
         if sha256(remote) == r["sha256"]:
             return "ok", "url live and serves the exact same bytes"
         if r["kind"] == "binary_stamped":
-            remote_hash = pdf_text_hash(remote)
+            try:
+                remote_hash = pdf_text_hash(remote)
+            except ValueError as e:
+                return "FAIL", f"url serves a file whose text could not be read: {e}"
             if remote_hash is None:
                 return "WARN", "stamped download; pypdf not installed so the text could not be compared"
             if not r["text_sha256"]:
