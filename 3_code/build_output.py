@@ -150,10 +150,12 @@ def compute():
             list1 = "Unclear: sensor evidence unsure (see open questions)"
         elif grade not in ("validated_commercial", "commercial_unvalidated"):
             list1 = "No"
+        elif required:
+            list1 = "No"  # one scheme that requires it settles the list, even before all four are read
         elif not schemes_done:
             list1 = "Not yet known: schemes not yet checked"
         else:
-            list1 = "Yes" if not required else "No"
+            list1 = "Yes"
         # Kevin's list 2: a scheme requires it and checks it by hand (inspection or records), not by sensor data.
         manual = [k for k in required if rows[k]["how_checked"] in MANUAL]
         unclear = [k for k in required if rows[k]["how_checked"] == "unsure"]
@@ -167,6 +169,7 @@ def compute():
             list2 = "No"
 
         status = ("Complete" if s and schemes_done else
+                  "Sensors done, schemes checked in part" if s and rows else
                   "Sensors done, schemes not yet checked" if s else NOT_YET)
         answer.append({
             "id": iid, "name": indicator_name(ind), "listed_by": LISTED_BY_LABEL[ind["listed_by"]],
@@ -226,6 +229,8 @@ def summary_lines(d):
     a = d["answer"]
     done = [r for r in a if r["grade"]]
     grades = Counter(r["grade"] for r in done)
+    n_all, n_any = scheme_counts(a)
+    read = f"all four schemes checked for {n_all} of {len(a)} indicators so far, at least one for {n_any}"
     lines = [
         ("The welfare indicators", f"{len(a)} indicators: "
          + ", ".join(f"{n} {LISTED_BY_LABEL[k]}" for k, n in sorted(Counter(i['listed_by'] for i in d['indicators']).items()))),
@@ -233,30 +238,33 @@ def summary_lines(d):
          + "; ".join(f"{grades.get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}" for k in SENSOR_LABEL)),
         ("(b) How easy to adopt?", "See the Answer sheet: device needed, products whose description names it, and whether FARM (the US industry "
          "programme) names it. " + f"FARM is checked for {sum(1 for r in a if r['farm'] != NOT_YET)} of {len(a)} indicators so far."),
-        ("(c) Already covered by schemes?", f"Checked for {sum(1 for r in a if r['schemes_n'] != NOT_YET)} of {len(a)} indicators so far."),
+        ("(c) Already covered by schemes?", read[0].upper() + read[1:] + "."),
         ("Kevin's list 1: Tested or Claimed in column (a), required by no scheme",
          f"{sum(1 for r in a if r['list1'] == 'Yes')} confirmed; {sum(1 for r in a if r['list1'].startswith('Not yet known'))} "
          f"are Tested or Claimed and wait for the scheme check; {sum(1 for r in a if r['list1'].startswith('Unclear'))} more are "
          "unclear because their sensor evidence is unsure."),
         ("Kevin's list 2: required by a scheme, checked by hand",
-         f"{sum(1 for r in a if r['list2'].startswith('Yes'))} confirmed; the schemes are checked for "
-         f"{sum(1 for r in a if r['schemes_n'] != NOT_YET)} of {len(a)} indicators so far. Column (a) shows the sensor "
+         f"{sum(1 for r in a if r['list2'].startswith('Yes'))} confirmed; {read}. Column (a) shows the sensor "
          "evidence beside each one."),
     ]
     return lines
 
 
+def scheme_counts(a):
+    """Indicators with all four schemes read, and with at least one scheme read."""
+    return sum(1 for r in a if r["schemes_n"] != NOT_YET), sum(1 for r in a if r["schemes_seen"] > 0)
+
+
 def schemes_status(d):
     a = d["answer"]
-    n_all = sum(1 for r in a if r["schemes_n"] != NOT_YET)
-    n_any = sum(1 for r in a if r["schemes_seen"] > 0)
+    n_all, n_any = scheme_counts(a)
     if n_any == 0:
         return "The certification schemes have not been read yet, so Kevin's two lists are not yet known."
     if n_all == len(a):
         return "The certification schemes have been read for every indicator."
-    part = f" and in part for {n_any - n_all} more" if n_any > n_all else ""
-    return (f"The certification schemes have been read in full for {n_all} of {len(a)} indicators{part}, so Kevin's "
-            f"two lists are complete only for those {n_all}.")
+    return (f"The certification schemes have been read in full for {n_all} of {len(a)} indicators and in part for "
+            f"{n_any - n_all}. A 'Yes' on list 2, or a 'No' on list 1 because a scheme requires the indicator, is "
+            f"already final; every other answer on the two lists is complete only for the {n_all} read in full.")
 
 
 def write(d, path=OUTPUT):
@@ -283,7 +291,7 @@ def write(d, path=OUTPUT):
          "sort by any of them. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
          "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
-        ("Status", "Work in progress. Rows marked 'Not yet checked' have no row in 2_research/sensor_coverage.csv yet, so "
+        ("Status", "Work in progress. Rows whose Row status is 'Not yet checked' have no row in 2_research/sensor_coverage.csv yet, so "
          "no sensor evidence grade (their Maroto Molina rating is coded in 2_research/indicators.csv); their score is not "
          "meaningful and the ranking is provisional until every row is complete."),
         ("", ""),
@@ -317,8 +325,8 @@ def write(d, path=OUTPUT):
         ("HOW TO CHECK ANY CELL", "Every checked row of the Answer sheet has a 'Where to check' column naming the "
          "documents, with pages where a passage is cited. The documents are listed in the Sources sheet and in "
          "1_sources/. The rules that turn what a page says into a label are in 2_research/rules.md, and section 2 of "
-         "that file explains the codes and the abbreviations used in the cells, other than product names, which are "
-         "given as the Stygar list writes them. "
+         "that file explains the codes and the abbreviations used in the cells, other than product names and sensor "
+         "types, which are given as the Stygar list writes them. "
          "2_research/README.md explains the three kinds of check: read the page, apply the rule, or count again."),
         ("Who checked it", "Before each push, an AI auditing agent checks the changes against the source pages; "
          "2_research/audit_log.md lists the versions that passed. The author plans to spot check ten rows after each "

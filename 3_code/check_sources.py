@@ -77,7 +77,8 @@ def fetch(url):
 
 
 def pdf_text_hash(data):
-    """Hash of the PDF text with download stamp lines removed. None if pypdf is absent."""
+    """Hash of the PDF text with download stamp lines removed. None if pypdf is absent; raises
+    ValueError if the file cannot be read as a PDF."""
     try:
         from pypdf import PdfReader
     except ImportError:
@@ -125,11 +126,12 @@ def check_row(r, network):
     if r["kind"] == "text" and (not path.exists() or sha256(path.read_bytes()) != r["sha256"]):
         # A saved web page: a copy saved today cannot match the snapshot, so check the live page.
         if not network:
-            return "absent", "saved web page not here or not the snapshot; run without --local to check the live page"
+            return ("absent" if not path.exists() else "not snapshot"), \
+                "saved web page not here or not the author's snapshot; run without --local to check the live page"
         try:
             status, remote = fetch(r["url"])
         except Exception as e:
-            return "WARN", f"url not reachable: {e}"
+            return "FAIL", f"url not reachable: {e}"
         if r["check_phrase"].encode("utf-8") in remote:
             return "ok", "live page contains the check phrase; the snapshot itself was not compared"
         return "WARN", "url live but the check phrase no longer appears on the page"
@@ -213,7 +215,14 @@ def main(argv):
                 data = path.read_bytes()
                 r["sha256"] = sha256(data)
                 if r["kind"] == "binary_stamped":
-                    r["text_sha256"] = pdf_text_hash(data) or ""
+                    if not data.startswith(b"%PDF"):
+                        print(f"refused: {r['filename']} is not a PDF")
+                        return 1
+                    try:
+                        r["text_sha256"] = pdf_text_hash(data) or ""
+                    except ValueError as e:
+                        print(f"refused: {r['filename']}: {e}")
+                        return 1
                 if r["status"] in ("", "missing"):
                     r["status"] = "ok"  # keep browser_only: those sites refuse scripted downloads
         save_manifest(rows)
