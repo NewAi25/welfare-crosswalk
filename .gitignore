@@ -1,13 +1,20 @@
-# Corpus files are large and some are copyrighted. Only the source list and the manifest are committed.
-corpus/*
-!corpus/README.md
-!corpus/manifest.csv
+# Only the Stygar paper and spreadsheet (CC BY 4.0), the README, the manifest and the kevin_*.md records are
+# committed (listed below with !); every other source is downloaded by its link, see 1_sources/README.md.
+1_sources/*
+!1_sources/README.md
+!1_sources/manifest.csv
+!1_sources/kevin_*.md
+!1_sources/stygar_2021.pdf
+!1_sources/stygar_2021_supplementary.xlsx
+
+# Local leftovers
+docs/
 __pycache__/
 *.pyc
 .DS_Store
-# Media files are never committed; nothing unaudited goes into the repository.
 *.mp4
 *.mov
 *.mp3
 *.wav
 *.m4a
+~$*.xlsx

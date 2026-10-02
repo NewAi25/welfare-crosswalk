@@ -1,0 +1,2 @@
+# Keep Unix line endings on the push gate so the shell can run it on every system.
+3_code/hooks/* text eol=lf

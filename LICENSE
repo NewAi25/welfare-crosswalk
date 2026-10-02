@@ -1,7 +1,8 @@
-Data and text in this repository (data/, standard/, notes/, writeup/, docs/ authored here, README.md) are licensed under
-Creative Commons Attribution 4.0 International (CC BY 4.0), https://creativecommons.org/licenses/by/4.0/.
+Data and text written for this repository (README.md, CLAUDE.md, 1_sources/README.md, 1_sources/manifest.csv,
+2_research/, 4_output/) are licensed under Creative Commons Attribution 4.0 International (CC BY 4.0),
+https://creativecommons.org/licenses/by/4.0/.
 
-Code (scripts/, .githooks/, .claude/) is licensed under the MIT License.
+Code (3_code/, .claude/) is licensed under the MIT License.
 
 Copyright 2026 Manisha Sarkar.
 
@@ -15,4 +16,7 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
-Source documents in corpus/ are not part of this repository and keep their own owners' terms.
+Source documents in 1_sources/ keep their own owners' terms, which 1_sources/README.md lists for each file. The papers
+included here are published under Creative Commons licences that allow redistribution of the unchanged file; the rest
+are not included and are listed with a link. The 1_sources/kevin_*.md files record Kevin Xia's words as received and are
+not covered by the licence above.

@@ -1,42 +1,73 @@
-# Welfare indicators x deployed sensors x certification requirements
+# Welfare crosswalk, dairy cows
 
-Which welfare indicators are (a) measurable by AI, (b) acceptable to industry for adoption, and (c) potentially already covered by existing sensors or widely used certification schemes? One species per unit. Dairy cattle first.
+Which signs of dairy cow welfare can a machine already measure on farms, and which do certification schemes (the standards behind welfare labels) ask farmers to show? The answer is one Excel file. It lists welfare indicators (measurable signs, such as lameness): the measures in the overview of the Welfare Quality assessment protocol, and the animal based measures (ABMs) that EFSA, the European Food Safety Authority, rates in the ABM assessment tables of its 2023 opinion on dairy cows. It sorts them by a stated rule of thumb for ease of adoption. Every value traces to a public document.
 
-## Start here
+## The question
 
-| Step | File | What it tells you |
-|---|---|---|
-| 1 | [`CLAUDE.md`](CLAUDE.md) | The question, the deliverables, the hard rules, the fixed citations |
-| 2 | [`standard/definitions.md`](standard/definitions.md) | Every column of the table, the rule that fills it, and the heuristic that ranks it. Fixed before extraction |
-| 3 | [`docs/kevin_answers.md`](docs/kevin_answers.md) | The mentor's steer that made the criteria soft factors rather than filters |
-| 4 | [`docs/PLF_Handover_2026-09-23.md`](docs/PLF_Handover_2026-09-23.md) | What the larger predecessor project attempted, what blocked it, and what was kept |
-| 5 | [`notes/decisions.md`](notes/decisions.md) | Every judgement call in date order |
-| 6 | [`docs/before_you_start.md`](docs/before_you_start.md) | What to read before the work starts, in order, with why |
+Kevin Xia put this on his Top 30 list of projects as item 13 ([his text](1_sources/kevin_item_13.md)). He asked for a three way crosswalk for one species: validated welfare indicators, against what commercial farm sensors measure, against what certification schemes require and audit. The most useful results, he wrote, are indicators a sensor already measures but no scheme requires, and indicators a scheme requires but checks by hand.
 
-## Deliverables
+On a call on 22 September 2026 Kevin proposed a smaller table of indicators that are measurable by AI (artificial intelligence), acceptable to industry and covered by certification schemes. The record of the call is a set of notes written automatically by a meeting tool, not Kevin's own words ([automated call notes](1_sources/kevin_call_2026-09-22.md)). The three part question this project answers, (a) measurable by AI, (b) acceptable to industry and (c) covered by existing sensors or certification schemes, is that proposal as written up in Manisha's smaller scope analysis, which Kevin quotes in his Slack reply of 25 September ([his reply](1_sources/kevin_slack_2026-09-25.md)). In that reply he calls industry acceptability, "covered by existing sensors" and "covered by existing certification schemes" soft factors that make adoption easier, not hard requirements. Item 13 itself has no (a), (b), (c) list. So every indicator stays in, sorted, with each factor visible.
 
-| # | Deliverable | Files |
-|---|---|---|
-| 1 | Column 3: what four certification schemes require and how they audit it | `data/crosswalk.csv` |
-| 2 | Column 2: sensor coverage, hardware class and market breadth for every indicator | `data/sensor_coverage.csv` |
-| 3 | The adoption table and the two item #13 views | `results/` |
-| 4 | Write up and one page list entry | `writeup/` |
-| 5 | A poultry unit, same schema | after dairy |
+Item 13 names three kinds of source for validated indicators: Welfare Quality, AWIN and the species literature. This project uses Welfare Quality and the EFSA opinion on dairy cows, a choice carried over from the project before it. AWIN is not used for this dairy unit. EFSA rates each of its measures for feasibility, sensitivity and specificity, and some ratings are low. It rates lying time low on feasibility on farm, for example.
 
-## How to verify any number
+## The answer
 
-Every value in `data/` traces to a public source. A crosswalk row quotes the requirement with section and page; open the scheme PDF named in [`corpus/README.md`](corpus/README.md) and find it. A sensor coverage row names the product ids and the Stygar reference numbers; open `corpus/stygar_2021.pdf` Table 1 on page 6 and the supplementary spreadsheet. `corpus/manifest.csv` holds the SHA256 of every source so you can confirm you have the same file, and `python scripts/check_corpus.py` re-fetches every URL. Nothing is pushed until a separate auditing agent has checked every claim in the change and returned PASS; the log, failures included, is [`notes/audit_log.md`](notes/audit_log.md). Every value is sourced, decided (a dated entry in `notes/decisions.md`) or unknown (`unsure`, `none`, `not_covered`), never guessed.
+The answer is [4_output/welfare_crosswalk_dairy.xlsx](4_output/welfare_crosswalk_dairy.xlsx), in six sheets. **Read me** explains the file and gives the current counts. **Answer** has one row per indicator, sorted by the ease of adoption score, a rule of thumb used only as a sort order and not a recommendation; every factor has its own column. **Sensors x products** sets each indicator against the 129 sensor products listed in a 2021 review by Stygar and colleagues, marking which a published study has tested and which only name it in their own description. **Schemes** sets each indicator against four schemes: RSPCA Assured, FARM version 5 (the US dairy industry's own programme), Global Animal Partnership and Certified Humane. **Product list** is the Stygar list of 129 products as it stood in 2021. Three more products, validated by ICAR (the International Committee for Animal Recording), are not in that list; they are in [2_research/products.csv](2_research/products.csv). **Sources** lists the documents.
 
-The adoption score is a heuristic sort order from a stated 0 to 3 mapping of five factors. It is not a welfare judgement and every factor stays visible so the table can be re sorted by any one of them.
+Read a row of the Answer sheet from left to right. Column (a) says whether a sensor can measure the indicator, and which tested products do. Column (b) gives the cheapest device needed, how many of the 129 products name it, and whether FARM names it. Column (c) gives how many schemes require it and how they check it. The sensor half of (c), covered by existing sensors, is not a separate column: it shows in column (a) and in the count of products that name the indicator. Then come Kevin's two lists, a score from 0 to 15 (a sort order, not a welfare judgement) with its five parts, and finally the documents and pages behind the row.
 
-## Running it
+One pairing can look odd. Device needed can read "Nothing extra" even where column (a) says "Nothing found" for sensors. That happens when the indicator is already taken from milk records or farm records, such as a count of clinical cases, so no new device is needed to have the value.
 
+## Answers so far, as of 3 October 2026
+
+There are 58 indicators: 26 listed only by EFSA (in its 2023 opinion on dairy cows), 26 only by the Welfare Quality protocol, and 6 by both.
+
+Sensors are checked for 40 of the 58. Of those, 7 have a product in the Stygar list that a published study tested for that measure, 1 is claimed by a product's own description with no validation study recorded, 15 have only research methods or a substitute measure, 12 have nothing in the two sensor sources, and 5 are unclear. The other 18 are not yet checked.
+
+For the 40 checked rows, the cheapest device needed is nothing extra on 7, one device per farm or barn on 17, one device per animal on 8, a sample or a scoring by a person on 1, and no technology named on 7. Across all 58 indicators, this project's coding of what Maroto Molina and colleagues say gives yes (commercially available technology) on 2, partial on 29, no on 2 and not covered on 25.
+
+The schemes are not started, so neither of Kevin's two lists is known yet. On the first list, 8 indicators have a sensor and are waiting for the scheme check, and 5 more show unclear because the rules do not yet settle their sensor evidence. The order is provisional until every row is complete.
+
+Every published version has a PASS row in [audit_log.md](2_research/audit_log.md). The numbers on this page are updated with each batch of work. The Read me sheet of the Excel file is always current, because a script writes it from the tables.
+
+## What this does not show
+
+The sensor evidence is a baseline from two papers: Stygar and colleagues 2021, and Maroto Molina and colleagues 2020. Their products, studies and web links are as those papers found them. "Nothing found" means no product or method in those two papers, not none anywhere. Newer products and studies are not in the table yet; a dated update pass is planned for later.
+
+"Validated" has a narrow meaning here. It means Stygar record at least one outside study of that product on that measure. It does not mean the product is accurate. Stygar placed every tool for physical condition and health below their high performance threshold.
+
+The certification schemes have not been read, and 18 indicators have not been checked for sensors. A factor not yet researched counts 0 points, so the order will change.
+
+No review of the table by a welfare scientist is recorded in this repository. The checks described below are by scripts and by an AI agent, not by a person with expertise in animal welfare.
+
+## How it was done
+
+```mermaid
+flowchart LR
+    A["1_sources<br>documents and fingerprints"] --> B["2_research<br>rules and tables"]
+    B --> C["3_code<br>checks and build"]
+    C --> D["4_output<br>Excel answer"]
 ```
-python scripts/validate_csv.py
-python scripts/market_breadth.py
-python scripts/stats.py
-```
 
-## Licence and credits
+1. **Sources.** Fifteen public documents, each in [manifest.csv](1_sources/manifest.csv) with its link and a fingerprint: a code computed from the file that changes if one character changes.
+2. **Rules.** [rules.md](2_research/rules.md) says how every column is filled and scored. It was first fixed on 25 September, before any data was taken. The rules have been changed since, and each change is dated in the change log at the end of rules.md. Some changes moved scores: corrections of 2 October under the farm records rule raised the scores of I020, I024, I028 and I029, and a correction of 3 October lowered I006 by one point, because EFSA's definition of that measure does not take it from records.
+3. **Tables.** Four tables in [2_research](2_research) hold the research. Each sensor row names the documents behind it, with pages where a passage is cited; rows resting on an absence say what was searched. Each indicator row names the measure as its source names it, and every EFSA row names its EFSA table, but not every indicator row gives a page.
+4. **Checks.** Scripts check the tables, fingerprints and vendor counts. Before a batch is pushed to GitHub, an AI agent (Claude, a language model, working from a fixed checklist in [.claude/agents/research-auditor.md](.claude/agents/research-auditor.md)) rereads the cited pages and checks each claim. It is a separate session from the one that wrote the rows, but it is not a human reviewer. [audit_log.md](2_research/audit_log.md) lists every version that passed, with what the audit checked and found. After each push the author also plans to read ten rows against the source pages; that spot check is planned and none is logged yet.
+5. **Excel.** [build_output.py](3_code/build_output.py) writes the Excel file from the tables. Nothing in it is typed by hand.
 
-Data and text CC BY 4.0, code MIT. Author Manisha Sarkar. Mentor Kevin Xia. Sentient Futures incubator, fall 2026. Predecessor: github.com/NewAi25/plf-audit.
+## How to check anything yourself
+
+Every value can be checked in one of three ways: read the page the row names, apply the written rule in [rules.md](2_research/rules.md) to what the page says, or count again, by hand in the Stygar spreadsheet or with a script. Cells marked unclear, nothing found or not yet checked say openly what is not known. [2_research/README.md](2_research/README.md) explains the three ways in more detail. Four open licence files are in this repository. The rest are not ours to republish; download them from their links and the fingerprint confirms you have the same file.
+
+## The four folders
+
+- [1_sources](1_sources): the documents, their links and fingerprints, and what Kevin sent, as received.
+- [2_research](2_research): the rules, the four tables, the decision log and the audit log.
+- [3_code](3_code): the scripts, each with a plain explanation at the top.
+- [4_output](4_output): the Excel answer.
+
+## Status, credits and licence
+
+Work in progress. Dairy cows come first. Kevin agreed to broilers, or maybe laying hens, as the second unit. Author Manisha Sarkar. Mentor Kevin Xia. Sentient Futures incubator, 2026. This repository follows on from [github.com/NewAi25/plf-audit](https://github.com/NewAi25/plf-audit), a public repository that is no longer updated.
+
+Data and text written for this repository are licensed CC BY 4.0, and the code is MIT. Source documents keep their owners' terms, and Kevin's words in 1_sources are not covered. See [LICENSE](LICENSE).

@@ -1,0 +1,59 @@
+#!/bin/sh
+# PUSH GATE. Runs before every "git push" and refuses the push unless all of these hold:
+#   1. the commit being pushed is the one checked out, with no uncommitted changes, so the
+#      checks below test exactly what is pushed;
+#   2. the four research tables pass 3_code/check_tables.py;
+#   3. every source file present matches its fingerprint (3_code/check_sources.py --local);
+#   4. the Excel file in 4_output matches the tables (3_code/build_output.py --check);
+#   5. the committed 2_research/audit_log.md has a row whose Result column is PASS for the
+#      commit being pushed, or for its parent when the pushed commit changes nothing but the
+#      audit log (that is the commit that records the PASS).
+# Turned on once per copy of the repository with:  git config core.hooksPath 3_code/hooks
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+zero=0000000000000000000000000000000000000000
+head_full=$(git rev-parse HEAD)
+
+# Git passes one line per ref being pushed: local ref, local sha, remote ref, remote sha.
+pushed=""
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue          # deleting a remote branch: nothing to check
+  if [ "$local_sha" != "$head_full" ]; then
+    echo "push gate: $local_ref is not the commit checked out; check it out and push from there"
+    exit 1
+  fi
+  pushed="$local_sha"
+done
+[ -z "$pushed" ] && exit 0
+
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+  echo "push gate: commit or stash your changes first, so the checks test what is pushed"
+  exit 1
+fi
+
+python 3_code/check_tables.py || { echo "push gate: check_tables.py failed"; exit 1; }
+python 3_code/check_sources.py --local || { echo "push gate: check_sources.py failed"; exit 1; }
+python 3_code/build_output.py --check || { echo "push gate: the Excel file is out of date"; exit 1; }
+
+head=$(git rev-parse --short=7 "$pushed")
+parent=$(git rev-parse -q --verify --short=7 "$pushed~1" 2>/dev/null)
+log=$(git show "$pushed:2_research/audit_log.md" 2>/dev/null)
+
+# An audit log row: | date | commit | claims | wrong | unsupported | imprecise | Result | summary |
+# PASS must sit in the Result column, the seventh cell.
+has_pass() {
+  printf '%s\n' "$log" | grep -Eq "^\| *[0-9-]+ *\| *$1([ (][^|]*)?\|([^|]*\|){4} *PASS *\|"
+}
+
+if has_pass "$head"; then
+  exit 0
+fi
+if [ -n "$parent" ] && has_pass "$parent"; then
+  if [ "$(git diff --name-only "$pushed~1" "$pushed")" = "2_research/audit_log.md" ]; then
+    exit 0
+  fi
+  echo "push gate: the PASS row is for $parent, but commit $head changes more than the audit log"
+  exit 1
+fi
+echo "push gate: no PASS row in 2_research/audit_log.md for commit $head${parent:+ or $parent}. Run the audit first."
+exit 1

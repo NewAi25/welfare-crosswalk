@@ -1,8 +1,0 @@
-# Status
-
-| Week | Planned | Done | Blocked | Sent to Kevin |
-|---|---|---|---|---|
-| 22 to 28 Sep | Handover, scope analysis, Kevin's answers, repository scaffold, definitions fixed | 25 Sep: repository scaffolded from plf-audit; definitions.md v0.1 written; schemas and scripts in place | | Handover and scope analysis 23 Sep; Kevin answered 25 Sep |
-| 29 Sep to 5 Oct | Column 2: sensor_coverage.csv for all 57 indicators, spot checked in batches of ten | 26 Sep: batch 1 pushed; 29 Sep: batch 2 pushed; 30 Sep: batch 3 pushed (30 rows in all) and batch 4 written, I031 to I040, awaiting audit; scoping check of newer reviews; option B deferred chosen | | Friday one liner |
-| 6 to 12 Oct | Column 3: RSPCA, FARM v5, GAP, Certified Humane into crosswalk.csv | | | Friday one liner |
-| 13 to 19 Oct | Update pass (evidence since 2021 column, Leliveld cross check), then queries, adoption table, note and list entry, audit, tag v0.1 | | | The table and the note |
