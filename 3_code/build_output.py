@@ -182,9 +182,12 @@ def compute():
             "device": DEVICE_LABEL[s["device_needed"]] if s else NOT_YET,
             "farm": FARM_LABEL.get(farm, NOT_YET),
             "schemes_n": len(required) if schemes_done else NOT_YET,
+            "schemes_n_shown": (len(required) if schemes_done else
+                                f"At least {len(required)} ({len(rows)} of 4 read)" if rows else NOT_YET),
             "schemes_seen": len(rows),
             "schemes_how": ("; ".join(f"{SCHEME_NAMES[k]}: {HOW_CHECKED_LABEL[rows[k]['how_checked']]}" for k in required)
-                            if required else f"No scheme read so far requires it ({len(rows)} of 4 read)" if rows else NOT_YET),
+                            if required else "No scheme requires it (4 of 4 read)" if schemes_done
+                            else f"No scheme read so far requires it ({len(rows)} of 4 read)" if rows else NOT_YET),
             "list1": list1, "list2": list2,
             "score": sum(points), "parts": " + ".join(str(p) for p in points), "status": status,
             "where": s["where_to_check"] if s else "", "reasoning": s["reasoning"] if s else "",
@@ -350,7 +353,7 @@ def write(d, path=OUTPUT):
         ("What was tested, and how well (Stygar 2021, Table 2)", 34, "tested_how"),
         ("Products whose description names it (of 129)", 14, "vendors"),
         ("(b) Device needed", 28, "device"), ("(b) Named by FARM, the US industry programme", 22, "farm"),
-        ("(c) Schemes requiring it (of 4)", 12, "schemes_n"), ("(c) Which schemes, and how they check", 30, "schemes_how"),
+        ("(c) Schemes requiring it (of 4)", 12, "schemes_n_shown"), ("(c) Which schemes, and how they check", 30, "schemes_how"),
         ("Kevin list 1: Tested or Claimed in column (a), and no scheme requires it", 22, "list1"),
         ("Kevin list 2: required by a scheme, checked by hand (inspection or records)", 22, "list2"),
         ("Ease of adoption score (0 to 15, sort order only)", 12, "score"),

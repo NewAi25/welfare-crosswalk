@@ -33,9 +33,10 @@ if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
   exit 1
 fi
 
-python 3_code/check_tables.py || { echo "push gate: check_tables.py failed"; exit 1; }
-python 3_code/check_sources.py --local || { echo "push gate: check_sources.py failed"; exit 1; }
-python 3_code/build_output.py --check || { echo "push gate: the Excel file is out of date"; exit 1; }
+PY=$(command -v python3 || command -v python) || { echo "push gate: no python3 or python found"; exit 1; }
+"$PY" 3_code/check_tables.py || { echo "push gate: check_tables.py failed"; exit 1; }
+"$PY" 3_code/check_sources.py --local || { echo "push gate: check_sources.py failed"; exit 1; }
+"$PY" 3_code/build_output.py --check || { echo "push gate: the Excel file is out of date"; exit 1; }
 
 head=$(git rev-parse --short=7 "$pushed")
 parent=$(git rev-parse -q --verify --short=7 "$pushed~1" 2>/dev/null)
