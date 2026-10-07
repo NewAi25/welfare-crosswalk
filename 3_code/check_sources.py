@@ -59,7 +59,8 @@ CORPUS = ROOT / "1_sources"
 MANIFEST = CORPUS / "manifest.csv"
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
-KEVIN_FILES = {"kevin_item_13.md", "kevin_slack_2026-09-25.md", "kevin_call_2026-09-22.md"}
+KEVIN_FILES = {"kevin_item_13.md", "kevin_slack_2026-09-25.md", "kevin_call_2026-09-22.md",
+               "kevin_change_request_2026-10-07.md"}
 FIELDS = ["filename", "title", "used_for", "licence", "in_repository", "kind", "url", "zip_member", "check_phrase",
           "sha256", "text_sha256", "retrieved", "status", "doi_or_landing"]
 STAMP = re.compile(r"Downloaded from|IP address|subject to the Cambridge Core terms|Utrecht University Repository|"
