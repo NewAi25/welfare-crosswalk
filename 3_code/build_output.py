@@ -333,7 +333,8 @@ def write(d, path=OUTPUT):
          "product can be tested without its description naming the measure, and the reverse."),
         ("EFSA's ratings", "For indicators that come from EFSA, how EFSA's own assessment table rates the measure: "
          "sensitivity (does it catch the animals that have the problem), specificity (does it avoid flagging animals that "
-         "do not) and feasibility on farm. The words are EFSA's; 2_research/indicators.csv quotes the passage. Blank for "
+         "do not) and feasibility on farm. High, Medium and Low are EFSA's own words; Mixed means EFSA gives two levels "
+         "and Not stated means EFSA gives none. 2_research/indicators.csv quotes the passage. Blank for "
          "Welfare Quality only indicators, which EFSA does not rate."),
         ("Schemes: 'Unclear'", "A scheme has a requirement that may name the indicator, but the written rules do not "
          "settle whether it does. It is not counted as required. Kevin's lists show Unclear for that indicator only where "
