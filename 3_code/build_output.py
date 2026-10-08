@@ -261,8 +261,10 @@ def summary_lines(d):
         ("(c) Already covered by schemes?", read[0].upper() + read[1:] + "."),
         ("Kevin's list 1: Tested or Claimed in column (a), required by no scheme",
          f"{sum(1 for r in a if r['list1'] == 'Yes')} confirmed; {sum(1 for r in a if r['list1'].startswith('Not yet known'))} "
-         f"are Tested or Claimed and wait for the scheme check; {sum(1 for r in a if r['list1'].startswith('Unclear'))} more are "
-         "unclear because their sensor evidence is unsure."),
+         f"are Tested or Claimed and wait for the scheme check; "
+         f"{sum(1 for r in a if r['list1'].startswith('Unclear: sensor'))} are unclear because their sensor evidence is "
+         f"unsure, and {sum(1 for r in a if r['list1'].startswith('Unclear: whether'))} because it is unclear whether a "
+         "scheme requires them."),
         ("Kevin's list 2: required by a scheme, checked by hand",
          f"{sum(1 for r in a if r['list2'].startswith('Yes'))} confirmed; {read}. Column (a) shows the sensor "
          "evidence beside each one."),
