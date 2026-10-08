@@ -336,8 +336,9 @@ def write(d, path=OUTPUT):
          "do not) and feasibility on farm. The words are EFSA's; 2_research/indicators.csv quotes the passage. Blank for "
          "Welfare Quality only indicators, which EFSA does not rate."),
         ("Schemes: 'Unclear'", "A scheme has a requirement that may name the indicator, but the written rules do not "
-         "settle whether it does. It is not counted as required, and it makes Kevin's lists Unclear for that indicator "
-         "(see 2_research/open_questions.md)."),
+         "settle whether it does. It is not counted as required. Kevin's lists show Unclear for that indicator only where "
+         "the answer depends on it, for example a list 1 row graded Tested or Claimed that no other scheme requires "
+         "(see 2_research/rules.md, section 6, and 2_research/open_questions.md)."),
         ("Sensors x products: 'validated'", "A published study tested this product for this measure (Stygar 2021, Tables 1 and 2)."),
         ("Sensors x products: 'named'", "The vendor's own description contains one of the indicator's search words. Not tested."),
         ("Ease of adoption score", "0 to 15, five factors of 0 to 3 added together (2_research/rules.md, section 5). "
