@@ -22,7 +22,11 @@ What it checks
        listed_by follows from which source columns are filled;
        every cell coded unsure (in any column that allows it) has a line for its indicator
        in 2_research/open_questions.md;
-       a scheme row that quotes a requirement gives the section, page and how it is checked.
+       a scheme row's requirement_status (required, unsure, not_required) agrees with what it
+       quotes: a required row quotes the requirement with section, page and how it is checked;
+       an unsure row quotes its candidate and has a line in open_questions.md naming the
+       indicator and the scheme; a not_required row quotes nothing;
+       EFSA's three ratings are filled exactly on the rows that come from EFSA.
 
 How to run it
     python 3_code/check_tables.py
@@ -41,13 +45,16 @@ ROOT = Path(__file__).resolve().parent.parent
 TABLES = ROOT / "2_research"
 YES_NO = {"yes", "no"}
 RATINGS = {"yes", "partial", "no", "not_covered"}
+EFSA_LEVELS = {"high", "medium", "low", "mixed", "not_stated"}  # the level word EFSA's own ABM table uses
 
 SCHEMAS = {
     "indicators.csv": {
         "columns": ["indicator_id", "efsa_welfare_consequence", "efsa_measure", "wq_principle", "wq_criterion",
-                    "wq_measure", "measure_type", "maroto_molina_technology", "maroto_molina_rating", "notes", "listed_by"],
+                    "wq_measure", "measure_type", "maroto_molina_technology", "maroto_molina_rating", "notes", "listed_by",
+                    "efsa_sensitivity", "efsa_specificity", "efsa_feasibility", "efsa_ratings_quoted"],
         "codes": {"maroto_molina_rating": RATINGS, "listed_by": {"joined", "efsa_only", "wq_only"},
-                  "measure_type": {"animal_based", "resource_based", "management_based", "none"}},
+                  "measure_type": {"animal_based", "resource_based", "management_based", "none"},
+                  "efsa_sensitivity": EFSA_LEVELS, "efsa_specificity": EFSA_LEVELS, "efsa_feasibility": EFSA_LEVELS},
         "must_fill": ["indicator_id", "listed_by", "measure_type", "maroto_molina_rating"],
         "key": ["indicator_id"],
     },
@@ -74,13 +81,14 @@ SCHEMAS = {
         "key": ["indicator_id"],
     },
     "crosswalk.csv": {
-        "columns": ["indicator_id", "scheme", "requirement_quote", "section", "page", "number_in_requirement",
-                    "how_checked", "farm_naming", "reasoning"],
+        "columns": ["indicator_id", "scheme", "requirement_status", "requirement_quote", "section", "page",
+                    "number_in_requirement", "how_checked", "farm_naming", "reasoning"],
         "codes": {"scheme": {"RSPCA_Assured", "FARM_v5", "GAP_dairy", "Certified_Humane"},
+                  "requirement_status": {"required", "unsure", "not_required"},
                   "how_checked": {"visual_inspection", "records_review", "sensor_accepted", "unspecified", "unsure"},
                   "farm_naming": {"named_with_threshold", "named", "related_resource", "not_named", "unsure"}},
         "may_be_empty": {"how_checked", "farm_naming"},
-        "must_fill": ["indicator_id", "scheme"],
+        "must_fill": ["indicator_id", "scheme", "requirement_status", "reasoning"],
         "key": ["indicator_id", "scheme"],
     },
 }
@@ -152,6 +160,12 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
             problems.setdefault("indicators.csv", f"line {number}: listed_by is {r['listed_by']}, the sources give {expected}")
         elif r["efsa_measure"].strip() and r["measure_type"] != "animal_based":
             problems.setdefault("indicators.csv", f"line {number}: an EFSA measure is animal_based by definition")
+        elif r["efsa_measure"].strip() and not (r["efsa_sensitivity"] and r["efsa_specificity"]
+                                                and r["efsa_feasibility"] and r["efsa_ratings_quoted"].strip()):
+            problems.setdefault("indicators.csv", f"line {number}: an EFSA row needs its three EFSA ratings and their quotes")
+        elif not r["efsa_measure"].strip() and (r["efsa_sensitivity"] or r["efsa_specificity"]
+                                                or r["efsa_feasibility"] or r["efsa_ratings_quoted"].strip()):
+            problems.setdefault("indicators.csv", f"line {number}: EFSA ratings are only filled on EFSA rows")
 
     for number, r in tables["products.csv"]:
         if r["in_stygar_list"] == "yes" and r["appendix_name"] not in stygar_names:
@@ -194,24 +208,31 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
     for number, r in tables["crosswalk.csv"]:
         problem = None
         quoted = bool(r["requirement_quote"].strip())
+        status = r["requirement_status"]
+        scheme_question = any(r["indicator_id"] in line and r["scheme"] in line for line in open_questions.splitlines())
         if r["indicator_id"] not in indicators:
             problem = f"{r['indicator_id']} is not in indicators.csv"
-        elif quoted and not r["how_checked"]:
-            problem = "a quoted requirement needs how_checked"
-        elif not quoted and r["how_checked"]:
-            problem = "how_checked is filled but no requirement is quoted"
-        elif quoted and not (r["section"].strip() and r["page"].strip()):
-            problem = "a quoted requirement needs section and page"
+        elif status in ("required", "unsure") and not (quoted and r["section"].strip() and r["page"].strip()):
+            problem = f"a {status} row needs the quoted requirement with its section and page"
+        elif status == "required" and not r["how_checked"]:
+            problem = "a required row needs how_checked"
+        elif status == "not_required" and (quoted or r["section"].strip() or r["page"].strip()
+                                           or r["number_in_requirement"].strip() or r["how_checked"]):
+            problem = "a not_required row quotes nothing and has no section, page, number or how_checked"
+        elif status == "unsure" and not scheme_question:
+            problem = "an unsure row needs a line in open_questions.md naming the indicator and the scheme"
+        elif r["scheme"] == "FARM_v5" and status == "required" and r["farm_naming"] not in ("named", "named_with_threshold"):
+            problem = "a required FARM row is named or named_with_threshold"
+        elif r["scheme"] == "FARM_v5" and status == "unsure" and r["farm_naming"] != "unsure":
+            problem = "an unsure FARM row has farm_naming unsure"
+        elif r["scheme"] == "FARM_v5" and status == "not_required" and r["farm_naming"] not in ("related_resource", "not_named"):
+            problem = "a not_required FARM row is related_resource or not_named"
         elif r["farm_naming"] and r["scheme"] != "FARM_v5":
             problem = "farm_naming is only filled on FARM_v5 rows"
         elif r["scheme"] == "FARM_v5" and not r["farm_naming"]:
             problem = "farm_naming must be filled on every FARM_v5 row"
-        elif r["scheme"] == "FARM_v5" and quoted and r["farm_naming"] not in ("named", "named_with_threshold", "unsure"):
-            problem = "a FARM requirement is quoted, so farm_naming must be named or named_with_threshold"
-        elif r["scheme"] == "FARM_v5" and not quoted and r["farm_naming"] in ("named", "named_with_threshold"):
-            problem = "farm_naming says named, but no FARM requirement is quoted"
-        elif "unsure" in (r["how_checked"], r["farm_naming"]) and not re.search(rf"\b{r['indicator_id']}\b", open_questions):
-            problem = "a cell is unsure, but there is no line for it in open_questions.md"
+        elif r["how_checked"] == "unsure" and not scheme_question:
+            problem = "how_checked is unsure, but open_questions.md has no line naming the indicator and the scheme"
         elif r["farm_naming"] == "named_with_threshold" and not r["number_in_requirement"].strip():
             problem = "named_with_threshold needs the number in number_in_requirement"
         if problem:

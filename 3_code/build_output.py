@@ -98,6 +98,8 @@ HOW_CHECKED_LABEL = {
 MANUAL = ("visual_inspection", "records_review")
 MEASURE_TYPE_LABEL = {"animal_based": "Observed or recorded on the animal", "resource_based": "About the housing or equipment",
                       "management_based": "About farm management", "none": "No measure defined"}
+EFSA_LABEL = {"high": "High", "medium": "Medium", "low": "Low", "mixed": "Mixed (EFSA gives two levels)",
+              "not_stated": "Not stated by EFSA"}
 LISTED_BY_LABEL = {"joined": "EFSA and Welfare Quality", "efsa_only": "EFSA only", "wq_only": "Welfare Quality only"}
 NOT_YET = "Not yet checked"
 
@@ -136,7 +138,8 @@ def compute():
         s = sensors.get(iid)
         rows = schemes.get(iid, {})
         schemes_done = all(k in rows for k in SCHEMES)
-        required = [k for k in SCHEMES if rows.get(k, {}).get("requirement_quote", "").strip()]
+        required = [k for k in SCHEMES if rows.get(k, {}).get("requirement_status") == "required"]
+        undecided = [k for k in SCHEMES if rows.get(k, {}).get("requirement_status") == "unsure"]
         grade = s["sensor_evidence"] if s else ""
         vendors = int(s["vendors_naming_it"]) if s else 0
         farm = rows.get("FARM_v5", {}).get("farm_naming", "") or ("not_named" if "FARM_v5" in rows else "")
@@ -152,6 +155,8 @@ def compute():
             list1 = "Unclear: sensor evidence unsure (see open questions)"
         elif grade not in ("validated_commercial", "commercial_unvalidated"):
             list1 = "No"
+        elif undecided:
+            list1 = "Unclear: whether " + ", ".join(SCHEME_NAMES[k] for k in undecided) + " requires it (see open questions)"
         elif not schemes_done:
             list1 = "Not yet known: schemes not yet checked"
         else:
@@ -163,6 +168,8 @@ def compute():
             list2 = "Yes: " + ", ".join(SCHEME_NAMES[k] for k in manual)
         elif unclear:
             list2 = "Unclear: how " + ", ".join(SCHEME_NAMES[k] for k in unclear) + " checks it (see open questions)"
+        elif undecided:
+            list2 = "Unclear: whether " + ", ".join(SCHEME_NAMES[k] for k in undecided) + " requires it (see open questions)"
         elif not schemes_done:
             list2 = "Not yet known: schemes not yet checked"
         else:
@@ -185,9 +192,14 @@ def compute():
             "schemes_n_shown": (len(required) if schemes_done else
                                 f"At least {len(required)} ({len(rows)} of 4 read)" if rows else NOT_YET),
             "schemes_seen": len(rows),
-            "schemes_how": ("; ".join(f"{SCHEME_NAMES[k]}: {HOW_CHECKED_LABEL[rows[k]['how_checked']]}" for k in required)
-                            if required else "No scheme requires it (4 of 4 read)" if schemes_done
-                            else f"No scheme read so far requires it ({len(rows)} of 4 read)" if rows else NOT_YET),
+            "schemes_how": (("; ".join(f"{SCHEME_NAMES[k]}: {HOW_CHECKED_LABEL[rows[k]['how_checked']]}" for k in required)
+                             if required else "No scheme requires it (4 of 4 read)" if schemes_done
+                             else f"No scheme read so far requires it ({len(rows)} of 4 read)" if rows else NOT_YET)
+                            + ("; unclear whether " + ", ".join(SCHEME_NAMES[k] for k in undecided) + " requires it"
+                               if undecided else "")),
+            "efsa_sens": EFSA_LABEL.get(ind["efsa_sensitivity"], ""),
+            "efsa_spec": EFSA_LABEL.get(ind["efsa_specificity"], ""),
+            "efsa_feas": EFSA_LABEL.get(ind["efsa_feasibility"], ""),
             "list1": list1, "list2": list2,
             "score": sum(points), "parts": " + ".join(str(p) for p in points), "status": status,
             "where": s["where_to_check"] if s else "", "reasoning": s["reasoning"] if s else "",
@@ -216,9 +228,13 @@ def compute():
             r = rows.get(k)
             if r is None:
                 line["per_scheme"].append((NOT_YET, "", ""))
-            elif r["requirement_quote"].strip():
-                where = f"{r['section']}, page {r['page']}"
+            elif r["requirement_status"] == "required":
+                where = f"{r['section']}, {r['page']}"
                 line["per_scheme"].append(("Required", HOW_CHECKED_LABEL[r["how_checked"]], f"\"{r['requirement_quote']}\" ({where})"))
+            elif r["requirement_status"] == "unsure":
+                where = f"{r['section']}, {r['page']}"
+                line["per_scheme"].append(("Unclear", HOW_CHECKED_LABEL.get(r["how_checked"], ""),
+                                           f"Candidate: \"{r['requirement_quote']}\" ({where}). {r['reasoning']}"))
             else:
                 line["per_scheme"].append(("Not required", "", r["reasoning"]))
         scheme_rows.append(line)
@@ -313,6 +329,13 @@ def write(d, path=OUTPUT):
         ("Vendors naming it", "How many of the 129 products in the Stygar list contain one of the indicator's search "
          "words in their own description. A count of claims, not of proof. 'Tested products' is a separate column: a "
          "product can be tested without its description naming the measure, and the reverse."),
+        ("EFSA's ratings", "For indicators that come from EFSA, how EFSA's own assessment table rates the measure: "
+         "sensitivity (does it catch the animals that have the problem), specificity (does it avoid flagging animals that "
+         "do not) and feasibility on farm. The words are EFSA's; 2_research/indicators.csv quotes the passage. Blank for "
+         "Welfare Quality only indicators, which EFSA does not rate."),
+        ("Schemes: 'Unclear'", "A scheme has a requirement that may name the indicator, but the written rules do not "
+         "settle whether it does. It is not counted as required, and it makes Kevin's lists Unclear for that indicator "
+         "(see 2_research/open_questions.md)."),
         ("Sensors x products: 'validated'", "A published study tested this product for this measure (Stygar 2021, Tables 1 and 2)."),
         ("Sensors x products: 'named'", "The vendor's own description contains one of the indicator's search words. Not tested."),
         ("Ease of adoption score", "0 to 15, five factors of 0 to 3 added together (2_research/rules.md, section 5). "
@@ -349,6 +372,8 @@ def write(d, path=OUTPUT):
     columns = [
         ("Rank", 6, "rank"), ("ID", 7, "id"), ("Welfare indicator", 34, "name"), ("Listed by", 16, "listed_by"),
         ("Welfare Quality name, if different", 22, "wq_name"), ("What is measured", 16, "measure_type"),
+        ("EFSA's rating: sensitivity", 11, "efsa_sens"), ("EFSA's rating: specificity", 11, "efsa_spec"),
+        ("EFSA's rating: feasibility on farm", 11, "efsa_feas"),
         ("(a) Can a sensor measure it?", 34, "sensor"), ("Tested products", 30, "validated"),
         ("What was tested, and how well (Stygar 2021, Table 2)", 34, "tested_how"),
         ("Products whose description names it (of 129)", 14, "vendors"),
