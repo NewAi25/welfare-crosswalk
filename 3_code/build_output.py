@@ -315,9 +315,10 @@ def write(d, path=OUTPUT):
          "sort by any of them. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
          "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
-        ("Status", "Work in progress. Rows whose Row status is 'Not yet checked' have no row in 2_research/sensor_coverage.csv yet, so "
-         "no sensor evidence grade (their Maroto Molina rating is coded in 2_research/indicators.csv); their score is not "
-         "meaningful and the ranking is provisional until every row is complete."),
+        ("Status", "Work in progress. Every indicator has a sensor row and four scheme rows. The sensor grades rest on "
+         "the 2021 baseline (Stygar and colleagues 2021, Maroto Molina and colleagues 2020); the dated pass for later "
+         "studies, from Kevin's change request of 7 October 2026, is still to come, so the ranking is provisional. A row "
+         "whose Row status is 'Not yet checked' would have no row in 2_research/sensor_coverage.csv."),
         ("", ""),
         ("THE ANSWERS SO FAR", ""),
     ] + summary_lines(d) + [

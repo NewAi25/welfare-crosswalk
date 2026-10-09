@@ -220,7 +220,7 @@ One row per product. There are 20: 17 in the Stygar list, which carry Stygar's v
 
 ### sensor_coverage.csv: what sensors measure (column 2 of the crosswalk)
 
-One row per indicator. There are 40 rows so far, I001 to I040. An indicator with no row here has not yet been checked for sensors, and the Excel file shows it as not yet checked.
+One row per indicator. Since 9 October 2026 there are 58 rows, one for each indicator. An indicator with no row here would not yet have been checked for sensors, and the Excel file would show it as not yet checked.
 
 | Column | What it holds | When empty |
 |---|---|---|
@@ -434,7 +434,7 @@ The five factors are scored independently of each other. So one row can earn sen
 
 Tested products and products whose description names it are separate columns. A product can be tested for a measure without its own description naming it, and the reverse. On I012, Track a))) Cow and RumiWatch were tested for lying, but their descriptions do not contain the search words, so they are among the tested products and not among the products that name it.
 
-**Example.** I023, body condition scoring, scores 3 for a validated product, 2 for a farm camera, 2 for three vendors naming it, 3 because FARM names it with a number, and 3 because all four schemes require it: 13 in all. Its sensor and scheme rows are complete. The rank is still provisional, because 18 indicators have no sensor row yet.
+**Example.** I023, body condition scoring, scores 3 for a validated product, 2 for a farm camera, 2 for three vendors naming it, 3 because FARM names it with a number, and 3 because all four schemes require it: 13 in all. Its sensor and scheme rows are complete. Every indicator now has a sensor row and four scheme rows. The rank is still provisional, because the sensor grades rest on the 2021 baseline until the dated pass for later studies is done.
 
 **How to check.** The Answer sheet of the Excel file shows each row's five parts in the order sensor + device + vendors + FARM + schemes, next to the sum.
 
@@ -454,7 +454,7 @@ On 8 October 2026 all four schemes are read for all 58 indicators. The Read me s
 
 Any cell the rules above do not settle is coded unsure. The candidate readings go in the row's reasoning column, and a line in [open_questions.md](open_questions.md) gives the indicator, the factor and the candidates. It is resolved only by tightening the rule that failed, with a dated decision log entry. Otherwise it stays unsure in the published table, and the note says how many rows are unsure per factor. On sensor evidence, device needed and named by FARM, an unsure cell scores 0 points (section 5). A scheme row whose requirement_status is unsure does not count its scheme as requiring the indicator, and it can make Kevin's lists Unclear (section 6). An unsure how_checked cell, which is kept only for a required row whose method the scheme truly leaves open, still counts its scheme as requiring the indicator and can show Unclear on Kevin's list 2 (section 6).
 
-On 8 October 2026, five rows are unsure on sensor evidence (I006, I009, I013, I020 and I039) and none on device needed. In crosswalk.csv, 5 of the 232 scheme rows have requirement_status unsure: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and Certified Humane. No FARM row is unsure, and no row has how_checked unsure.
+On 9 October 2026, seven rows are unsure on sensor evidence (I006, I009, I013, I020, I039, I057 and I058) and three on device needed (I043, I044 and I047). In crosswalk.csv, 5 of the 232 scheme rows have requirement_status unsure: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and Certified Humane. No FARM row is unsure, and no row has how_checked unsure.
 
 ## 8. Change log
 
