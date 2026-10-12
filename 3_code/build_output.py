@@ -327,7 +327,7 @@ def write(d, path=OUTPUT):
     ] + [(f"Sensor: {k}", v) for k, v in SENSOR_LABEL.items()] + [
         ("Device needed", "The cheapest kind of equipment that measures it. Classes, in the order the score ranks them: "
          "nothing extra (3 points), one device per farm (2), one device per animal (1), a sample or a scoring by a "
-         "person (0), or no technology named in the sources (0). 'Nothing extra' can appear where no sensor exists, "
+         "person (0), or no technology named in the sources (0), or unclear when the rules do not settle it (0). 'Nothing extra' can appear where no sensor exists, "
          "because the value is already taken from milk or farm records (2_research/rules.md, rule 4.4)."),
         ("Vendors naming it", "How many of the 129 products in the Stygar list contain one of the indicator's search "
          "words in their own description. A count of claims, not of proof. 'Tested products' is a separate column: a "

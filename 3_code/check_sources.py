@@ -221,7 +221,7 @@ def download(rows):
             continue
         print(f"downloading {r['filename']}")
         try:
-            status, data = fetch(r["url"])
+            _, data = fetch(r["url"])
             if r["zip_member"]:
                 data = zipfile.ZipFile(io.BytesIO(data)).read(r["zip_member"])
         except Exception as e:
@@ -239,13 +239,14 @@ def download(rows):
 def main(argv):
     rows = load_manifest()
     if "--download" in argv:
-        by_hand = download(rows)
+        wanted = set(argv[argv.index("--only") + 1:]) if "--only" in argv else None
+        by_hand = download([r for r in rows if wanted is None or r["filename"] in wanted])
         if by_hand:
             print("\nSave these from a web browser into 1_sources/, under the name given:")
             for r in by_hand:
                 print(f"   {r['filename']:40} {r['url']}")
         print()
-        argv = [a for a in argv if a != "--download"] + ["--local"]
+        argv = ["--local"] + [a for a in argv if a != "--download"]
     if "--only" in argv:
         names = set(argv[argv.index("--only") + 1:])
         rows_to_check = [r for r in rows if r["filename"] in names]
@@ -277,6 +278,7 @@ def main(argv):
         return 0
     network = "--local" not in argv
     failures = 0
+    absent = 0
     listed = {r["filename"] for r in rows} | {"README.md", "manifest.csv"}
     for path in sorted(CORPUS.iterdir()):
         if path.is_file() and path.name not in listed and path.name not in KEVIN_FILES:
@@ -285,8 +287,11 @@ def main(argv):
     for r in rows_to_check:
         verdict, why = check_row(r, network)
         failures += verdict == "FAIL"
+        absent += verdict in ("absent", "missing")
         print(f"{verdict:8} {r['filename']:40} {why}")
     print(f"\n{len(rows_to_check)} entries, {failures} failures")
+    if absent:
+        print(f"{absent} documents are not on this computer yet, so they were not checked")
     return 1 if failures else 0
 
 
