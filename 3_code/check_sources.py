@@ -39,6 +39,17 @@ WARN, not a FAIL: the link is not proven, and must be opened in a browser.
     python 3_code/check_sources.py --local         local check only (hash, or stamped text), no network
     python 3_code/check_sources.py --record        write current local hashes into the manifest
     python 3_code/check_sources.py --only a.pdf b.pdf   restrict to named files
+    python 3_code/check_sources.py --download      download every missing document into 1_sources/,
+                                                   then run the local check
+
+--download fetches each document that is not stored here (in_repository = no) and not
+yet in 1_sources/, saves it under the manifest's file name (taking the named file out of
+a zip where the manifest gives zip_member), and then runs the local check, which proves
+each copy is the document the research read. It never overwrites a file. A site that
+refuses scripted downloads (status browser_only, or a reply that is not the expected
+PDF) is listed with its link, to save from a web browser. Saved web pages (kind text)
+are not downloaded, because a copy saved today cannot match the snapshot; the full
+check without --local confirms their live pages instead.
 
 Standard library only, except pypdf for binary_stamped rows. A file with
 status "missing" in the manifest is reported but does not fail the check. Status
@@ -198,8 +209,43 @@ def check_row(r, network):
     return "ok", "url live and check phrase present"
 
 
+def download(rows):
+    """Fetch every missing document that is not stored here. Returns the links to open by hand."""
+    by_hand = []
+    for r in rows:
+        path = CORPUS / r["filename"]
+        if r["in_repository"] != "no" or path.exists() or r["kind"] == "text":
+            continue
+        if r["status"] == "browser_only":
+            by_hand.append(r)
+            continue
+        print(f"downloading {r['filename']}")
+        try:
+            status, data = fetch(r["url"])
+            if r["zip_member"]:
+                data = zipfile.ZipFile(io.BytesIO(data)).read(r["zip_member"])
+        except Exception as e:
+            print(f"   could not download it: {e}")
+            by_hand.append(r)
+            continue
+        if path.suffix.lower() == ".pdf" and not data.startswith(b"%PDF"):
+            print("   the site did not send a PDF (bot protection or a login page)")
+            by_hand.append(r)
+            continue
+        path.write_bytes(data)
+    return by_hand
+
+
 def main(argv):
     rows = load_manifest()
+    if "--download" in argv:
+        by_hand = download(rows)
+        if by_hand:
+            print("\nSave these from a web browser into 1_sources/, under the name given:")
+            for r in by_hand:
+                print(f"   {r['filename']:40} {r['url']}")
+        print()
+        argv = [a for a in argv if a != "--download"] + ["--local"]
     if "--only" in argv:
         names = set(argv[argv.index("--only") + 1:])
         rows_to_check = [r for r in rows if r["filename"] in names]

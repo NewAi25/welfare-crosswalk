@@ -20,7 +20,13 @@ The Stygar paper is CC BY 4.0. Its spreadsheet has no licence line of its own; i
 
 ## How to get a missing document
 
-Open the link in the last column of the tables below. It is the exact address the original file came from, also given in the `url` column of [`manifest.csv`](manifest.csv). Save the file into this folder under the file name given in the first column. The name matters, because the scripts look for that exact name.
+Open the link in the last column of the tables below. It is the exact address the original file came from, also given in the `url` column of [`manifest.csv`](manifest.csv). Save the file into this folder under the file name given in the first column. The name matters, because the scripts look for that exact name. Or let a script do it for every document at once, from the top folder of the repository:
+
+```
+python 3_code/check_sources.py --download
+```
+
+It saves each missing document under the right name, never overwrites a file, and then proves each copy with its fingerprint. Any site that refuses it is listed with its link, to open in a web browser.
 
 One site, the FARM programme, refuses downloads made by a program. Open its link in an ordinary web browser and save the file from there.
 
@@ -47,9 +53,9 @@ It works out the fingerprint of every file in this folder and compares it with t
 
 Kevin Xia is the mentor of this project in the Sentient Futures incubator. These four files record what was received from him or about him. The item 13 text was pasted from his project list.
 
-The Slack message is copied word for word. It quotes three questions from Manisha's smaller scope analysis of 23 September without marking them as hers. They are the paragraphs that begin "Species:", "Yes or no: FARM v5" and "Yes or no: the four dairy schemes". The paragraph after each is Kevin's answer. The handover of 23 September in the predecessor repository says the analysis asked Kevin for three decisions on Slack ([handover](https://github.com/NewAi25/plf-audit/blob/master/docs/handover_2026-09-23.md), section Next steps). So the recommendation of dairy first, then broilers, was Manisha's, and Kevin agreed, adding laying hens as an option for the second unit.
+The Slack message is copied word for word. It quotes three questions from Manisha's smaller scope analysis of 23 September without marking them as hers. They are the paragraphs that begin "Species:", "Yes or no: FARM v5" and "Yes or no: the four dairy schemes". The paragraph after each is Kevin's answer. The header of the file says the reply answers the handover and the smaller scope analysis sent on 23 September, and Kevin answers each of the three paragraphs in turn. So the recommendation of dairy first, then broilers, was Manisha's, and Kevin agreed, adding laying hens as an option for the second unit.
 
-The call is recorded as the meeting notes that Gemini, an AI note taker, wrote automatically, with survey and calendar links removed. They summarise what was said; they are not Kevin's words. They record Kevin proposing a table of welfare indicators that are measurable by artificial intelligence, acceptable to industry, and covered by certification schemes. Manisha wrote that proposal up in her smaller scope analysis of 23 September. The analysis is not a file in this folder; it can be read in this repository's history at commit 6384465, file docs/PLF_Smaller_Scope_Analysis_2026-09-23.pdf. The phrases "covered by existing sensors" and "covered by existing certification schemes" appear in the Slack reply, where Kevin quotes them. An author's note that had been added to one line of the call file was removed on 3 October 2026, because these files hold only what was received; [`decision_log.md`](../2_research/decision_log.md) records it under that date. The header of the call file points to the author's own account of the call, the handover named above; the predecessor repository is public, so anyone can read it.
+The call is recorded as the meeting notes that Gemini, an AI note taker, wrote automatically, with survey and calendar links removed. They summarise what was said; they are not Kevin's words. They record Kevin proposing a table of welfare indicators that are measurable by artificial intelligence, acceptable to industry, and covered by certification schemes. Manisha wrote that proposal up in her smaller scope analysis of 23 September. The analysis is not stored here. What this project rests on from it is the three questions Kevin quotes and answers in the Slack reply, which is here. The phrases "covered by existing sensors" and "covered by existing certification schemes" appear in the Slack reply, where Kevin quotes them. An author's note that had been added to one line of the call file was removed on 3 October 2026, because these files hold only what was received; [`decision_log.md`](../2_research/decision_log.md) records it under that date.
 
 These files have no row in the manifest, because they are not published documents. What was decided from them is in [`decision_log.md`](../2_research/decision_log.md).
 
@@ -74,7 +80,7 @@ The Stygar spreadsheet comes inside a zip file. Download the zip, open it, and s
 
 ## The certification schemes (column 3)
 
-Column 3 has not been started. These documents are collected and fingerprinted so that the work can begin on fixed versions.
+Column 3 is done: on 8 October 2026 all four schemes were read in full for all 58 indicators ([`decision_log.md`](../2_research/decision_log.md)). The documents were fingerprinted first, so the reading rests on fixed versions.
 
 | Document | What it is | Used for | Licence | Here or link only | Link |
 |---|---|---|---|---|---|
@@ -84,7 +90,7 @@ Column 3 has not been started. These documents are collected and fingerprinted s
 | `gap_dairy_standard.pdf` | Global Animal Partnership, 5-Step Animal Welfare Standards for Dairy Cattle v2.0, issued 1 June 2026 | What Global Animal Partnership requires and how it is checked | All rights reserved (Global Animal Partnership) | Link only | [PDF](https://globalanimalpartnership.org/wp-content/uploads/2026/06/G.A.P.-5-Step-Standards-for-Dairy-Cattle-v2.0_-Website.pdf) |
 | `certified_humane_dairy.pdf` | Humane Farm Animal Care, welfare standards for dairy cattle, Edition 23, the rules behind the Certified Humane label | What Certified Humane requires and how it is checked | All rights reserved (Humane Farm Animal Care) | Link only | [PDF](https://certifiedhumane.org/wp-content/uploads/DAIRY_CATTLE_STANDARDS.pdf) |
 
-How each scheme document will be read is set out in [`rules.md`](../2_research/rules.md), which already quotes the RSPCA and FARM documents in its worked examples.
+How each scheme document was read is set out in [`rules.md`](../2_research/rules.md), rule 4.8, in fourteen reading rules.
 
 ## ICAR validated devices
 

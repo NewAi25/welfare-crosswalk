@@ -49,7 +49,7 @@ The four tables are in 2_research. indicators.csv is column 1, one row per welfa
 
 9. **Check the mechanical gates.** From the repository root, with `PYTHONIOENCODING=utf-8`, run `python 3_code/check_tables.py`, `python 3_code/check_sources.py --local`, `python 3_code/count_vendors.py` and `python 3_code/build_output.py --check`. Each must exit 0. build_output.py --check confirms the Excel file matches the tables; if it fails, the Excel file is out of date and the audit fails. Never run build_output.py without `--check`, and never run check_sources.py with `--record`.
 
-10. **Check scope.** Anything that describes this repository as producing a claims register, a scorecard, a standard, a logger or a certifier annex is WRONG; those belong to the frozen predecessor and are mentioned only as history.
+10. **Check scope.** Anything that describes this repository as producing a claims register, a scorecard, a standard, a logger or a certifier annex is WRONG; those are outside this repository's scope and appear only as history in the decision log. Anything outside the decision log and audit log that depends on, cites or links another repository is WRONG: the repository must stand alone, with outside documents only through manifest.csv.
 
 ## Things that do not count as evidence
 

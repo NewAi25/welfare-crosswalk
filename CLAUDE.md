@@ -6,7 +6,7 @@ Item 13 on Kevin Xia's Top 30 list, for dairy cows ([his text](1_sources/kevin_i
 
 Kevin's steer. The three part question, indicators that are (a) measurable by AI, (b) acceptable to industry and (c) covered by existing sensors or certification schemes, comes from Kevin's proposal on the call of 22 September 2026 ([automated notes](1_sources/kevin_call_2026-09-22.md), written by a meeting tool, not Kevin's words), as written up in Manisha's smaller scope analysis, which Kevin quotes in his Slack reply of 25 September ([his reply](1_sources/kevin_slack_2026-09-25.md)). Item 13 itself has no (a), (b), (c) list. In that reply Kevin calls industry acceptability, "covered by existing sensors" and "covered by existing certification schemes" soft factors that make adoption easier, and says that for industry acceptability the real question is how easily a measure can be implemented, ideally at low or no cost. So the deliverable is a ranked table with every factor visible. Nothing is filtered out.
 
-This repository follows the frozen predecessor github.com/NewAi25/plf-audit, which is public. Sentient Futures incubator, mentor Kevin Xia, author Manisha Sarkar.
+This repository stands alone. Every fact, rule and decision it rests on is in it, and nothing in it may depend on, cite or link another repository; the only outside documents are the sources in manifest.csv, each with a link and a fingerprint. Sentient Futures incubator, mentor Kevin Xia, author Manisha Sarkar.
 
 ## The four folders
 

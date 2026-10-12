@@ -1,6 +1,6 @@
 # Call with Kevin Xia, 22 September 2026
 
-Gemini meeting notes as received, survey and calendar links removed. The author's own account of the call is the handover in the predecessor repository, github.com/NewAi25/plf-audit, docs/handover_2026-09-23.md.
+Gemini meeting notes as received, survey and calendar links removed.
 
 ## Summary
 
