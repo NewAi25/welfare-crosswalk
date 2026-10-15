@@ -1,6 +1,6 @@
 # Rules
 
-Version 0.4.1, 12 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
+Version 0.5, 15 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
 
 ## 1. In one page
 
@@ -215,7 +215,7 @@ One row per product. There are 20: 17 in the Stygar list, which carry Stygar's v
 | in_stygar_list | yes or no. | Never. |
 | validation_found | none, external_self, external_independent or not_listed (section 2). | Never. |
 | icar_validated | yes or no. | Never. |
-| link | The web link from Stygar 2021, not checked again since. | When the product is not in the Stygar list. |
+| link | The web link from Stygar 2021, as they printed it. What it opens today, and the product's current page, are in product_links.csv. | When the product is not in the Stygar list. |
 | notes | Where the row comes from, and the study numbers behind the validation value. | Never. |
 
 ### sensor_coverage.csv: what sensors measure (column 2 of the crosswalk)
@@ -254,6 +254,21 @@ One row per indicator per scheme. An indicator that no scheme requires still get
 | reasoning | On a required row, the other requirements that name the measure and the related ones. On an unsure row, the candidate readings and the rule that failed. On a not_required row, what was searched and the related requirements, with section and page. | Never. |
 
 check_tables.py checks these links: a required or unsure row quotes a requirement with its section and page; a required row has how_checked; a not_required row has no quote, section, page, number or how_checked; an unsure row has a line in open_questions.md naming the indicator and the scheme; and a FARM_v5 row's farm_naming follows its requirement_status as section 2 says.
+
+### product_links.csv: the product links today
+
+One row for each of the 129 products in the Stygar list, in spreadsheet order. It records whether the link the Stygar team printed in 2021 still works, and where the product's page is today ([rule 4.10](#410-product-links-today)). It changes no grade, count or score.
+
+| Column | What it holds | When empty |
+|---|---|---|
+| appendix_row | The product's row in sheet 1 of the Stygar spreadsheet. | Never. |
+| vendor, product, link_2021 | The provider, the name and the link, copied exactly from the Stygar spreadsheet. | Never. |
+| link_2021_today | works, moved, wrong_page or broken (rule 4.10). | Never. |
+| current_link | The page found today (rule 4.10). | When current_link_shows is none_found. |
+| current_link_shows | product_page, related_page, product_not_listed, maker_home_page or none_found (rule 4.10). | Never. |
+| page_says | Words on the current page that name the product, copied exactly as the page has them. | When the page does not name the product. |
+| checked | The date the links were opened, written YYYY-MM-DD. | Never. |
+| notes | What changed, what was searched, or, on a related_page row, what the page names instead. | May be empty when there is nothing to add; never on a related_page row. |
 
 ## 4. The rules
 
@@ -416,6 +431,18 @@ Third, FARM Animal Care v5, page 149: "Severe Lameness: 5% or less of the lactat
 
 **How to check.** Open the EFSA opinion at the table and page named in efsa_ratings_quoted and read the Sensitivity and Specificity line and the Feasibility line for the measure. check_tables.py confirms that the three ratings are filled exactly on the rows that come from EFSA and use only the five values.
 
+### 4.10 Product links today
+
+**Question.** Does the link the Stygar team printed for each product still open a page about that product, and where is the product's page today?
+
+**Rule.** Each of the 129 products in the Stygar list is checked by opening its 2021 link on the date in the checked column. link_2021_today is works when the link opens a live page on the maker's own site, or the site of a company that sells the product under its own name, and that page names the product; moved when it redirects to such a page; wrong_page when it opens a live page that does not name the product, a dealer's or other third party page, a parked domain or an unrelated site; and broken when it gives an error page, a dead domain or no answer. Where the link does not work, the maker's current page is searched for, with at most three searches per product. A page is accepted only on the maker's own site, or the site of a company that sells the product under its own name, never a reseller's page, a news story, a file on a third party site or an archive copy. A new name counts as the same product only where the maker's page says so. current_link_shows is product_page when the page names the product, by Stygar's name, a spelling of it, or a new name the maker's page says replaces it; related_page when a maker's page names the product family, a close variant or a likely successor but not this exact product, and the notes say what it names; product_not_listed when a live maker page is found but the product is not on it; maker_home_page when only the maker's live home page is found; and none_found when no live maker site is found, so current_link is empty. A link that loads for a person in a web browser but refuses scripts counts as live.
+
+This table records the web as it stood on the date checked. It is not a source for any grade, count or score, which all read the Stygar list as published.
+
+**Example.** Row 2, the WellCow bolus. Stygar printed a link to the design firm i4 Product Design; on 15 October 2026 it redirected to an error page, so it is broken. The product is not on the firm's site today, so the row gives the firm's home page as maker_home_page and says so in notes.
+
+**How to check.** Open link_2021 and current_link and compare what they show with the two codes, then find page_says on the current page.
+
 ## 5. The score
 
 Each factor is turned into 0 to 3 points as follows, and the five are added to a score from 0 to 15.
@@ -475,3 +502,4 @@ The rows before 0.2.1 use the file and column names of their day. definitions.md
 | 2026-10-03 | 0.3.2 | Change of meaning, narrower hold back on list 1 (section 6): an indicator is No as soon as one scheme is read and requires it, whatever its sensor evidence, since its count of requiring schemes can then never be 0; before, a list 1 row graded Tested or Claimed waited for all four schemes, an unsure row showed Unclear and a row not yet graded showed Not yet checked, whatever the schemes said. Yes still waits for all four schemes. The Not yet known glossary entry and the crosswalk.csv note were brought in line. | Third and fourth confirmation audits, 3 October 2026; decision_log.md entries of 3 October 2026 on Kevin's files, on the fourth confirmation audit and on the fifth confirmation audit |
 | 2026-10-08 | 0.4 | Changes of meaning, for reading the certification schemes. crosswalk.csv gains the column requirement_status (required, unsure, not_required) after scheme, and only required counts toward the schemes requiring an indicator; section 3 describes the column and what an empty cell means, and says the table now has all 232 rows. Rules 4.7 and 4.8 now carry the fourteen reading rules approved by Manisha Sarkar on 8 October 2026, each with an example from crosswalk.csv; the three worked examples are kept. how_checked unsure is kept only for a required row whose method the scheme truly leaves open, no longer for naming that is unsettled, and visual_inspection covers observing a resource or equipment. farm_naming follows requirement_status (rule 4.6). Section 6 says a scheme row coded unsure makes Kevin's lists Unclear where it could change the answer. indicators.csv gains efsa_sensitivity, efsa_specificity, efsa_feasibility and efsa_ratings_quoted, with the new rule 4.9 for EFSA's own ratings (high, medium, low, mixed, not_stated) and section 3 rows for the four columns. Section 2 gains glossary rows for sensitivity, specificity and feasibility and code tables for requirement_status and the EFSA ratings. The section 5 example, section 7 and the Not yet known and Unclear entries are brought up to date with the read schemes | Four readers found 41 of the 232 scheme rows unsure under rules 0.3.2, almost all from situations those rules did not cover; Kevin's change request of 7 October asked for EFSA's ratings; decision_log.md, entries of 7 October 2026 and 8 October 2026 |
 | 2026-10-12 | 0.4.1 | Wording only, no change of meaning. The opening line and the notes on indicators.csv and products.csv no longer point to another repository; the products.csv note says where its 17 Stygar products came from and that no grade or count depends on them; the Provisional rank entry and the counts in sections 3, 5 and 7 are brought up to date for the sensor rows of 9 October | Manisha asked that the repository stand alone; decision_log.md, 12 October 2026 |
+| 2026-10-15 | 0.5 | New table product_links.csv (section 3) and rule 4.10: the 129 links Stygar printed in 2021 are checked again and the products' current pages recorded. No grade, count or score changes | Manisha found a Stygar product link that no longer works and asked for every link to be checked; decision_log.md, 15 October 2026 |

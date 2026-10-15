@@ -1,7 +1,7 @@
 """BUILD OUTPUT: turn the research tables into the one Excel file that answers the question.
 
 In plain words
-    The research is recorded in four tables in 2_research/. This script reads them,
+    The research is recorded in five tables in 2_research/. This script reads them,
     adds up the ease of adoption score exactly as 2_research/rules.md says, and writes
     4_output/welfare_crosswalk_dairy.xlsx. Nothing in the Excel file is edited by hand:
     every value comes from the tables, the manifest or the Stygar product list, and the
@@ -98,6 +98,11 @@ HOW_CHECKED_LABEL = {
 MANUAL = ("visual_inspection", "records_review")
 MEASURE_TYPE_LABEL = {"animal_based": "Observed or recorded on the animal", "resource_based": "About the housing or equipment",
                       "management_based": "About farm management", "none": "No measure defined"}
+LINK_TODAY_LABEL = {"works": "Works", "moved": "Moved, still works", "wrong_page": "Wrong page",
+                    "broken": "Broken"}
+LINK_SHOWS_LABEL = {"product_page": "The product's page", "related_page": "A related page (see note)",
+                    "product_not_listed": "Maker's site, product not on it", "maker_home_page": "Maker's home page only",
+                    "none_found": "No maker site found"}
 EFSA_LABEL = {"high": "High", "medium": "Medium", "low": "Low", "mixed": "Mixed (EFSA gives two levels)",
               "not_stated": "Not stated by EFSA"}
 LISTED_BY_LABEL = {"joined": "EFSA and Welfare Quality", "efsa_only": "EFSA only", "wq_only": "Welfare Quality only"}
@@ -131,6 +136,7 @@ def compute():
         schemes.setdefault(r["indicator_id"], {})[r["scheme"]] = r
     products = count_vendors.appendix_products()
     profiled = {r["appendix_name"]: r["product_id"] for r in read("products.csv") if r["appendix_name"]}
+    links = {int(r["appendix_row"]): r for r in read("product_links.csv")}
 
     answer = []
     for ind in indicators:
@@ -242,7 +248,7 @@ def compute():
     with (ROOT / "1_sources" / "manifest.csv").open(newline="", encoding="utf-8") as f:
         sources = list(csv.DictReader(f))
     return {"indicators": indicators, "answer": answer, "matrix": matrix, "schemes": scheme_rows,
-            "products": products, "profiled": profiled, "sources": sources, "sensors": sensors}
+            "products": products, "profiled": profiled, "sources": sources, "sensors": sensors, "links": links}
 
 
 def summary_lines(d):
@@ -343,6 +349,12 @@ def write(d, path=OUTPUT):
          "(see 2_research/rules.md, section 6, and 2_research/open_questions.md)."),
         ("Sensors x products: 'validated'", "A published study tested this product for this measure (Stygar 2021, Tables 1 and 2)."),
         ("Sensors x products: 'named'", "The vendor's own description contains one of the indicator's search words. Not tested."),
+        ("Product list: links", "Link (2021) is the link the Stygar team printed in their spreadsheet. On the date in "
+         "Checked, each was opened again. Works or Moved: it still opens a page that names the product. Wrong page: it "
+         "opens a page that does not, such as a dealer's page, a parked domain or an unrelated site. Broken: an error "
+         "or no answer. Link today is the maker's current page for the product where one was found, otherwise the "
+         "nearest live maker page, as the next column says. 2_research/product_links.csv holds the same, with the rule "
+         "in 2_research/rules.md, rule 4.10. The links change no grade, count or score."),
         ("Ease of adoption score", "0 to 15, five factors of 0 to 3 added together (2_research/rules.md, section 5). "
          "Ties are sorted by indicator id. "
          "A sort order, not a welfare judgement. Score parts are shown in the order: sensor + device + vendors + FARM + schemes."),
@@ -456,14 +468,19 @@ def write(d, path=OUTPUT):
     ws = wb.create_sheet("Product list")
     head = [("Spreadsheet row", 8), ("Product", 30), ("Company", 22), ("Sensor type", 24),
             ("What the vendor says it does (Stygar list, column AIM)", 60), ("Country", 12),
-            ("Validation study found by Stygar", 12), ("Profiled in products.csv", 10), ("Link (2021)", 40)]
+            ("Validation study found by Stygar", 12), ("Profiled in products.csv", 10), ("Link (2021)", 40),
+            ("The 2021 link today", 14), ("Link today", 40), ("What the link today shows", 18),
+            ("What that page says", 36), ("Checked", 11), ("Note on the link", 40)]
     for c, (title, width) in enumerate(head, start=1):
         cell = ws.cell(row=1, column=c, value=title)
         cell.font, cell.fill, cell.alignment = HEAD, HEAD_FILL, WRAP
         ws.column_dimensions[get_column_letter(c)].width = width
     for row, p in enumerate(d["products"], start=2):
+        k = d["links"].get(p["row"], {})
         values = [p["row"], p["name"], p["provider"], p["sensor_type"], p["aim"], p["country"], p["has_study"],
-                  d["profiled"].get(p["name"], ""), p["link"]]
+                  d["profiled"].get(p["name"], ""), p["link"], LINK_TODAY_LABEL.get(k.get("link_2021_today"), ""),
+                  k.get("current_link", ""), LINK_SHOWS_LABEL.get(k.get("current_link_shows"), ""),
+                  k.get("page_says", ""), k.get("checked", ""), k.get("notes", "")]
         for c, v in enumerate(values, start=1):
             ws.cell(row=row, column=c, value=v).alignment = WRAP
     ws.freeze_panes = "C2"

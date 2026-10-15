@@ -143,7 +143,7 @@ There are three layers.
 
 Under these sit four mechanical checks, small programs in [3_code](../3_code) that anyone can run. They check that the files are consistent; they cannot tell whether a value is true, which is the job of the auditor and of the reader with the page open.
 
-1. [check_tables.py](../3_code/check_tables.py) checks that the four tables have the right columns, use only the allowed labels, have no duplicate or unknown identifiers, and follow the rules that a machine can test. For example, a validated row must name its products and study numbers, and every unsure cell must have a line in open_questions.md.
+1. [check_tables.py](../3_code/check_tables.py) checks that the five tables have the right columns, use only the allowed labels, have no duplicate or unknown identifiers, and follow the rules that a machine can test. For example, a validated row must name its products and study numbers, and every unsure cell must have a line in open_questions.md.
 2. [count_vendors.py](../3_code/count_vendors.py) counts again, from the Stygar spreadsheet, how many vendors name each indicator, and compares the count with the table. It changes nothing unless asked to.
 3. [check_sources.py](../3_code/check_sources.py) proves the documents are the ones the research read. Each document in [manifest.csv](../1_sources/manifest.csv) has a fingerprint, a long code computed from the file's exact contents that changes completely if one character changes. With `--local` it recomputes the fingerprints on your copy; without it, it also fetches each link and compares.
 4. [build_output.py](../3_code/build_output.py) with `--check` confirms that the Excel file still matches the tables.

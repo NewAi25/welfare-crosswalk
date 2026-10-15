@@ -22,6 +22,8 @@ Which signs of dairy cow welfare can a machine already measure on farms, and whi
 
 **How to check one row yourself, with no code.** Pick a row in the Answer sheet. Its last columns name a document and a page. Open that document at that page and find the sentence the row relies on. Then read the rule the row names in [rules.md](2_research/rules.md) and ask whether the label in the row follows from that sentence. If it does not, that is an error, and it should be reported.
 
+**Product links.** The Product list sheet gives, for each of the 129 products, the link the Stygar team printed in 2021 and what it opens today. When the links were checked on 15 October 2026, 40 still opened a page naming the product (20 directly and 20 after a redirect), 32 opened the wrong page, such as a dealer's page, a parked domain or an unrelated site, and 57 were broken. Where the old link fails, the sheet gives the maker's current page if one was found. [2_research/product_links.csv](2_research/product_links.csv) holds the same, and [4_output/found_along_the_way.md](4_output/found_along_the_way.md) describes what the check found, with other places where the sources disagree.
+
 **Everything is in this repository.** Every fact, rule and decision this work rests on is written down here, with the date it was made. No other repository, notes or person is needed to check it. The only things not stored here are 13 published documents that cannot be copied into a public repository, because of their owners' terms or, for one paper, a download stamp that identifies whoever downloaded it. Each has a link and a fingerprint, a code that proves a downloaded copy is the exact document the research read. For three of them a fresh copy cannot match byte for byte; [1_sources/README.md](1_sources/README.md) says how each of those is checked instead.
 
 **Running the checks again.** This needs Python on the computer. From the top folder of the repository, run these four commands in order. The first installs two helper libraries; the second downloads every document it can, proves each copy, and lists any to save from a web browser; the last two check the tables and confirm the Excel file matches them.
@@ -103,9 +105,9 @@ Every value can be checked in one of three ways: read the page the row names, ap
 ## The four folders
 
 - [1_sources](1_sources): the documents, their links and fingerprints, and what Kevin sent, as received.
-- [2_research](2_research): the rules, the four tables, the decision log and the audit log.
+- [2_research](2_research): the rules, the five tables, the decision log and the audit log.
 - [3_code](3_code): the scripts, each with a plain explanation at the top.
-- [4_output](4_output): the Excel answer.
+- [4_output](4_output): the Excel answer, and [found_along_the_way.md](4_output/found_along_the_way.md), the places where the source documents disagree with themselves, with each other or with the web today.
 
 ## Status, credits and licence
 

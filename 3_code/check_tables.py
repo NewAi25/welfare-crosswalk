@@ -1,7 +1,7 @@
-"""CHECK TABLES: the mechanical checks on the four research tables in 2_research/.
+"""CHECK TABLES: the mechanical checks on the five research tables in 2_research/.
 
 In plain words
-    The research lives in four spreadsheet files (CSV). This script checks that they are
+    The research lives in five spreadsheet files (CSV). This script checks that they are
     well formed and agree with each other. It does not check that a value is TRUE; that
     is the job of the auditor and of a person reading the source page. It checks that
     nothing is missing, misspelled, duplicated or out of date.
@@ -26,7 +26,10 @@ What it checks
        quotes: a required row quotes the requirement with section, page and how it is checked;
        an unsure row quotes its candidate and has a line in open_questions.md naming the
        indicator and the scheme; a not_required row quotes nothing;
-       EFSA's three ratings are filled exactly on the rows that come from EFSA.
+       EFSA's three ratings are filled exactly on the rows that come from EFSA;
+       product_links.csv has one row for each of the 129 products in the Stygar list, with
+       the maker, name and 2021 link copied exactly, and a current link exactly where one
+       was found.
 
 How to run it
     python 3_code/check_tables.py
@@ -90,6 +93,17 @@ SCHEMAS = {
         "may_be_empty": {"how_checked", "farm_naming"},
         "must_fill": ["indicator_id", "scheme", "requirement_status", "reasoning"],
         "key": ["indicator_id", "scheme"],
+    },
+    "product_links.csv": {
+        "columns": ["appendix_row", "vendor", "product", "link_2021", "link_2021_today", "current_link",
+                    "current_link_shows", "page_says", "checked", "notes"],
+        "codes": {"link_2021_today": {"works", "moved", "wrong_page", "broken"},
+                  "current_link_shows": {"product_page", "related_page", "product_not_listed", "maker_home_page",
+                                         "none_found"}},
+        "must_fill": ["appendix_row", "vendor", "product", "link_2021", "link_2021_today", "current_link_shows",
+                      "checked"],
+        "whole_numbers": ["appendix_row"],
+        "key": ["appendix_row"],
     },
 }
 
@@ -237,6 +251,29 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
             problem = "named_with_threshold needs the number in number_in_requirement"
         if problem:
             problems.setdefault("crosswalk.csv", f"line {number}: {problem}")
+    stygar_rows = {p["row"]: p for p in stygar}
+    links = tables["product_links.csv"]
+    if sorted(int(r["appendix_row"]) for _, r in links) != sorted(stygar_rows):
+        problems.setdefault("product_links.csv", "the rows are not exactly the 129 products of the Stygar list")
+    for number, r in links:
+        p = stygar_rows.get(int(r["appendix_row"]))
+        if p is None:
+            continue
+        problem = None
+        if (r["vendor"], r["product"], r["link_2021"]) != (p["provider"], p["name"], p["link"]):
+            problem = "vendor, product or link_2021 differs from the Stygar list"
+        elif (r["current_link_shows"] == "none_found") != (not r["current_link"].strip()):
+            problem = "current_link must be empty exactly when current_link_shows is none_found"
+        elif r["current_link"].strip() and not r["current_link"].startswith("http"):
+            problem = "current_link is not a web address"
+        elif r["current_link_shows"] in ("product_page", "related_page") and not r["page_says"].strip():
+            problem = "a product_page or related_page row must quote what the page says in page_says"
+        elif r["current_link_shows"] == "related_page" and not r["notes"].strip():
+            problem = "a related_page row must say in notes what the page names instead"
+        elif not re.fullmatch(r"\d{4}-\d{2}-\d{2}", r["checked"]):
+            problem = "checked must be a date written YYYY-MM-DD"
+        if problem:
+            problems.setdefault("product_links.csv", f"line {number}: {problem}")
     return problems
 
 

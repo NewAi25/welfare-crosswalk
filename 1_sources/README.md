@@ -76,7 +76,7 @@ The EFSA copy is the published PDF, downloaded from Wiley Online Library and re-
 | [`stygar_2021_supplementary.xlsx`](stygar_2021_supplementary.xlsx) | The spreadsheet published with Stygar 2021: the 129 products and the validation studies | The product list, [`products.csv`](../2_research/products.csv), and the count of products naming each indicator, which [`count_vendors.py`](../3_code/count_vendors.py) recomputes | CC BY 4.0, from the article | Here | [Europe PMC zip](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8044875/supplementaryFiles), file `Data_Sheet_1.xlsx` inside it |
 | `maroto_molina_2020.pdf` | Maroto Molina et al. 2020, *Welfare Quality for dairy cows: towards a sensor-based assessment* | Which technology could measure each Welfare Quality measure, and the evidence for indicators no product measures | CC BY 4.0 | Link only | [PDF](https://www.cambridge.org/core/services/aop-cambridge-core/content/view/77A030621073F6601CC76F8A66487FAD/S002202992000045Xa.pdf/welfare_quality_for_dairy_cows_towards_a_sensorbased_assessment.pdf) |
 
-The Stygar spreadsheet comes inside a zip file. Download the zip, open it, and save the file `Data_Sheet_1.xlsx` under the name `stygar_2021_supplementary.xlsx`.
+The Stygar spreadsheet comes inside a zip file. Download the zip, open it, and save the file `Data_Sheet_1.xlsx` under the name `stygar_2021_supplementary.xlsx`. The publisher, Frontiers, also offers the same file directly, under Supplementary material at the foot of the [article page](https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2021.634338/full#supplementary-material); on 15 October 2026 its fingerprint matched the copy here.
 
 ## The certification schemes (column 3)
 

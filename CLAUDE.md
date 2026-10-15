@@ -11,9 +11,9 @@ This repository stands alone. Every fact, rule and decision it rests on is in it
 ## The four folders
 
 1. [1_sources](1_sources): the source documents, [manifest.csv](1_sources/manifest.csv) with a link and a fingerprint (SHA256 hash) for each, and the kevin_*.md files that hold what was received from Kevin: his item 13 text, his Slack reply (which quotes three of Manisha's questions), the automated notes of the call of 22 September and his change request of 7 October 2026. Call transcripts are never stored. Of the source documents, only the Stygar paper and its spreadsheet (stygar_2021.pdf, stygar_2021_supplementary.xlsx, CC BY 4.0) are committed, with the README, the manifest and the kevin_*.md files. Every other source stays on disk and is never committed, including the open licence Maroto Molina paper (each download is stamped with the date, the time and the downloader's IP address) and the EFSA opinion (six of its figures belong to third parties and are outside its licence); .gitignore keeps them out.
-2. [2_research](2_research): [rules.md](2_research/rules.md) (how every column is filled and scored), the four tables (indicators.csv, products.csv, sensor_coverage.csv, crosswalk.csv), [decision_log.md](2_research/decision_log.md), [audit_log.md](2_research/audit_log.md) and [open_questions.md](2_research/open_questions.md).
+2. [2_research](2_research): [rules.md](2_research/rules.md) (how every column is filled and scored), the five tables (indicators.csv, products.csv, sensor_coverage.csv, crosswalk.csv, product_links.csv), [decision_log.md](2_research/decision_log.md), [audit_log.md](2_research/audit_log.md) and [open_questions.md](2_research/open_questions.md).
 3. [3_code](3_code): check_tables.py, count_vendors.py, check_sources.py, build_output.py and the push gate hooks/pre-push. Each script explains itself at the top; read that before running it.
-4. [4_output](4_output): the Excel answer.
+4. [4_output](4_output): the Excel answer, and found_along_the_way.md, which records every place a source document was found to disagree with itself, another source or the web. Add to it whenever such a thing is found.
 
 ## Deliverables
 

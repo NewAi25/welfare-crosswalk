@@ -281,7 +281,8 @@ def main(argv):
     absent = 0
     listed = {r["filename"] for r in rows} | {"README.md", "manifest.csv"}
     for path in sorted(CORPUS.iterdir()):
-        if path.is_file() and path.name not in listed and path.name not in KEVIN_FILES:
+        # "~$" files are lock files Office makes while a document is open; they are not sources.
+        if path.is_file() and path.name not in listed and path.name not in KEVIN_FILES and not path.name.startswith("~$"):
             failures += 1
             print(f"{'FAIL':8} {path.name:40} in 1_sources but not in the manifest")
     for r in rows_to_check:
