@@ -53,7 +53,8 @@ Each indicator gets one of five labels for sensor evidence (rules.md, rule 4.2):
 |---|---|
 | validated_commercial | A product in Stygar's list measures it, and Stygar record at least one external validation study of that product on that trait. |
 | commercial_unvalidated | A product's description names it, and no external study is recorded. |
-| research_only | No product, but Maroto Molina name research level technology or a substitute measure. |
+| research_demonstrated | No product states the measure, and the sensor sources say a study they cite measured this indicator's own measure in cattle. |
+| theoretically_measurable | No product states the measure, and the sources only propose a technology, report it shown only in another species or setting, or offer only a substitute measure. |
 | none | No product, and Maroto Molina say sensors cannot provide it or do not discuss it. |
 | unsure | The sources do not settle it. The possible readings go in the row and in open_questions.md. |
 
@@ -61,11 +62,11 @@ A validation only counts when Stygar's trait and the indicator are the same meas
 
 Two more columns come from the same sources. device_needed is the cheapest kind of equipment that measures the indicator and is on sale: nothing extra because the value is already in milk or farm records (routine_data), one device per farm or barn such as a camera (farm_fixed), one device per animal such as a collar (animal_mounted), a sample or a scoring by a person (sample_or_procedure), no technology named (none), or unsure when the rules do not settle it. vendors_naming_it counts how many of the 129 product descriptions contain the search words written in the row. It counts claims, not proof.
 
-All 58 rows are done; the last 18, I041 and I043 to I059, were added on 9 October 2026. Of the 58, 7 are validated_commercial, 1 is commercial_unvalidated, 24 are research_only, 19 are none and 7 are unsure. For device_needed they split into 12 routine_data, 21 farm_fixed, 9 animal_mounted, 2 sample_or_procedure, 10 none and 4 unsure.
+All 58 rows are done; the last 18, I041 and I043 to I059, were added on 9 October 2026. Of the 58, 7 are validated_commercial, 1 is commercial_unvalidated, 2 are research_demonstrated, 22 are theoretically_measurable, 19 are none and 7 are unsure. The last two grades replaced research_only on 15 October 2026 (decision_log.md). For device_needed they split into 12 routine_data, 21 farm_fixed, 9 animal_mounted, 2 sample_or_procedure, 10 none and 4 unsure.
 
 Why only these two sources? The decision_log entry of 29 September answers this. It was a design choice made when the rules were written, not an instruction from Kevin. Stygar apply a stated standard for validation, every grade can be checked against a page, and the project had a budget of about 25 hours. The cost is that the table shows the market and the research as they stood around 2020. A later product or a later study is invisible, and a grade of none means none in these two papers.
 
-The [literature check of 29 September](literature_check_2026-09-29.md) then asked whether anyone had repeated either paper since. It found no review that repeats Stygar's method, and none that repeats Maroto Molina's measure by measure mapping. It found partial updates, read so far only as abstracts: Lee, Brause, Foy and Cantor 2025 on wearable sensors for behaviour, Hudson and colleagues 2026 on automated lameness detection, Islam and colleagues 2026 on cameras, Fuentes and colleagues 2026 on social behaviour, and Leliveld and Provolo 2020 as a second source for the research_only and none grades. On 30 September Manisha approved an update pass and deferred it (decision_log, 30 September). The order was: finish column 2 on the two sources, then do column 3, then the update pass, before the write up. Kevin's change request of 7 October changed it (decision_log, 7 October): the schemes were read first, and the update pass follows with the rest of the change request. The Stygar grade stays as the 2021 baseline. The update pass adds a separate column, evidence since 2021, with its own sources, and checks every research_only and none row against Leliveld and Provolo. It is estimated at nine to eleven hours and has not started.
+The [literature check of 29 September](literature_check_2026-09-29.md) then asked whether anyone had repeated either paper since. It found no review that repeats Stygar's method, and none that repeats Maroto Molina's measure by measure mapping. It found partial updates, read so far only as abstracts: Lee, Brause, Foy and Cantor 2025 on wearable sensors for behaviour, Hudson and colleagues 2026 on automated lameness detection, Islam and colleagues 2026 on cameras, Fuentes and colleagues 2026 on social behaviour, and Leliveld and Provolo 2020 as a second source for the grades research_only then covered (now research_demonstrated and theoretically_measurable) and for none. On 30 September Manisha approved an update pass and deferred it (decision_log, 30 September). The order was: finish column 2 on the two sources, then do column 3, then the update pass, before the write up. Kevin's change request of 7 October changed it (decision_log, 7 October): the schemes were read first, and the update pass follows with the rest of the change request. The Stygar grade stays as the 2021 baseline. The update pass adds a separate column, evidence since 2021, with its own sources, and checks every research_only and none row against Leliveld and Provolo. It is estimated at nine to eleven hours and has not started.
 
 ### Step 3. Reading the certification schemes
 
@@ -85,7 +86,7 @@ In his Slack reply ([kevin_slack_2026-09-25.md](../1_sources/kevin_slack_2026-09
 
 | Factor | 3 points | 2 points | 1 point | 0 points |
 |---|---|---|---|---|
-| Sensor evidence | validated_commercial | commercial_unvalidated | research_only | none or unsure |
+| Sensor evidence | validated_commercial | commercial_unvalidated | research_demonstrated or theoretically_measurable | none or unsure |
 | Device needed | routine_data | farm_fixed | animal_mounted | anything else |
 | Vendors naming it | 10 or more | 3 to 9 | 1 or 2 | none |
 | Named by FARM | named with a number | named | only a related rule | not named or unsure |

@@ -10,7 +10,7 @@ What it checks
     1. Every file has exactly the expected columns, in order.
     2. Every coded value is one of the allowed codes listed in 2_research/rules.md
        (for example sensor_evidence can only be validated_commercial,
-       commercial_unvalidated, research_only, none or unsure).
+       commercial_unvalidated, research_demonstrated, theoretically_measurable, none or unsure).
     3. No indicator appears twice; every indicator id used anywhere exists in indicators.csv.
     4. Rows obey the rules that can be checked mechanically:
        a product is named whenever the sensor evidence is commercial;
@@ -75,7 +75,8 @@ SCHEMAS = {
         "columns": ["indicator_id", "sensor_evidence", "products", "validated_products", "validated_trait",
                     "study_numbers", "maroto_molina_rating", "device_needed", "vendors_naming_it", "search_words",
                     "where_to_check", "reasoning"],
-        "codes": {"sensor_evidence": {"validated_commercial", "commercial_unvalidated", "research_only", "none", "unsure"},
+        "codes": {"sensor_evidence": {"validated_commercial", "commercial_unvalidated", "research_demonstrated",
+                                    "theoretically_measurable", "none", "unsure"},
                   "device_needed": {"routine_data", "farm_fixed", "animal_mounted", "sample_or_procedure", "none", "unsure"},
                   "maroto_molina_rating": RATINGS},
         "must_fill": ["indicator_id", "sensor_evidence", "device_needed", "vendors_naming_it", "search_words",

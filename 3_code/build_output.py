@@ -18,7 +18,7 @@ The sheets it writes
 
 The score, in plain words (the full rule is in 2_research/rules.md, "The score")
     Five factors, each turned into 0 to 3 points, then added (0 to 15):
-    sensor evidence      validated product 3, product without validation 2, research only 1, otherwise 0
+    sensor evidence      validated product 3, product without validation 2, shown in research or proposed 1, otherwise 0
     device needed        none extra 3, one per farm 2, one per animal 1, otherwise 0
     vendors naming it    10 or more 3, 3 to 9 2, 1 or 2 1, none 0
     named by FARM        with a number 3, named 2, only a related housing rule 1, otherwise 0
@@ -50,7 +50,8 @@ SCHEME_NAMES = {"RSPCA_Assured": "RSPCA Assured (UK)", "FARM_v5": "FARM v5 (US i
 
 # The 0 to 3 points for each factor. These five lines are the only place the ranking is set,
 # and they must match the table "The score" in 2_research/rules.md word for word.
-SENSOR_POINTS = {"validated_commercial": 3, "commercial_unvalidated": 2, "research_only": 1}
+SENSOR_POINTS = {"validated_commercial": 3, "commercial_unvalidated": 2, "research_demonstrated": 1,
+                 "theoretically_measurable": 1}
 DEVICE_POINTS = {"routine_data": 3, "farm_fixed": 2, "animal_mounted": 1}
 FARM_POINTS = {"named_with_threshold": 3, "named": 2, "related_resource": 1}
 
@@ -68,9 +69,11 @@ SENSOR_LABEL = {
     "validated_commercial": "Tested: a product in the Stygar list was tested for this in a published study; "
                             "the Answer sheet column 'What was tested, and how well' says how it did",
     "commercial_unvalidated": "Claimed: a product's own description names it; Stygar 2021 coded no validation study",
-    "research_only": "Research only: no product in the Stygar list claims this measure; researchers propose a "
-                     "method or a substitute measure",
-    "none": "Nothing found: neither sensor source names a product or a method for it",
+    "research_demonstrated": "Shown in research: no product in the Stygar list claims this measure, but a study "
+                             "the sensor sources cite measured it in cattle",
+    "theoretically_measurable": "Proposed only: no product claims it; the sources only propose a method, report one "
+                                "shown in another species or setting, or offer a substitute measure",
+    "none": "Nothing found: neither sensor source names a product or a method for it, as of their dates (2020 and 2021)",
     "unsure": "Unclear: the written rules do not settle it (see open questions)",
 }
 DEVICE_LABEL = {

@@ -1,6 +1,6 @@
 # Rules
 
-Version 0.5, 15 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
+Version 0.6, 15 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
 
 ## 1. In one page
 
@@ -60,8 +60,9 @@ Each coded column takes only the values below. [check_tables.py](../3_code/check
 |---|---|---|
 | validated_commercial | A product in the Stygar list measures the indicator, and Stygar code at least one external validation study for that product on that trait. | Tested |
 | commercial_unvalidated | A product in the Stygar list states the indicator in its AIM, and no external study is coded. | Claimed |
-| research_only | No product, but Maroto Molina identify research level technology or a substitute measure. | Research only |
-| none | No product, and Maroto Molina say sensors cannot provide it or do not discuss it. | Nothing found |
+| research_demonstrated | No product states the measure, and the sensor sources say a study they cite measured this indicator's own measure in cattle. | Shown in research |
+| theoretically_measurable | No product states the measure, and the sources only propose a technology, report it shown only in another species or setting, or offer only a substitute measure. | Proposed only |
+| none | No product, and Maroto Molina say sensors cannot provide it or do not discuss it: nothing in the two sources, as of their dates (2020 and 2021). | Nothing found |
 | unsure | The sources do not settle it. See section 7. | Unclear |
 
 **device_needed** (sensor_coverage.csv): the cheapest kind of equipment that would measure it, a stand in for cost and ease. The full rule is [rule 4.4](#44-device-needed-factor-2).
@@ -298,9 +299,13 @@ validated_commercial: a product in the Stygar list measures the indicator and St
 
 commercial_unvalidated: a product in the Stygar list states the indicator in its aim, and no external study is coded. The row names the products.
 
-research_only: no product, but Maroto Molina identify research level technology or a substitute measure, whatever feasibility rating they give it.
+research_demonstrated: no product in the Stygar list states the measure in its aim, and Maroto Molina 2020 or Stygar 2021 say that a study they cite measured this indicator's own measure in cattle, on a research farm, a commercial farm or in a trial, whatever feasibility rating they give it. Whether the study was in cattle and measured this measure is read from the source's own words, or from the cited reference's title as printed in the source's reference list, and from nothing else. The row names the study as the source cites it and the page. Kevin's change request has a cell for a commercial device used in research to measure an indicator that no product claims (device exists, measurability unclear); such a row is research_demonstrated and its reasoning names the device. On 15 October 2026 no row is of that kind.
 
-none: no product, and Maroto Molina say sensors cannot provide it or do not discuss it.
+theoretically_measurable: no product in the Stygar list states the measure, and the sources only propose a technology for it, or report it shown only in another species or setting (for example pigs, bird flocks, carcasses, human skin or a laboratory assay), or offer only a substitute measure, a different measure used in its place. A study of a substitute measure does not demonstrate the indicator, even in cattle. The row says which of these applies.
+
+The two grades replace research_only, which until 15 October 2026 covered both (decision log, 15 October 2026). They differ in how certain the evidence is, not in points: both score 1 (section 5). Where the source's words and the reference title do not settle which applies, the cell is unsure.
+
+none: no product, and Maroto Molina say sensors cannot provide it or do not discuss it. None means nothing in these two sources as of their dates, not nothing anywhere.
 
 unsure: the sources do not settle it. The candidate reading goes in the reasoning column and in [open_questions.md](open_questions.md).
 
@@ -308,7 +313,7 @@ When a validated trait counts. A trait validated by Stygar counts for an indicat
 
 Products and validated products. The products column names every product the row cites, whether or not it stands behind the grade. The validated_products column names only the products with a validation study coded by Stygar for the row's trait.
 
-**Example.** I023, subclinical ketosis by body condition scoring, is validated_commercial. Its product is P009, the DeLaval body condition scoring camera, its study number is 48, and its validated_trait reads "Body condition scoring, Table 2 page 7, commercial farm, lower performance column". The products rule shows on I027, rumen pH by bolus: the row cites five products, but validated_products names only `eCow UK|eBolus`, the one with studies 50 and 51. The same measure rule shows on I030, water provision, which is research_only. Maroto Molina propose individual water intake as a substitute, and a product validated for water intake exists (study 45), but the Welfare Quality measure is the water point itself, so the grade does not credit it.
+**Example.** I023, subclinical ketosis by body condition scoring, is validated_commercial. Its product is P009, the DeLaval body condition scoring camera, its study number is 48, and its validated_trait reads "Body condition scoring, Table 2 page 7, commercial farm, lower performance column". The products rule shows on I027, rumen pH by bolus: the row cites five products, but validated_products names only `eCow UK|eBolus`, the one with studies 50 and 51. The same measure rule shows on I030, water provision, which is theoretically_measurable. Maroto Molina propose individual water intake as a substitute, and a product validated for water intake exists (study 45), but the Welfare Quality measure is the water point itself, so the grade does not credit it.
 
 **How to check.** Open [stygar_2021.pdf](../1_sources/stygar_2021.pdf) at Table 1 (page 6) and Table 2 (page 7) and find the study numbers the row gives. Open the Stygar list, find each product, and read its AIM. The row's where_to_check column names every page.
 
@@ -449,7 +454,7 @@ Each factor is turned into 0 to 3 points as follows, and the five are added to a
 
 | Factor | 3 points | 2 points | 1 point | 0 points |
 |---|---|---|---|---|
-| Sensor evidence | validated_commercial | commercial_unvalidated | research_only | none or unsure |
+| Sensor evidence | validated_commercial | commercial_unvalidated | research_demonstrated or theoretically_measurable | none or unsure |
 | Device needed | routine_data | farm_fixed | animal_mounted | sample_or_procedure, none or unsure |
 | Vendors naming it | 10 or more products | 3 to 9 products | 1 or 2 products | none |
 | Named by FARM | named_with_threshold | named | related_resource | not_named or unsure |
@@ -503,3 +508,4 @@ The rows before 0.2.1 use the file and column names of their day. definitions.md
 | 2026-10-08 | 0.4 | Changes of meaning, for reading the certification schemes. crosswalk.csv gains the column requirement_status (required, unsure, not_required) after scheme, and only required counts toward the schemes requiring an indicator; section 3 describes the column and what an empty cell means, and says the table now has all 232 rows. Rules 4.7 and 4.8 now carry the fourteen reading rules approved by Manisha Sarkar on 8 October 2026, each with an example from crosswalk.csv; the three worked examples are kept. how_checked unsure is kept only for a required row whose method the scheme truly leaves open, no longer for naming that is unsettled, and visual_inspection covers observing a resource or equipment. farm_naming follows requirement_status (rule 4.6). Section 6 says a scheme row coded unsure makes Kevin's lists Unclear where it could change the answer. indicators.csv gains efsa_sensitivity, efsa_specificity, efsa_feasibility and efsa_ratings_quoted, with the new rule 4.9 for EFSA's own ratings (high, medium, low, mixed, not_stated) and section 3 rows for the four columns. Section 2 gains glossary rows for sensitivity, specificity and feasibility and code tables for requirement_status and the EFSA ratings. The section 5 example, section 7 and the Not yet known and Unclear entries are brought up to date with the read schemes | Four readers found 41 of the 232 scheme rows unsure under rules 0.3.2, almost all from situations those rules did not cover; Kevin's change request of 7 October asked for EFSA's ratings; decision_log.md, entries of 7 October 2026 and 8 October 2026 |
 | 2026-10-12 | 0.4.1 | Wording only, no change of meaning. The opening line and the notes on indicators.csv and products.csv no longer point to another repository; the products.csv note says where its 17 Stygar products came from and that no grade or count depends on them; the Provisional rank entry and the counts in sections 3, 5 and 7 are brought up to date for the sensor rows of 9 October | Manisha asked that the repository stand alone; decision_log.md, 12 October 2026 |
 | 2026-10-15 | 0.5 | New table product_links.csv (section 3) and rule 4.10, with its codes tightened after the audit of the same day (works and moved only with product_page; one code, product_not_listed, for a live maker page without the product; visible text only; http to https alone is works; a site the maker's own old address now sends visitors to counts as the maker's; a notice that only sends visitors elsewhere is not the product's page): the 129 links Stygar printed in 2021 are checked again and the products' current pages recorded. No grade, count or score changes | Manisha found a Stygar product link that no longer works and asked for every link to be checked; decision_log.md, 15 October 2026 |
+| 2026-10-15 | 0.6 | Change of meaning: the sensor evidence grade research_only splits into research_demonstrated (a study the sources cite measured the indicator's own measure in cattle) and theoretically_measurable (only proposed, shown in another species or setting, or a substitute measure), both 1 point; none is defined as nothing in the two sources as of their dates | Kevin's change request of 7 October 2026 and the second amendment of the same day; decision_log.md, 15 October 2026 |

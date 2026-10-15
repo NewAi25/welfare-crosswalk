@@ -14,8 +14,9 @@ Which signs of dairy cow welfare can a machine already measure on farms, and whi
 |---|---|
 | Tested | A product on the market measures this sign, and a published study recorded in the 2021 sensor review tested it |
 | Claimed | A product on the market says it measures this sign, but no study of it is recorded |
-| Research only | Scientists have shown or proposed a way to measure it, or to measure a related sign in its place, but nothing on the market measures this sign itself |
-| Nothing found | The two sensor papers this project reads name no way to measure it |
+| Shown in research | Nothing on the market measures this sign, but a study the sensor papers cite measured it in cattle |
+| Proposed only | Nothing on the market measures this sign; scientists have only proposed a way, shown one in another species or setting, or offered a related sign in its place |
+| Nothing found | The two sensor papers this project reads, from 2020 and 2021, name no way to measure it |
 | Unclear | The written rules do not settle the answer; the question is listed openly in [open_questions.md](2_research/open_questions.md) |
 | Required | A label's numbered rules require it on every farm the label certifies |
 | Checked by hand | The label's inspector looks at the cows or their housing and equipment, or reads the farm's records |
@@ -57,7 +58,7 @@ One pairing can look odd. Device needed can read "Nothing extra" even where colu
 
 There are 58 indicators: 26 listed only by EFSA (in its 2023 opinion on dairy cows), 26 only by the Welfare Quality protocol, and 6 by both. For the 32 that come from EFSA, the table now also gives EFSA's own ratings of each measure: sensitivity (does it catch the animals that have the problem), specificity (does it avoid flagging animals that do not) and feasibility on farm.
 
-Sensors are checked for all 58. Of those, 7 have a product in the Stygar list that a published study tested for that measure, 1 is claimed by a product's own description with no validation study recorded, 24 have only research methods or a substitute measure, 19 have nothing in the two sensor sources, and 7 are unclear.
+Sensors are checked for all 58. Of those, 7 have a product in the Stygar list that a published study tested for that measure, 1 is claimed by a product's own description with no validation study recorded, 2 have no product but were measured in cattle in a study the sensor papers cite (agonistic interactions, I011, and allo grooming, I019), 22 have a method that is only proposed, shown in another species or setting, or a related measure in its place, 19 have nothing in the two sensor sources, and 7 are unclear.
 
 The cheapest device needed is nothing extra on 12, one device per farm or barn on 21, one device per animal on 9, a sample or a scoring by a person on 2, no technology named on 10, and unclear on 4. Across all 58 indicators, this project's coding of what Maroto Molina and colleagues say gives yes (commercially available technology) on 2, partial on 29, no on 2 and not covered on 25.
 
