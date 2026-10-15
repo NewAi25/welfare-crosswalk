@@ -18,7 +18,7 @@ This repository stands alone. Every fact, rule and decision it rests on is in it
 ## Deliverables
 
 1. [4_output/welfare_crosswalk_dairy.xlsx](4_output/welfare_crosswalk_dairy.xlsx). It is built only by `python 3_code/build_output.py`, never edited by hand.
-2. The four tables in 2_research, complete for dairy. crosswalk.csv has one row per indicator per scheme for the four schemes (RSPCA Assured, FARM v5, Global Animal Partnership, Certified Humane), with the requirement quoted and its section and page.
+2. The four research tables in 2_research, complete for dairy. crosswalk.csv has one row per indicator per scheme for the four schemes (RSPCA Assured, FARM v5, Global Animal Partnership, Certified Humane), with the requirement quoted and its section and page.
 3. A write up of about 1,500 words and a one page entry in the format of Kevin's list, both in 4_output when written.
 4. A poultry unit after dairy, same tables and rules: broilers, or laying hens if that is where the sources are.
 
