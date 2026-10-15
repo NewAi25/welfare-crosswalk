@@ -14,8 +14,8 @@ Which signs of dairy cow welfare can a machine already measure on farms, and whi
 |---|---|
 | Tested | A product on the market measures this sign, and a published study recorded in the 2021 sensor review tested it |
 | Claimed | A product on the market says it measures this sign, but no study of it is recorded |
-| Shown in research | Nothing on the market measures this sign, but a study the sensor papers cite measured it in cattle |
-| Proposed only | Nothing on the market measures this sign; scientists have only proposed a way, shown one in another species or setting, or offered a related sign in its place |
+| Shown in research | No product in the 2021 sensor review says it measures this sign, but a study the sensor papers cite measured it in cattle |
+| Proposed only | No product in the 2021 sensor review says it measures this sign; scientists have only proposed a way, shown one in another species or setting, or offered a related sign in its place |
 | Nothing found | The two sensor papers this project reads, from 2020 and 2021, name no way to measure it |
 | Unclear | The written rules do not settle the answer; the question is listed openly in [open_questions.md](2_research/open_questions.md) |
 | Required | A label's numbered rules require it on every farm the label certifies |
