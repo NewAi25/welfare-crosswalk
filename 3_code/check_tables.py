@@ -98,8 +98,7 @@ SCHEMAS = {
         "columns": ["appendix_row", "vendor", "product", "link_2021", "link_2021_today", "current_link",
                     "current_link_shows", "page_says", "checked", "notes"],
         "codes": {"link_2021_today": {"works", "moved", "wrong_page", "broken"},
-                  "current_link_shows": {"product_page", "related_page", "product_not_listed", "maker_home_page",
-                                         "none_found"}},
+                  "current_link_shows": {"product_page", "related_page", "product_not_listed", "none_found"}},
         "must_fill": ["appendix_row", "vendor", "product", "link_2021", "link_2021_today", "current_link_shows",
                       "checked"],
         "whole_numbers": ["appendix_row"],
@@ -268,6 +267,8 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
             problem = "current_link is not a web address"
         elif r["current_link_shows"] in ("product_page", "related_page") and not r["page_says"].strip():
             problem = "a product_page or related_page row must quote what the page says in page_says"
+        elif r["link_2021_today"] in ("works", "moved") and r["current_link_shows"] != "product_page":
+            problem = "a link that works or moved must open a page naming this exact product (product_page)"
         elif r["current_link_shows"] == "related_page" and not r["notes"].strip():
             problem = "a related_page row must say in notes what the page names instead"
         elif not re.fullmatch(r"\d{4}-\d{2}-\d{2}", r["checked"]):

@@ -101,8 +101,7 @@ MEASURE_TYPE_LABEL = {"animal_based": "Observed or recorded on the animal", "res
 LINK_TODAY_LABEL = {"works": "Works", "moved": "Moved, still works", "wrong_page": "Wrong page",
                     "broken": "Broken"}
 LINK_SHOWS_LABEL = {"product_page": "The product's page", "related_page": "A related page (see note)",
-                    "product_not_listed": "Maker's site, product not on it", "maker_home_page": "Maker's home page only",
-                    "none_found": "No maker site found"}
+                    "product_not_listed": "Maker's site, product not named on it", "none_found": "No maker site found"}
 EFSA_LABEL = {"high": "High", "medium": "Medium", "low": "Low", "mixed": "Mixed (EFSA gives two levels)",
               "not_stated": "Not stated by EFSA"}
 LISTED_BY_LABEL = {"joined": "EFSA and Welfare Quality", "efsa_only": "EFSA only", "wq_only": "Welfare Quality only"}
@@ -350,8 +349,9 @@ def write(d, path=OUTPUT):
         ("Sensors x products: 'validated'", "A published study tested this product for this measure (Stygar 2021, Tables 1 and 2)."),
         ("Sensors x products: 'named'", "The vendor's own description contains one of the indicator's search words. Not tested."),
         ("Product list: links", "Link (2021) is the link the Stygar team printed in their spreadsheet. On the date in "
-         "Checked, each was opened again. Works or Moved: it still opens a page that names the product. Wrong page: it "
-         "opens a page that does not, such as a dealer's page, a parked domain or an unrelated site. Broken: an error "
+         "Checked, each was opened again. Works or Moved: it still opens, directly or after being sent on to a new "
+         "address, a maker's page that names this exact product. Wrong page: it opens a page that does not, such as a "
+         "page for the product family, a dealer's page, a domain held for sale or an unrelated site. Broken: an error "
          "or no answer. Link today is the maker's current page for the product where one was found, otherwise the "
          "nearest live maker page, as the next column says. 2_research/product_links.csv holds the same, with the rule "
          "in 2_research/rules.md, rule 4.10. The links change no grade, count or score."),
@@ -360,7 +360,7 @@ def write(d, path=OUTPUT):
          "A sort order, not a welfare judgement. Score parts are shown in the order: sensor + device + vendors + FARM + schemes."),
         ("", ""),
         ("WHAT THIS DOES NOT SHOW", "The sensor evidence is a baseline from two papers, Stygar et al. 2021 and Maroto "
-         "Molina et al. 2020. Products, studies and links are as those papers found them; 'Nothing found' means nothing "
+         "Molina et al. 2020. Products and studies are as those papers found them, and so are the links in the column Link (2021); what those links open today is in the Product list sheet; 'Nothing found' means nothing "
          "in those two papers, not nothing anywhere."),
         ("", "'Tested' means a published study tested the product for the measure, as Stygar 2021 coded it; many of "
          "those tests fell below Stygar's high performance bar, which the column 'What was tested, and how well' shows."),
