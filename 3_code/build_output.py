@@ -1,7 +1,7 @@
 """BUILD OUTPUT: turn the research tables into the one Excel file that answers the question.
 
 In plain words
-    The research is recorded in five tables in 2_research/. This script reads them,
+    The research is recorded in six tables in 2_research/. This script reads them,
     adds up the ease of adoption score exactly as 2_research/rules.md says, and writes
     4_output/welfare_crosswalk_dairy.xlsx. Nothing in the Excel file is edited by hand:
     every value comes from the tables, the manifest or the Stygar product list, and the
@@ -101,6 +101,37 @@ HOW_CHECKED_LABEL = {
 MANUAL = ("visual_inspection", "records_review")
 MEASURE_TYPE_LABEL = {"animal_based": "Observed or recorded on the animal", "resource_based": "About the housing or equipment",
                       "management_based": "About farm management", "none": "No measure defined"}
+# The stronger of the 2021 baseline grade and the grade since 2021 is used for the score and Kevin's lists
+# (rules.md rule 4.11). Order from weakest to strongest; an unsure grade stays unsure unless the other
+# grade is commercial (Claimed or Tested), because the open question could still change the answer.
+GRADE_ORDER = ["none", "unsure", "theoretically_measurable", "research_demonstrated", "commercial_unvalidated",
+               "validated_commercial"]
+COMMERCIAL = ("validated_commercial", "commercial_unvalidated")
+
+
+def stronger(a, b, b_could_be_commercial=False):
+    """a is the 2021 grade, b the grade since 2021 (rules.md rule 4.11)."""
+    if not b:
+        return a
+    if a == "unsure":
+        return b if b in COMMERCIAL else "unsure"
+    if b == "unsure":
+        # An unsure grade since 2021 never lowers the baseline; it makes the row unsure only when one of its
+        # candidate readings (open_questions.md) is commercial, so that it could put the row on list 1.
+        return "unsure" if b_could_be_commercial and a not in COMMERCIAL else a
+    return max(a, b, key=GRADE_ORDER.index)
+
+
+def since_candidates_commercial(iid, open_questions):
+    """True when an open line on the grade since 2021 for this indicator offers a commercial candidate."""
+    for line in open_questions.splitlines():
+        cells = [c.strip() for c in line.split("|")]
+        if len(cells) > 4 and cells[2].startswith(iid) and cells[3] == "sensor evidence since 2021" and cells[-2] == "open":
+            if "validated_commercial" in cells[4] or "commercial_unvalidated" in cells[4]:
+                return True
+    return False
+
+
 LINK_TODAY_LABEL = {"works": "Works", "moved": "Moved, still works", "wrong_page": "Wrong page",
                     "broken": "Broken"}
 LINK_SHOWS_LABEL = {"product_page": "The product's page", "related_page": "A related page (see note)",
@@ -139,6 +170,8 @@ def compute():
     products = count_vendors.appendix_products()
     profiled = {r["appendix_name"]: r["product_id"] for r in read("products.csv") if r["appendix_name"]}
     links = {int(r["appendix_row"]): r for r in read("product_links.csv")}
+    evidence = read("evidence_since_2021.csv")
+    open_questions = (TABLES / "open_questions.md").read_text(encoding="utf-8")
 
     answer = []
     for ind in indicators:
@@ -149,9 +182,11 @@ def compute():
         required = [k for k in SCHEMES if rows.get(k, {}).get("requirement_status") == "required"]
         undecided = [k for k in SCHEMES if rows.get(k, {}).get("requirement_status") == "unsure"]
         grade = s["sensor_evidence"] if s else ""
+        since = s["since_2021_grade"] if s else ""
+        best = stronger(grade, since, since_candidates_commercial(iid, open_questions)) if s else ""
         vendors = int(s["vendors_naming_it"]) if s else 0
         farm = rows.get("FARM_v5", {}).get("farm_naming", "") or ("not_named" if "FARM_v5" in rows else "")
-        points = [SENSOR_POINTS.get(grade, 0), DEVICE_POINTS.get(s["device_needed"], 0) if s else 0,
+        points = [SENSOR_POINTS.get(best, 0), DEVICE_POINTS.get(s["device_needed"], 0) if s else 0,
                   vendor_points(vendors), FARM_POINTS.get(farm, 0), scheme_points(len(required))]
 
         # Kevin's list 1: Tested or Claimed in column (a), and no scheme requires it.
@@ -159,9 +194,9 @@ def compute():
             list1 = "No"  # one scheme that requires it settles the list, whatever the sensor evidence
         elif not s:
             list1 = NOT_YET
-        elif grade == "unsure":
+        elif best == "unsure":
             list1 = "Unclear: sensor evidence unsure (see open questions)"
-        elif grade not in ("validated_commercial", "commercial_unvalidated"):
+        elif best not in COMMERCIAL:
             list1 = "No"
         elif undecided:
             list1 = "Unclear: whether " + ", ".join(SCHEME_NAMES[k] for k in undecided) + " requires it (see open questions)"
@@ -192,6 +227,10 @@ def compute():
             "measure_type": MEASURE_TYPE_LABEL[ind["measure_type"]],
             "sensor": SENSOR_LABEL[grade] if s else NOT_YET,
             "tested_how": s["validated_trait"] if s and grade == "validated_commercial" else "",
+            "since": SENSOR_LABEL[since] if s else NOT_YET,
+            "since_keys": s["since_2021_evidence"] if s else "",
+            "since_why": s["since_2021_reasoning"] if s else "",
+            "best": SENSOR_LABEL[best].split(":")[0] if s else NOT_YET,
             "validated": "; ".join(k.split("|", 1)[1] for k in filter(None, (x.strip() for x in s["validated_products"].split(";")))) if s else "",
             "vendors": vendors if s else NOT_YET,
             "device": DEVICE_LABEL[s["device_needed"]] if s else NOT_YET,
@@ -211,7 +250,7 @@ def compute():
             "list1": list1, "list2": list2,
             "score": sum(points), "parts": " + ".join(str(p) for p in points), "status": status,
             "where": s["where_to_check"] if s else "", "reasoning": s["reasoning"] if s else "",
-            "grade": grade,
+            "grade": grade, "since_grade": since, "best_grade": best,
         })
     answer.sort(key=lambda r: (-r["score"], r["id"]))
     for rank, r in enumerate(answer, start=1):
@@ -250,7 +289,8 @@ def compute():
     with (ROOT / "1_sources" / "manifest.csv").open(newline="", encoding="utf-8") as f:
         sources = list(csv.DictReader(f))
     return {"indicators": indicators, "answer": answer, "matrix": matrix, "schemes": scheme_rows,
-            "products": products, "profiled": profiled, "sources": sources, "sensors": sensors, "links": links}
+            "products": products, "profiled": profiled, "sources": sources, "sensors": sensors, "links": links,
+            "evidence": evidence}
 
 
 def summary_lines(d):
@@ -264,10 +304,16 @@ def summary_lines(d):
          + ", ".join(f"{n} {LISTED_BY_LABEL[k]}" for k, n in sorted(Counter(i['listed_by'] for i in d['indicators']).items()))),
         ("(a) Can a sensor measure it?", f"Checked for {len(done)} of {len(a)} indicators so far. "
          + "; ".join(f"{grades.get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}" for k in SENSOR_LABEL)),
+        ("(a) Since 2021", "Studies and maker pages since 2021, read in October 2026: "
+         + "; ".join(f"{Counter(r['since_grade'] for r in done).get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}"
+                     for k in SENSOR_LABEL)
+         + ". The stronger of the two grades, used for the score and Kevin's lists: "
+         + "; ".join(f"{Counter(r['best_grade'] for r in done).get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}"
+                     for k in SENSOR_LABEL) + "."),
         ("(b) How easy to adopt?", "See the Answer sheet: device needed, products whose description names it, and whether FARM (the US industry "
          "programme) names it. " + f"FARM is checked for {sum(1 for r in a if r['farm'] != NOT_YET)} of {len(a)} indicators so far."),
         ("(c) Already covered by schemes?", read[0].upper() + read[1:] + "."),
-        ("Kevin's list 1: Tested or Claimed in column (a), required by no scheme",
+        ("Kevin's list 1: Tested or Claimed in column (a) or since 2021, required by no scheme",
          f"{sum(1 for r in a if r['list1'] == 'Yes')} confirmed; {sum(1 for r in a if r['list1'].startswith('Not yet known'))} "
          f"are Tested or Claimed and wait for the scheme check; "
          f"{sum(1 for r in a if r['list1'].startswith('Unclear: sensor'))} are unclear because their sensor evidence is "
@@ -396,10 +442,14 @@ def write(d, path=OUTPUT):
         ("EFSA's rating: feasibility on farm", 11, "efsa_feas"),
         ("(a) Can a sensor measure it?", 34, "sensor"), ("Tested products", 30, "validated"),
         ("What was tested, and how well (Stygar 2021, Table 2)", 34, "tested_how"),
+        ("(a) Since 2021 (studies and maker pages read in October 2026)", 30, "since"),
+        ("Evidence since 2021 (keys on the sheet Evidence since 2021)", 24, "since_keys"),
+        ("Why, since 2021", 50, "since_why"),
+        ("(a) Used for the score and lists: the stronger of the two", 16, "best"),
         ("Products whose description names it (of 129)", 14, "vendors"),
         ("(b) Device needed", 28, "device"), ("(b) Named by FARM, the US industry programme", 22, "farm"),
         ("(c) Schemes requiring it (of 4)", 12, "schemes_n_shown"), ("(c) Which schemes, and how they check", 30, "schemes_how"),
-        ("Kevin list 1: Tested or Claimed in column (a), and no scheme requires it", 22, "list1"),
+        ("Kevin list 1: Tested or Claimed (the stronger of 2021 and since 2021), and no scheme requires it", 22, "list1"),
         ("Kevin list 2: required by a scheme, checked by hand (inspection or records)", 22, "list2"),
         ("Ease of adoption score (0 to 15, sort order only)", 12, "score"),
         ("Score parts (sensor + device + vendors + FARM + schemes)", 16, "parts"),
@@ -487,6 +537,26 @@ def write(d, path=OUTPUT):
         for c, v in enumerate(values, start=1):
             ws.cell(row=row, column=c, value=v).alignment = WRAP
     ws.freeze_panes = "C2"
+
+    # Evidence since 2021
+    ws = wb.create_sheet("Evidence since 2021")
+    cols = [("evidence_key", "Key", 22), ("kind", "Kind", 10), ("citation", "Study, review or maker page", 50),
+            ("doi_or_url", "DOI or address", 30), ("year", "Year", 7), ("indicator_ids", "Indicators", 12),
+            ("product", "Product", 24), ("on_sale", "On sale, as the source says", 10),
+            ("technology", "Technology", 22), ("setting", "Setting", 14), ("n_animals", "Animals", 9),
+            ("authors_independent", "Authors independent of the maker", 11),
+            ("maker_involvement", "Maker's involvement", 24), ("measure", "What was measured", 34),
+            ("reference_method", "Compared with", 28), ("statistic", "Result as reported", 40),
+            ("sections_read", "What was read", 14), ("found_via", "Found through", 30),
+            ("source_file", "File in 1_sources", 26), ("notes", "Notes", 40)]
+    for c, (_, title, width) in enumerate(cols, start=1):
+        cell = ws.cell(row=1, column=c, value=title)
+        cell.font, cell.fill, cell.alignment = HEAD, HEAD_FILL, WRAP
+        ws.column_dimensions[get_column_letter(c)].width = width
+    for row, e in enumerate(d["evidence"], start=2):
+        for c, (k, _, _) in enumerate(cols, start=1):
+            ws.cell(row=row, column=c, value=e[k]).alignment = WRAP
+    ws.freeze_panes = "B2"
 
     # Sources
     ws = wb.create_sheet("Sources")

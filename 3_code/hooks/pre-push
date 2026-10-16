@@ -2,7 +2,7 @@
 # PUSH GATE. Runs before every "git push" and refuses the push unless all of these hold:
 #   1. the commit being pushed is the one checked out, with no uncommitted changes, so the
 #      checks below test exactly what is pushed;
-#   2. the four research tables pass 3_code/check_tables.py;
+#   2. the research tables pass 3_code/check_tables.py;
 #   3. every source file present matches its fingerprint, or for the stamped paper its text (when pypdf
 #      is installed; without it a changed stamped copy is a warning); a saved web page that is not the
 #      snapshot is reported, not refused (3_code/check_sources.py --local);

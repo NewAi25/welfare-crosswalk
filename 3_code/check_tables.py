@@ -1,7 +1,7 @@
-"""CHECK TABLES: the mechanical checks on the five research tables in 2_research/.
+"""CHECK TABLES: the mechanical checks on the six research tables in 2_research/.
 
 In plain words
-    The research lives in five spreadsheet files (CSV). This script checks that they are
+    The research lives in six spreadsheet files (CSV). This script checks that they are
     well formed and agree with each other. It does not check that a value is TRUE; that
     is the job of the auditor and of a person reading the source page. It checks that
     nothing is missing, misspelled, duplicated or out of date.
@@ -29,7 +29,10 @@ What it checks
        EFSA's three ratings are filled exactly on the rows that come from EFSA;
        product_links.csv has one row for each of the 129 products in the Stygar list, with
        the maker, name and 2021 link copied exactly, and a current link exactly where one
-       was found.
+       was found;
+       every since_2021_grade is a sensor evidence code, every evidence key it cites exists in
+       evidence_since_2021.csv and names that indicator, and a commercial grade since 2021
+       cites at least one piece of evidence.
 
 How to run it
     python 3_code/check_tables.py
@@ -74,13 +77,15 @@ SCHEMAS = {
     "sensor_coverage.csv": {
         "columns": ["indicator_id", "sensor_evidence", "products", "validated_products", "validated_trait",
                     "study_numbers", "maroto_molina_rating", "device_needed", "vendors_naming_it", "search_words",
-                    "where_to_check", "reasoning"],
+                    "where_to_check", "reasoning", "since_2021_grade", "since_2021_evidence", "since_2021_reasoning"],
         "codes": {"sensor_evidence": {"validated_commercial", "commercial_unvalidated", "research_demonstrated",
+                                    "theoretically_measurable", "none", "unsure"},
+                  "since_2021_grade": {"validated_commercial", "commercial_unvalidated", "research_demonstrated",
                                     "theoretically_measurable", "none", "unsure"},
                   "device_needed": {"routine_data", "farm_fixed", "animal_mounted", "sample_or_procedure", "none", "unsure"},
                   "maroto_molina_rating": RATINGS},
         "must_fill": ["indicator_id", "sensor_evidence", "device_needed", "vendors_naming_it", "search_words",
-                      "where_to_check"],
+                      "where_to_check", "since_2021_grade", "since_2021_reasoning"],
         "whole_numbers": ["vendors_naming_it"],
         "key": ["indicator_id"],
     },
@@ -94,6 +99,18 @@ SCHEMAS = {
         "may_be_empty": {"how_checked", "farm_naming"},
         "must_fill": ["indicator_id", "scheme", "requirement_status", "reasoning"],
         "key": ["indicator_id", "scheme"],
+    },
+    "evidence_since_2021.csv": {
+        "columns": ["evidence_key", "kind", "citation", "doi_or_url", "year", "found_via", "indicator_ids", "product",
+                    "on_sale", "technology", "setting", "n_animals", "authors_independent", "maker_involvement",
+                    "measure", "reference_method", "statistic", "sections_read", "source_file", "notes"],
+        "codes": {"kind": {"study", "review", "maker_page"},
+                  "on_sale": {"yes", "no", "not_stated"},
+                  "setting": {"laboratory", "research_farm", "commercial_farm", "mixed", "not_stated", "not_applicable"},
+                  "authors_independent": {"yes", "no", "not_stated", "not_applicable"}},
+        "must_fill": ["evidence_key", "kind", "citation", "doi_or_url", "year", "found_via", "indicator_ids", "on_sale",
+                      "setting", "authors_independent", "measure", "sections_read", "source_file"],
+        "key": ["evidence_key"],
     },
     "product_links.csv": {
         "columns": ["appendix_row", "vendor", "product", "link_2021", "link_2021_today", "current_link",
@@ -251,6 +268,28 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
             problem = "named_with_threshold needs the number in number_in_requirement"
         if problem:
             problems.setdefault("crosswalk.csv", f"line {number}: {problem}")
+    evidence = {r["evidence_key"]: r for _, r in tables["evidence_since_2021.csv"]}
+    for number, r in tables["evidence_since_2021.csv"]:
+        for iid in filter(None, (x.strip() for x in r["indicator_ids"].split(";"))):
+            if iid not in indicators:
+                problems.setdefault("evidence_since_2021.csv", f"line {number}: unknown indicator {iid}")
+        if r["kind"] != "maker_page" and not re.fullmatch(r"20(2[1-9])", r["year"]):
+            problems.setdefault("evidence_since_2021.csv", f"line {number}: a study or review must be from 2021 or later")
+        if not (ROOT / "1_sources" / r["source_file"]).name == r["source_file"]:
+            problems.setdefault("evidence_since_2021.csv", f"line {number}: source_file must be a file name in 1_sources")
+    for number, r in tables["sensor_coverage.csv"]:
+        keys = [k.strip() for k in r["since_2021_evidence"].split(";") if k.strip()]
+        for k in keys:
+            if k not in evidence:
+                problems.setdefault("sensor_coverage.csv", f"line {number}: since_2021_evidence cites unknown key {k}")
+            elif r["indicator_id"] not in [x.strip() for x in evidence[k]["indicator_ids"].split(";")]:
+                problems.setdefault("sensor_coverage.csv",
+                                    f"line {number}: evidence {k} does not list {r['indicator_id']} in its indicator_ids")
+        if r["since_2021_grade"] in ("validated_commercial", "commercial_unvalidated", "research_demonstrated") and not keys:
+            problems.setdefault("sensor_coverage.csv", f"line {number}: a since 2021 grade above proposed needs evidence keys")
+        if r["since_2021_grade"] == "unsure" and not re.search(rf"\b{r['indicator_id']}\b", open_questions):
+            problems.setdefault("sensor_coverage.csv", f"line {number}: since_2021_grade is unsure but has no open question")
+
     stygar_rows = {p["row"]: p for p in stygar}
     links = tables["product_links.csv"]
     if sorted(int(r["appendix_row"]) for _, r in links) != sorted(stygar_rows):

@@ -1,14 +1,14 @@
 # Rules
 
-Version 0.6, 15 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
+Version 0.7, 16 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
 
 ## 1. In one page
 
-This project answers item 13 on Kevin Xia's Top 30 list for dairy cows ([his text](../1_sources/kevin_item_13.md)). It sets three things side by side: validated welfare indicators, what commercial farm sensors measure, and what certification schemes require and how they check it. The research sits in five tables in this folder. This file is the rulebook for those tables. For every column it says what the column means, which rule fills it, and which source the value is read from.
+This project answers item 13 on Kevin Xia's Top 30 list for dairy cows ([his text](../1_sources/kevin_item_13.md)). It sets three things side by side: validated welfare indicators, what commercial farm sensors measure, and what certification schemes require and how they check it. The research sits in six tables in this folder. This file is the rulebook for those tables. For every column it says what the column means, which rule fills it, and which source the value is read from.
 
 The three part question, indicators that are (a) measurable by AI, (b) acceptable to industry and (c) covered by existing sensors or certification schemes, comes from Kevin's proposal on the call of 22 September ([automated notes](../1_sources/kevin_call_2026-09-22.md)), as written up in Manisha's smaller scope analysis, which Kevin quotes in his Slack reply of 25 September ([his words](../1_sources/kevin_slack_2026-09-25.md)). In that reply he calls industry acceptability, and coverage by existing sensors and by existing certification schemes, soft factors that make adoption easier rather than hard requirements. So each factor is a graded column, every indicator stays in the table, and the rank is a stated rule of thumb that any reader can sort again by any single factor.
 
-The answer itself is the Excel file [welfare_crosswalk_dairy.xlsx](../4_output/welfare_crosswalk_dairy.xlsx). Nothing in it is typed by hand. The script [build_output.py](../3_code/build_output.py) writes it from the five tables using the rules below.
+The answer itself is the Excel file [welfare_crosswalk_dairy.xlsx](../4_output/welfare_crosswalk_dairy.xlsx). Nothing in it is typed by hand. The script [build_output.py](../3_code/build_output.py) writes it from the six tables using the rules below.
 
 How to use this file. If a word or a code puzzles you, look it up in section 2. If you want to know what a column holds, or what an empty cell means, see section 3. If you want to know why a cell has its value, find the rule in section 4, then open the page named in that row's where_to_check column and read it. Section 5 explains the score, section 6 defines Kevin's two lists, and section 7 says what happens when the rules cannot decide.
 
@@ -177,7 +177,7 @@ Each coded column takes only the values below. [check_tables.py](../3_code/check
 
 ## 3. What each table holds
 
-Five tables, each a CSV file (a plain spreadsheet file) with fixed column names in a fixed order. [check_tables.py](../3_code/check_tables.py) checks the columns, the codes and the links between tables after every edit. It checks that the tables are well formed and agree with each other; it does not check that a value is true. That is the job of the auditor and of a person reading the source page.
+Six tables, each a CSV file (a plain spreadsheet file) with fixed column names in a fixed order. [check_tables.py](../3_code/check_tables.py) checks the columns, the codes and the links between tables after every edit. It checks that the tables are well formed and agree with each other; it does not check that a value is true. That is the job of the auditor and of a person reading the source page.
 
 ### indicators.csv: the welfare indicators (column 1 of the crosswalk)
 
@@ -237,6 +237,27 @@ One row per indicator. Since 9 October 2026 there are 58 rows, one for each indi
 | search_words | The search words, separated by semicolons. | Never. |
 | where_to_check | Where each value was read: document, page, table, row. | Never. |
 | reasoning | Alternatives, the other technologies, and the candidate readings on unsure rows. | May be empty when there is nothing to add. |
+| since_2021_grade | The grade for evidence since 2021 ([rule 4.11](#411-evidence-since-2021-a-second-sensor-column)), using the codes of rule 4.2. | Never. |
+| since_2021_evidence | The keys of the evidence in evidence_since_2021.csv behind that grade, separated by semicolons. | When nothing since 2021 was found. |
+| since_2021_reasoning | Which evidence decides the grade since 2021, and why. | Never. |
+
+### evidence_since_2021.csv: the studies and maker pages since 2021
+
+One row per study or maker page that a grade since 2021 rests on, with its quality record ([rule 4.11](#411-evidence-since-2021-a-second-sensor-column)).
+
+| Column | What it holds | When empty |
+|---|---|---|
+| evidence_key | A short key, first author and year for a study, Maker: and the snapshot name for a maker page. | Never. |
+| kind | study, review or maker_page. | Never. |
+| citation, doi_or_url, year | The study as published, or the maker and product. | Never. |
+| found_via | The source read in this pass through which it was found, with table or section. | Never. |
+| indicator_ids | The indicators it bears on, separated by semicolons. | Never. |
+| product, on_sale | The product as the source names it, and yes, no or not_stated as a source says. | product when no product was used. |
+| technology, setting, n_animals | The device, where it was done (laboratory, research_farm, commercial_farm, mixed, not_stated, or not_applicable for a maker page) and how many animals. | technology and n_animals when not given. |
+| authors_independent, maker_involvement | yes, no or not_stated as the paper says, and what the maker did (authorship, funding, approval of the manuscript, data). | maker_involvement when nothing is stated. |
+| measure, reference_method, statistic | What was measured, against what, and the result as reported. | reference_method and statistic when there was none. |
+| sections_read, source_file | What was read, and the file in 1_sources that holds it. | Never. |
+| notes | Anything a reader checking the row needs. | May be empty. |
 
 ### crosswalk.csv: what schemes require (column 3 of the crosswalk)
 
@@ -448,9 +469,30 @@ This table records the web as it stood on the date checked. It is not a source f
 
 **How to check.** Open link_2021 and current_link and compare what they show with the two codes, then find page_says on the current page.
 
+
+### 4.11 Evidence since 2021 (a second sensor column)
+
+**Question.** What do studies and maker pages since 2021 add to the 2021 baseline of rule 4.2?
+
+**Rule.** The baseline grade of rule 4.2 is never changed. A second grade, since_2021_grade, is read from sources published in 2021 or later, by the year of the journal issue: the reviews Lee et al. 2025 (with its dataset of 101 studies), Hudson et al. 2026, Islam et al. 2026, Silva et al. 2021 and Fuentes et al. 2026; a bounded search of Europe PMC for the milk and metabolic rows, whose protocol was written before it was run; studies one step through the reference list of any of these, read in full or as an abstract that states the product, the measure, the animals and the result; and a vendor check of the makers' own current pages. A study that a review since 2021 only restates, but that was published before 2021, does not count. The grade uses the codes of rule 4.2:
+
+validated_commercial: a study since 2021 tested a named product against a reference method on the indicator's own measure, and a source since 2021 (the study, a review or the maker's page) says the product is on sale. A test with a maker employee among the authors, or paid for or approved by the maker, counts, as Stygar's baseline counted self validations; the maker's involvement is recorded in evidence_since_2021.csv and shown in the Excel file. This point is provisional, pending Kevin's answer (decision log, 16 October 2026).
+
+commercial_unvalidated: the maker's own current page names the product and says it measures the indicator's own measure, or a source since 2021 says a product on sale measures it, and no test against a reference was found. A page read by a person or saved by script is kept in 1_sources as a snapshot with a check phrase.
+
+research_demonstrated, theoretically_measurable and none: as in rule 4.2, applied to the sources above. A test against a combined outcome of several measures (for example several foot lesions together) is a substitute for each one. Cattle includes beef cattle.
+
+unsure: the sources above do not settle it. Where the baseline is unsure because the rules do not settle what the indicator's measure is (I006, clinical mastitis as an incidence rate; I039, thermal comfort with no defined measure), the grade since 2021 is unsure for the same reason unless the new evidence settles that question.
+
+**Which grade counts.** The score (factor 1, section 5) and Kevin's list 1 (section 6) use the stronger of the two grades, in the order none, unsure, theoretically_measurable, research_demonstrated, commercial_unvalidated, validated_commercial; but where the 2021 grade is unsure and the grade since 2021 is not commercial, the result stays unsure, because the open question could still change the answer; and where only the grade since 2021 is unsure, the 2021 grade stands, unless one of the candidate readings in its open_questions.md line is commercial, in which case the result is unsure, because that reading could put the indicator on list 1. Both grades are shown in the Excel file.
+
+**Example.** I013, frequency of lying bouts, is unsure in the 2021 baseline. Since 2021, the maker's page for the IDS i-QUBE leg sensor lists Lying Bouts as an output, so the grade since 2021 is commercial_unvalidated, and the stronger of the two is Claimed. No scheme requires it, so it is on Kevin's list 1.
+
+**How to check.** Read the row's since_2021_evidence keys on the sheet Evidence since 2021, open each source file named there, and confirm the product, the measure, the reference method and the result.
+
 ## 5. The score
 
-Each factor is turned into 0 to 3 points as follows, and the five are added to a score from 0 to 15.
+Each factor is turned into 0 to 3 points as follows, and the five are added to a score from 0 to 15. For sensor evidence, the grade scored is the stronger of the 2021 grade and the grade since 2021 (rule 4.11).
 
 | Factor | 3 points | 2 points | 1 point | 0 points |
 |---|---|---|---|---|
@@ -476,7 +518,7 @@ Kevin's item 13 names two valuable cells: "indicators already instrumented but n
 
 A scheme counts as requiring an indicator only when its row's requirement_status is required (rule 4.8). A scheme row coded unsure is neither required nor not required, so it makes the lists Unclear wherever it could change the answer, as set out below.
 
-**List 1, instrumented but not required.** Sensor evidence is validated_commercial or commercial_unvalidated, and the schemes requiring it number 0. Yes is reported for an indicator only once all four schemes have been read for it, because before that a count of 0 means not yet read rather than not required. No is final as soon as one scheme is read and requires it, whatever the sensor evidence. An indicator whose sensor evidence is unsure shows Unclear, unless a scheme already requires it, because it could join the list once its question is settled. An indicator graded Tested or Claimed that no scheme requires, but that has a scheme row coded unsure, shows Unclear, because that scheme may require it.
+**List 1, instrumented but not required.** Sensor evidence, the stronger of the 2021 grade and the grade since 2021 (rule 4.11), is validated_commercial or commercial_unvalidated, and the schemes requiring it number 0. Yes is reported for an indicator only once all four schemes have been read for it, because before that a count of 0 means not yet read rather than not required. No is final as soon as one scheme is read and requires it, whatever the sensor evidence. An indicator whose sensor evidence is unsure shows Unclear, unless a scheme already requires it, because it could join the list once its question is settled. An indicator graded Tested or Claimed that no scheme requires, but that has a scheme row coded unsure, shows Unclear, because that scheme may require it.
 
 **List 2, required but manually audited.** Kevin's "indicators required but manually audited". Per scheme row, the requirement is present (requirement_status required) and the scheme checks it by inspection or by records review (how_checked visual_inspection or records_review), not by accepting sensor data. The sensor evidence for the indicator is shown beside it. This replaces the earlier, narrower filter, which also required sensor evidence validated_commercial. When no scheme that requires the indicator checks it by inspection or records review, the list shows Unclear if a requiring scheme's how_checked is unsure, or if a scheme row is coded unsure, because either could put the indicator on the list. Where another scheme that requires it does check it by inspection or records review, the indicator is on the list, whatever the unsure row says.
 
@@ -486,7 +528,7 @@ On 8 October 2026 all four schemes are read for all 58 indicators. The Read me s
 
 Any cell the rules above do not settle is coded unsure. The candidate readings go in the row's reasoning column, and a line in [open_questions.md](open_questions.md) gives the indicator, the factor and the candidates. It is resolved only by tightening the rule that failed, with a dated decision log entry. Otherwise it stays unsure in the published table, and the note says how many rows are unsure per factor. On sensor evidence, device needed and named by FARM, an unsure cell scores 0 points (section 5). A scheme row whose requirement_status is unsure does not count its scheme as requiring the indicator, and it can make Kevin's lists Unclear (section 6). An unsure how_checked cell, which is kept only for a required row whose method the scheme truly leaves open, still counts its scheme as requiring the indicator and can show Unclear on Kevin's list 2 (section 6).
 
-On 12 October 2026, seven rows are unsure on sensor evidence (I006, I009, I013, I020, I039, I057 and I058) and four on device needed (I043, I044, I047 and I059). In crosswalk.csv, 5 of the 232 scheme rows have requirement_status unsure: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and Certified Humane. No FARM row is unsure, and no row has how_checked unsure.
+On 12 October 2026, seven rows are unsure on sensor evidence (I006, I009, I013, I020, I039, I057 and I058) and four on device needed (I043, I044, I047 and I059). On 16 October 2026, five rows are unsure on the grade since 2021 (I006, I010, I039, I045 and I056). In crosswalk.csv, 5 of the 232 scheme rows have requirement_status unsure: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and Certified Humane. No FARM row is unsure, and no row has how_checked unsure.
 
 ## 8. Change log
 
@@ -509,3 +551,4 @@ The rows before 0.2.1 use the file and column names of their day. definitions.md
 | 2026-10-12 | 0.4.1 | Wording only, no change of meaning. The opening line and the notes on indicators.csv and products.csv no longer point to another repository; the products.csv note says where its 17 Stygar products came from and that no grade or count depends on them; the Provisional rank entry and the counts in sections 3, 5 and 7 are brought up to date for the sensor rows of 9 October | Manisha asked that the repository stand alone; decision_log.md, 12 October 2026 |
 | 2026-10-15 | 0.5 | New table product_links.csv (section 3) and rule 4.10, with its codes tightened after the audit of the same day (works and moved only with product_page; one code, product_not_listed, for a live maker page without the product; visible text only; http to https alone is works; a site the maker's own old address now sends visitors to counts as the maker's; a notice that only sends visitors elsewhere is not the product's page): the 129 links Stygar printed in 2021 are checked again and the products' current pages recorded. No grade, count or score changes | Manisha found a Stygar product link that no longer works and asked for every link to be checked; decision_log.md, 15 October 2026 |
 | 2026-10-15 | 0.6 | Change of meaning: the sensor evidence grade research_only splits into research_demonstrated (a study the sources cite measured the indicator's own measure in cattle) and theoretically_measurable (only proposed, shown in another species or setting, or a substitute measure), both 1 point; none is defined as nothing in the two sources as of their dates | Kevin's change request of 7 October 2026 and the second of the three further points from the sense check in the decision_log entry of the same day; decision_log.md, 15 October 2026 |
+| 2026-10-16 | 0.7 | Change of meaning: a second sensor grade, evidence since 2021 (rule 4.11), with a new table evidence_since_2021.csv and three new columns in sensor_coverage.csv; the score and Kevin's list 1 use the stronger of the two grades. Two points are provisional pending Kevin: studies one step through a review count, and tests involving the maker count as validated with the involvement recorded | Kevin's change request of 7 October 2026 (evidence update and vendor check) and Manisha's decisions of 16 October 2026; decision_log.md, 16 October 2026 |

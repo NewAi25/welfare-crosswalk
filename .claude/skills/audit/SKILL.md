@@ -20,7 +20,7 @@ Nothing in this repository is pushed until it has passed this audit. A crosswalk
    python 3_code/build_output.py --check
    ```
 
-   check_tables.py checks the five tables. check_sources.py --local checks every source file against its fingerprint in 1_sources/manifest.csv. count_vendors.py compares every stored vendors_naming_it with a fresh count and changes nothing. build_output.py --check confirms the Excel file in 4_output matches the tables; if it fails, run `python 3_code/build_output.py`, commit the rebuilt file and start again.
+   check_tables.py checks the six tables. check_sources.py --local checks every source file against its fingerprint in 1_sources/manifest.csv. count_vendors.py compares every stored vendors_naming_it with a fresh count and changes nothing. build_output.py --check confirms the Excel file in 4_output matches the tables; if it fails, run `python 3_code/build_output.py`, commit the rebuilt file and start again.
 
    If source files were added or replaced in this batch, record them first (`python 3_code/check_sources.py --record --only <file>`) and then run the full check with the network, `python 3_code/check_sources.py --only <file>`.
 
