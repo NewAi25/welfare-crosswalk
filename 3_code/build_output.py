@@ -162,9 +162,10 @@ WELFARE_LABEL = {
     "supported": "Supported: EFSA 2023, Welfare Quality or Linstaedt and colleagues 2024 link it to a welfare problem, "
                  "condition or state, and none of them questions the link",
     "indirect_or_contested": "Indirect or contested: one of those three sources says its link to welfare is indirect, "
-                             "insufficient on its own, inconsistent or debated",
-    "no_welfare_validation": "No welfare validation: a product's description frames it as about health or welfare, "
-                             "or a scheme requires it, but none of the three sources links it to welfare",
+                             "insufficient on its own, weak, inconsistent, unclear or not fully understood",
+    "no_welfare_validation": "No welfare validation: none of the three sources links it to welfare, but a product's "
+                             "description says it is for health, welfare or a named condition, or it is itself a "
+                             "health or condition status, or a scheme requires it",
     "not_welfare_relevant": "Not framed as welfare: no product's description, no scheme requirement and none of the "
                             "three sources ties it to health or welfare",
     "unsure": "Unclear: the written rules do not settle it (see open questions)",

@@ -2,7 +2,7 @@
 
 This folder lists the documents the research reads, with a link and a fingerprint for each; two of them are stored here and the rest are link only. Every fact in the tables in [`2_research`](../2_research) comes from one of them. Papers read only as abstracts in the literature check ([`2_research/literature_check_2026-09-29.md`](../2_research/literature_check_2026-09-29.md)), and candidate sources named in [`2_research/decision_log.md`](../2_research/decision_log.md), are cited by DOI and are not in the manifest; each gets a row here before any table cell, rule or count rests on it. The list of documents, with the web address each file came from, is [`manifest.csv`](manifest.csv). This page explains that list in plain words.
 
-The project builds a table with three columns. Column 1 is the welfare indicators: the signs of a cow's welfare that scientists have agreed on, such as lameness or lying time. Column 2 is the sensors: whether a commercial device measures each indicator. Column 3 is the certification schemes: whether a farm assurance label requires the indicator, and how its auditors check it. Each document below is tied to one of these columns, or to the question itself.
+The project builds a table whose rows are the welfare indicators: the signs of a cow's welfare that scientists have agreed on, such as lameness or lying time, and, since 17 October 2026, the parameters sensors say they measure. Its columns ask whether the welfare sources treat each row as a measure of welfare (column 1), whether a commercial device measures it (column (a), the sensors) and whether the certification schemes require it, and how their auditors check it (column (c)). Each document below is tied to one of these columns, or to the question itself.
 
 ## Why only two of the source documents are in the repository
 
@@ -16,7 +16,7 @@ A licence is the owner's statement of what others may do with a document. Three 
 
 The kevin_*.md files are a deliberate exception. They carry no open licence, but Manisha Sarkar decided on 3 October 2026 to keep the first three in the repository so that a reader can check the question this project answers against what Kevin wrote (item 13 and his Slack reply) and the meeting tool's notes of the call, and on 7 October 2026 to add the change request Kevin shared, which the redesign rests on. No record of Kevin's consent is in the repository.
 
-The Stygar paper is CC BY 4.0. Its spreadsheet has no licence line of its own; it was published alongside the CC BY 4.0 article, so it is treated as CC BY 4.0. Two other papers have open licences but are still not stored here. The Maroto Molina paper is CC BY 4.0, but every copy downloaded from Cambridge University Press is stamped on each page with the date, the time and the downloader's IP address (an internet address that can identify who downloaded it), so the downloaded copy is kept out of a public repository. The EFSA opinion is CC BY-ND 4.0 for EFSA's own content, but six of its figures belong to other owners and are not covered by that licence, so the file is not republished whole. The other eleven are the Welfare Quality protocol, the ICAR web page and its three test reports, the five certification documents and one essay, whose owners reserve their rights or state no licence, which is treated the same way. Each table below says which is which.
+The Stygar paper is CC BY 4.0. Its spreadsheet has no licence line of its own; it was published alongside the CC BY 4.0 article, so it is treated as CC BY 4.0. Of the fifteen documents in the tables below, two other papers have open licences but are still not stored here; the openly licensed documents added since 16 October are likewise left out by choice and downloaded by link. The Maroto Molina paper is CC BY 4.0, but every copy downloaded from Cambridge University Press is stamped on each page with the date, the time and the downloader's IP address (an internet address that can identify who downloaded it), so the downloaded copy is kept out of a public repository. The EFSA opinion is CC BY-ND 4.0 for EFSA's own content, but six of its figures belong to other owners and are not covered by that licence, so the file is not republished whole. The other eleven are the Welfare Quality protocol, the ICAR web page and its three test reports, the five certification documents and one essay, whose owners reserve their rights or state no licence, which is treated the same way. Each table below says which is which.
 
 ## How to get a missing document
 
@@ -59,7 +59,7 @@ The call is recorded as the meeting notes that Gemini, an AI note taker, wrote a
 
 These files have no row in the manifest, because they are not published documents. What was decided from them is in [`decision_log.md`](../2_research/decision_log.md).
 
-## The welfare indicators (column 1)
+## The welfare indicators (the rows, and column 1)
 
 | Document | What it is | Used for | Licence | Here or link only | Link |
 |---|---|---|---|---|---|
@@ -68,7 +68,7 @@ These files have no row in the manifest, because they are not published document
 
 The EFSA copy is the published PDF, downloaded from Wiley Online Library and re-hosted by the Spanish agriculture ministry, because the publisher's site blocked automated download. It carries the same DOI, 10.2903/j.efsa.2023.7993.
 
-## The sensors (column 2)
+## The sensors (column (a))
 
 | Document | What it is | Used for | Licence | Here or link only | Link |
 |---|---|---|---|---|---|
@@ -78,7 +78,7 @@ The EFSA copy is the published PDF, downloaded from Wiley Online Library and re-
 
 The Stygar spreadsheet comes inside a zip file. Download the zip, open it, and save the file `Data_Sheet_1.xlsx` under the name `stygar_2021_supplementary.xlsx`. The publisher, Frontiers, also offers the same file directly, under Supplementary material at the foot of the [article page](https://www.frontiersin.org/journals/veterinary-science/articles/10.3389/fvets.2021.634338/full#supplementary-material); on 15 October 2026 its fingerprint matched the copy here.
 
-## The certification schemes (column 3)
+## The certification schemes (column (c))
 
 Column 3 is done: on 8 October 2026 all four schemes were read in full for all 58 indicators ([`decision_log.md`](../2_research/decision_log.md)). The documents were fingerprinted first, so the reading rests on fixed versions.
 
