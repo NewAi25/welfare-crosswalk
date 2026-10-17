@@ -12,10 +12,10 @@ This page explains how the tables were filled and how anyone can check them with
 |---|---|
 | README.md | This page. |
 | [rules.md](rules.md) | The written rules. For every column it gives the values allowed and the rule that decides which value a row gets. Its version is at the top and its change log at the end. The older column guide, tables_explained.md, was merged into it on 2 October and removed. |
-| [indicators.csv](indicators.csv) | The 58 welfare indicators, one row each, with where each source lists it and, for the 32 from EFSA, EFSA's own ratings of sensitivity, specificity and feasibility. A CSV file is a plain spreadsheet; Excel opens it. |
+| [indicators.csv](indicators.csv) | The 81 rows, one each: the 58 welfare indicators from the two protocols and, since 17 October 2026, 23 sensor side rows. Each says where its source lists it, its welfare state and its welfare relevance (column 1), and, for the 32 from EFSA, EFSA's own ratings of sensitivity, specificity and feasibility. A CSV file is a plain spreadsheet; Excel opens it. |
 | [products.csv](products.csv) | 20 sensor products described in more detail, including whether a published study tested each one. |
 | [sensor_coverage.csv](sensor_coverage.csv) | For each indicator: whether a product measures it, in the 2021 baseline and since 2021, what device it needs, how many vendors name it, and the pages that show this. |
-| [crosswalk.csv](crosswalk.csv) | What the four certification schemes require for each indicator, and how they check it. It has 232 rows, one per indicator per scheme. |
+| [crosswalk.csv](crosswalk.csv) | What the four certification schemes require for each indicator, and how they check it. It has 324 rows, one per indicator per scheme. |
 | [decision_log.md](decision_log.md) | Every judgement the rules did not cover, dated and written down before it was applied. Entries are not edited once pushed, so older entries use the file and column names of their day. |
 | [audit_log.md](audit_log.md) | One row for each audited version that was published, recording the AI audit that allowed it (section 5). |
 | [open_questions.md](open_questions.md) | Cells the rules do not settle, one line each, with the factor, the possible readings and the pages behind them. A line that has been resolved stays, with its resolution. |
@@ -106,6 +106,16 @@ Kevin's second list is indicators required by schemes but checked by hand. An in
 
 Both tests are set out in rules.md, section 6, and [build_output.py](../3_code/build_output.py) applies them as written there: it holds back a Yes on list 1 until all four schemes are read for an indicator, and it uses the wider list 2 test. The decision_log entry of 2 October on the two item 13 views says the script still applied the old filter; the entry of 3 October on build_output.py records that it now applies both tests.
 
+### Step 5. The sensor side, the welfare state and column 1
+
+Kevin's change request of 7 October 2026 asked for three more things, built on 17 October 2026 (rules.md, rules 4.12 to 4.14; decision_log.md, 17 October 2026).
+
+The sensor side. Every parameter named in the descriptions of the 129 products in the Stygar list was coded. Where a protocol row's search words already match it, it stays with that row. Every other parameter joined one of 23 classes, rows I060 to I082, such as rumination, body temperature, location, oestrus detection, milk yield and milk fed to each calf. Each class has search words that reproduce its product count, and check_tables.py confirms that every product is named by some row, except one whose description names no parameter. Each new row was graded like any other: sensor evidence from Stygar's Table 2, a grade since 2021, device needed, and the four schemes, read by eight readers and a ninth for the two feed rows.
+
+The welfare state. Each row names the state it measures, read from EFSA's table headings (for example Subclinical ketosis) or, for a Welfare Quality only row, its criterion. The sheet By welfare state reads Kevin's lists once per state, so three tests for one state count once.
+
+Column 1, welfare relevance. Protocol rows are graded by their measure type: established for a measure taken on the animal, established input for a measure of housing or management. Sensor side rows are graded only from what three sources say in their own words: the EFSA opinion, the Welfare Quality protocol and Linstädt and colleagues 2024, each searched in full for every sentence about the parameter. A sentence that questions the link to welfare gives indirect or contested; otherwise a sentence that links it gives supported; otherwise a product's description or a scheme requirement that treats it as about health or welfare gives no welfare validation; otherwise it is not framed as welfare. Column 1 is not part of the score.
+
 ## 3. What "checked" means
 
 A value in the tables is checked in one of three ways: read the page, apply the rule, or count again. A fourth kind of cell, not known yet, has nothing to check; it says openly what is missing.
@@ -161,13 +171,13 @@ To run a check yourself, install Python, open a terminal in the repository folde
 
 Public documents only. The project never contacts a vendor and never uses anything behind a login, so what a product does is what the published sources say it does.
 
-The sensor evidence is a 2021 baseline. It rests on the products and studies Stygar and colleagues found for their 2021 paper, and on Maroto Molina's 2020 reading. Newer products and studies are not in the table until the update pass described in Step 2.
+The sensor evidence starts from a 2021 baseline. It rests on the products and studies Stygar and colleagues found for their 2021 paper, and on Maroto Molina's 2020 reading. Since 16 October 2026 a second grade from studies and makers' pages since 2021 sits beside it (rules.md, rule 4.11), and the score uses the stronger of the two.
 
 A validated product is not the same as an accurate one. Stygar classed every tool for physical condition and health as below their high performance threshold, and for body condition they report it was reliable only for cows of average condition.
 
-[open_questions.md](open_questions.md) has 24 lines. Seven are open about the 2021 sensor evidence (I006, I009, I013, I020, I039, I057 and I058), six about the evidence since 2021 (I006, I010, I039, I045 and I056, dated 16 October 2026, and I058, dated 17 October 2026), and four about device needed (I043, I044 and I047, dated 9 October 2026, and I059, dated 12 October 2026). Five, dated 8 October 2026, are open about scheme rows: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and for Certified Humane. A sixth, on I037 for RSPCA Assured, was closed the same day: hind quarters is Welfare Quality's own name for that measure's area, so the row is required. An unsure scheme row is not counted as required. One more line, on the Maroto Molina rating of I057 and I058, was closed on 3 October 2026 by reading rule 4.3 literally, which gives partial. An unsure row scores 0 on sensor evidence until a rule settles it.
+[open_questions.md](open_questions.md) has 43 lines, 41 open and 2 closed. On the protocol side, seven are open about the 2021 sensor evidence (I006, I009, I013, I020, I039, I057 and I058), six about the evidence since 2021 (I006, I010, I039, I045 and I056, dated 16 October 2026, and I058, dated 17 October 2026), and four about device needed (I043, I044 and I047, dated 9 October 2026, and I059, dated 12 October 2026). Five, dated 8 October 2026, are open about scheme rows: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and for Certified Humane. A sixth, on I037 for RSPCA Assured, was closed the same day: hind quarters is Welfare Quality's own name for that measure's area, so the row is required. One more line, on the Maroto Molina rating of I057 and I058, was closed on 3 October 2026 by reading rule 4.3 literally, which gives partial. On the sensor side, dated 17 October 2026, sixteen are open about scheme rows and three about the evidence since 2021 (I062, I065 and I080). An unsure scheme row is not counted as required. An unsure row scores 0 on sensor evidence until a rule settles it.
 
-The certification schemes are read for all 58 indicators. The scheme reading of 8 October passed the AI audit (audit_log.md, the row for commit 62f142a).
+The certification schemes are read for all 81 rows. The scheme reading of 8 October passed the AI audit (audit_log.md, the row for commit 62f142a).
 
 Every indicator has a sensor row. Since 16 October 2026 each also has a grade for the evidence since 2021; two points of that pass are provisional until Kevin answers (decision_log.md, 16 October 2026).
 

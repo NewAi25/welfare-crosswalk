@@ -19,7 +19,11 @@ What it checks
        Provider|Name pair in the Stygar list of 129;
        vendors_naming_it equals a fresh count from the Stygar spreadsheet;
        maroto_molina_rating is copied correctly from indicators.csv;
-       listed_by follows from which source columns are filled;
+       listed_by follows from which source columns are filled, and plf_only rows name their parameter;
+       welfare_relevance follows the measure type on protocol rows (established or established_input)
+       and is one of the four sensor side grades, or unsure, on plf_only rows;
+       every one of the 129 products in the Stygar list is named by at least one row's search words,
+       except the one whose aim names no parameter (Mastiline Luci, "Milk analyzer");
        every cell coded unsure (in any column that allows it) has a line for its indicator
        in 2_research/open_questions.md;
        a scheme row's requirement_status (required, unsure, not_required) agrees with what it
@@ -52,16 +56,23 @@ TABLES = ROOT / "2_research"
 YES_NO = {"yes", "no"}
 RATINGS = {"yes", "partial", "no", "not_covered"}
 EFSA_LEVELS = {"high", "medium", "low", "mixed", "not_stated"}  # the level word EFSA's own ABM table uses
+WELFARE_RELEVANCE = {"established", "established_input", "supported", "indirect_or_contested", "no_welfare_validation",
+                     "not_welfare_relevant", "unsure"}  # column 1, rules.md rule 4.14
+# The one product in the Stygar list whose aim names no parameter, so no row's search words can match it (rule 4.12).
+AIM_NAMES_NO_PARAMETER = {"Mastiline|Luci"}
 
 SCHEMAS = {
     "indicators.csv": {
         "columns": ["indicator_id", "efsa_welfare_consequence", "efsa_measure", "wq_principle", "wq_criterion",
                     "wq_measure", "measure_type", "maroto_molina_technology", "maroto_molina_rating", "notes", "listed_by",
-                    "efsa_sensitivity", "efsa_specificity", "efsa_feasibility", "efsa_ratings_quoted"],
-        "codes": {"maroto_molina_rating": RATINGS, "listed_by": {"joined", "efsa_only", "wq_only"},
+                    "efsa_sensitivity", "efsa_specificity", "efsa_feasibility", "efsa_ratings_quoted",
+                    "plf_parameter", "welfare_state", "welfare_relevance", "welfare_relevance_evidence"],
+        "codes": {"maroto_molina_rating": RATINGS, "listed_by": {"joined", "efsa_only", "wq_only", "plf_only"},
+                  "welfare_relevance": WELFARE_RELEVANCE,
                   "measure_type": {"animal_based", "resource_based", "management_based", "none"},
                   "efsa_sensitivity": EFSA_LEVELS, "efsa_specificity": EFSA_LEVELS, "efsa_feasibility": EFSA_LEVELS},
-        "must_fill": ["indicator_id", "listed_by", "measure_type", "maroto_molina_rating"],
+        "must_fill": ["indicator_id", "listed_by", "measure_type", "maroto_molina_rating", "welfare_state",
+                      "welfare_relevance", "welfare_relevance_evidence"],
         "key": ["indicator_id"],
     },
     "products.csv": {
@@ -186,7 +197,9 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
     for number, r in tables["indicators.csv"]:
         expected = ("joined" if r["efsa_measure"].strip() and r["wq_measure"].strip()
                     else "efsa_only" if r["efsa_measure"].strip()
-                    else "wq_only" if (r["wq_measure"].strip() or r["wq_criterion"].strip()) else "no source")
+                    else "wq_only" if (r["wq_measure"].strip() or r["wq_criterion"].strip())
+                    else "plf_only" if r["plf_parameter"].strip() else "no source")
+        protocol = expected in ("joined", "efsa_only", "wq_only")
         if r["listed_by"] != expected:
             problems.setdefault("indicators.csv", f"line {number}: listed_by is {r['listed_by']}, the sources give {expected}")
         elif r["efsa_measure"].strip() and r["measure_type"] != "animal_based":
@@ -197,6 +210,16 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
         elif not r["efsa_measure"].strip() and (r["efsa_sensitivity"] or r["efsa_specificity"]
                                                 or r["efsa_feasibility"] or r["efsa_ratings_quoted"].strip()):
             problems.setdefault("indicators.csv", f"line {number}: EFSA ratings are only filled on EFSA rows")
+        elif protocol and r["plf_parameter"].strip():
+            problems.setdefault("indicators.csv", f"line {number}: plf_parameter is only filled on plf_only rows")
+        elif protocol and r["welfare_relevance"] != ("established" if r["measure_type"] == "animal_based" else "established_input"):
+            problems.setdefault("indicators.csv", f"line {number}: a protocol row is established when animal_based, "
+                                "otherwise established_input (rule 4.14)")
+        elif not protocol and r["welfare_relevance"] in ("established", "established_input"):
+            problems.setdefault("indicators.csv", f"line {number}: a plf_only row cannot be established (rule 4.14)")
+        elif r["welfare_relevance"] == "unsure" and not any(
+                r["indicator_id"] in line and "welfare relevance" in line for line in open_questions.splitlines()):
+            problems.setdefault("indicators.csv", f"line {number}: welfare_relevance is unsure but has no open question")
 
     for number, r in tables["products.csv"]:
         if r["in_stygar_list"] == "yes" and r["appendix_name"] not in stygar_names:
@@ -291,6 +314,14 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
                          for c in ([x.strip() for x in l.split("|")] for l in open_questions.splitlines()) if len(c) > 4)
         if r["since_2021_grade"] == "unsure" and not since_line:
             problems.setdefault("sensor_coverage.csv", f"line {number}: since_2021_grade is unsure but has no open question")
+
+    covered = {p["key"] for p in stygar for _, r in tables["sensor_coverage.csv"]
+               if count_vendors.names_it(p, count_vendors.search_words(r["search_words"]))}
+    uncovered = sorted(k for k in stygar_keys - covered if k not in AIM_NAMES_NO_PARAMETER)
+    if uncovered:
+        problems.setdefault("sensor_coverage.csv", f"no row's search words name these products: {', '.join(uncovered)} (rule 4.12)")
+    elif not AIM_NAMES_NO_PARAMETER <= stygar_keys - covered:
+        problems.setdefault("sensor_coverage.csv", "a product listed as naming no parameter is now named by a row")
 
     stygar_rows = {p["row"]: p for p in stygar}
     links = tables["product_links.csv"]

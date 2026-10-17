@@ -1,16 +1,16 @@
 # Rules
 
-Version 0.7.1, 17 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
+Version 0.8, 17 October 2026. First fixed as version 0.1 on 25 September 2026, before any sensor row was graded; the indicator and product tables were carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since. Every change is dated in the [change log](#8-change-log) at the end.
 
 ## 1. In one page
 
-This project answers item 13 on Kevin Xia's Top 30 list for dairy cows ([his text](../1_sources/kevin_item_13.md)). It sets three things side by side: validated welfare indicators, what commercial farm sensors measure, and what certification schemes require and how they check it. The research sits in six tables in this folder. This file is the rulebook for those tables. For every column it says what the column means, which rule fills it, and which source the value is read from.
+This project answers item 13 on Kevin Xia's Top 30 list for dairy cows ([his text](../1_sources/kevin_item_13.md)). It sets three things side by side: validated welfare indicators, what commercial farm sensors measure, and what certification schemes require and how they check it. Since 17 October 2026, following Kevin's change request of 7 October 2026, the rows come from two sides, the welfare protocols and the parameters that sensor products say they measure, and a column 1 says whether the welfare sources treat each row as a measure of welfare. The research sits in six tables in this folder. This file is the rulebook for those tables. For every column it says what the column means, which rule fills it, and which source the value is read from.
 
 The three part question, indicators that are (a) measurable by AI, (b) acceptable to industry and (c) covered by existing sensors or certification schemes, comes from Kevin's proposal on the call of 22 September ([automated notes](../1_sources/kevin_call_2026-09-22.md)), as written up in Manisha's smaller scope analysis, which Kevin quotes in his Slack reply of 25 September ([his words](../1_sources/kevin_slack_2026-09-25.md)). In that reply he calls industry acceptability, and coverage by existing sensors and by existing certification schemes, soft factors that make adoption easier rather than hard requirements. So each factor is a graded column, every indicator stays in the table, and the rank is a stated rule of thumb that any reader can sort again by any single factor.
 
 The answer itself is the Excel file [welfare_crosswalk_dairy.xlsx](../4_output/welfare_crosswalk_dairy.xlsx). Nothing in it is typed by hand. The script [build_output.py](../3_code/build_output.py) writes it from the six tables using the rules below.
 
-How to use this file. If a word or a code puzzles you, look it up in section 2. If you want to know what a column holds, or what an empty cell means, see section 3. If you want to know why a cell has its value, find the rule in section 4, then open the page named in that row's where_to_check column and read it. Section 5 explains the score, section 6 defines Kevin's two lists, and section 7 says what happens when the rules cannot decide.
+How to use this file. If a word or a code puzzles you, look it up in section 2. If you want to know what a column holds, or what an empty cell means, see section 3. If you want to know why a cell has its value, find the rule in section 4, then open the page named in that row's where_to_check column and read it. Section 5 explains the score, section 6 defines Kevin's two lists and how they are read per welfare state, and section 7 says what happens when the rules cannot decide.
 
 How this file changes. A rule changes only through a dated entry in [decision_log.md](decision_log.md) and a new row in the change log at the end of this file. A rewording keeps the meaning unless the decision log entry says the meaning changes. Older entries in the decision log use the file and column names of their day; its entry of 2 October 2026 on the reorganisation gives the old and new names.
 
@@ -34,9 +34,12 @@ How this file changes. A rule changes only through a dated entry in [decision_lo
 | Stygar Table 1, Table 2 | Table 1 (page 6) summarises the externally validated technologies and puts each study under independent validation or self validation. Table 2 (page 7) gives the results of the validation trials by measured trait, says whether each trial took place on a research farm or a commercial farm, and places each technology in a high performance or a lower performance column. |
 | Study number | The number Stygar give a study in their reference list, for example 48. The tables call it a study number; older notes call it a reference number or ref. |
 | Validated | In this repository the word has one narrow meaning: Stygar code at least one external validation study for that product on that trait. It never means more than that here. The one exception is the icar_validated column of products.csv, which means the product is on ICAR's list. |
+| Linstädt 2024 | Linstädt, Thöne-Reineke and Merle 2024, Frontiers in Veterinary Science 11:1429097, a systematic review of animal based welfare indicators for dairy cows, covering studies from 2011 to 2021. It summarises studies one by one and gives no grade per indicator. It is one of the three sources of column 1 for the sensor side rows (rule 4.14). |
 | Maroto Molina 2020 | Maroto Molina et al. 2020, Journal of Dairy Research 87(S1). They go through the Welfare Quality measures and say which sensor technologies could provide each one. They give no rating of their own, so the rating column here is this project's coding of their text. |
 | Substitute measure | Something Maroto Molina propose measuring in place of the protocol's own measure, for example water intake in place of the water point measures. |
 | PLF | Precision livestock farming: sensors, cameras and data analysis used on farms. |
+| Sensor side | The rows that come from what sensor products say they measure, not from a welfare protocol: one row per kind of parameter that a product in the Stygar list names and that no protocol row covers (rule 4.12). They are coded listed_by plf_only. The protocol side is the 58 rows from EFSA and Welfare Quality. |
+| Welfare state | The state or problem a row measures, read from EFSA's table headings or the Welfare Quality criterion (rule 4.13). Several rows can test one state, such as the three EFSA tests for subclinical ketosis. |
 | FARM v5 | FARM Animal Care Version 5, the US dairy industry's own animal care programme, written by the National Milk Producers Federation. It is read twice: for the industry naming factor, and as one of the four schemes. |
 | The four schemes | RSPCA Assured dairy cattle standards, April 2026 (UK); FARM v5 (US); Global Animal Partnership dairy standard version 2.0 (US), called GAP; Certified Humane dairy standards, Edition 23 (US). In the tables they are coded RSPCA_Assured, FARM_v5, GAP_dairy and Certified_Humane. |
 | ICAR | The International Committee for Animal Recording. It keeps a list of validated sensor systems; the copy used here was saved on 16 September 2026. The three products in products.csv that are not in the Stygar list (P018 to P020) come from that list, and all three measure milk. P018, the Ekomilk Horizon Unlimited analyser, measures somatic cell count, which is indicators I057 and I058, and milk composition. P019, the Brolis BLH01 in line sensor, measures milk fat and protein, which EFSA uses for I021 and I025. P020, the Panazoo MMI sensor, measures milk yield. The Ekomilk report found that its somatic cell count met ICAR's accuracy limit only between 0 and 500,000 cells per ml, not over the full range. |
@@ -94,13 +97,26 @@ Each coded column takes only the values below. [check_tables.py](../3_code/check
 | no | They say sensors cannot provide it. |
 | not_covered | The paper does not discuss the measure, or discusses it but names no technology for it. |
 
-**listed_by** (indicators.csv): which of the two indicator sources lists the indicator.
+**listed_by** (indicators.csv): which of the two indicator sources lists the indicator, or plf_only for a sensor side row.
 
 | Value | Meaning |
 |---|---|
 | joined | EFSA and Welfare Quality share the row. |
 | efsa_only | Only EFSA lists it. |
 | wq_only | Only Welfare Quality lists it. |
+| plf_only | No protocol lists it: a sensor side row, a parameter that products in the Stygar list say they measure (rule 4.12). |
+
+**welfare_relevance** (indicators.csv): column 1, whether the welfare sources treat the row as a measure of welfare. The full rule is [rule 4.14](#414-welfare-relevance-column-1). It is not part of the score.
+
+| Value | Meaning | Label in the Excel file |
+|---|---|---|
+| established | A protocol row whose measure is animal based: EFSA's ABM tables or the Welfare Quality protocol list it as a measure taken on the animal. | Established |
+| established_input | A protocol row whose measure is resource based or management based, or a criterion with no measure (thermal comfort): Welfare Quality lists it, but it describes the farm rather than the animal. | Established input |
+| supported | A sensor side row that EFSA 2023, Welfare Quality or Linstädt 2024 links to a welfare problem, condition or state, with no passage in them questioning the link. | Supported |
+| indirect_or_contested | A sensor side row for which one of those three sources says the link to welfare is indirect, insufficient on its own, inconsistent, unclear or debated. | Indirect or contested |
+| no_welfare_validation | A sensor side row that a product's own description frames as being for health or welfare, or that a scheme requires, which none of the three sources links to welfare. | No welfare validation |
+| not_welfare_relevant | A sensor side row that no product's description, no scheme requirement and none of the three sources ties to health or welfare. | Not framed as welfare |
+| unsure | The rules do not settle it. See section 7. | Unclear |
 
 **efsa_sensitivity, efsa_specificity, efsa_feasibility** (indicators.csv): the level word EFSA's own ABM table uses for the measure. The full rule is [rule 4.9](#49-efsas-own-ratings). In the Excel file they show as High, Medium, Low, "Mixed (EFSA gives two levels)" and "Not stated by EFSA".
 
@@ -181,24 +197,28 @@ Six tables, each a CSV file (a plain spreadsheet file) with fixed column names i
 
 ### indicators.csv: the welfare indicators (column 1 of the crosswalk)
 
-One row per indicator. There are 58 rows. The table was carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since; the rule for which indicators belong is [rule 4.1](#41-which-indicators-are-in-the-table).
+One row per indicator. There are 81 rows: the 58 protocol rows, carried over when this repository was set up on 25 September 2026 (decision_log.md, first entry) and corrected since, and 23 sensor side rows added on 17 October 2026. The rule for which protocol indicators belong is [rule 4.1](#41-which-indicators-are-in-the-table), and for the sensor side rows [rule 4.12](#412-the-sensor-side-rows).
 
 | Column | What it holds | When empty |
 |---|---|---|
 | indicator_id | The identifier, I001 onwards, used by the other tables. A removed row's number is not reused, so I042 is missing. | Never. |
 | efsa_welfare_consequence | The EFSA welfare consequence. | On a Welfare Quality only row. |
-| efsa_measure | The EFSA animal based measure. | On a Welfare Quality only row. |
-| wq_principle, wq_criterion | The Welfare Quality principle and criterion. | On an EFSA only row. |
-| wq_measure | The Welfare Quality measure. | On an EFSA only row, and on thermal comfort (I039), the one row where Welfare Quality defines no measure. |
+| efsa_measure | The EFSA animal based measure. | On a Welfare Quality only row and a sensor side row. |
+| wq_principle, wq_criterion | The Welfare Quality principle and criterion. | On an EFSA only row and a sensor side row. |
+| wq_measure | The Welfare Quality measure. | On an EFSA only row, on a sensor side row, and on thermal comfort (I039), the one row where Welfare Quality defines no measure. |
 | measure_type | animal_based, resource_based, management_based or none (section 2). | Never. |
 | maroto_molina_technology | What Maroto Molina 2020 identify for the measure, in words. | Never; where they do not discuss it, the cell says so. |
 | maroto_molina_rating | yes, partial, no or not_covered ([rule 4.3](#43-maroto-molina-rating)). | Never. |
 | notes | The source table, the basis for joining an EFSA and a Welfare Quality measure, and open questions. | May be empty when there is nothing to add. |
-| listed_by | joined, efsa_only or wq_only. check_tables.py confirms it follows from which source columns are filled. | Never. |
-| efsa_sensitivity | EFSA's level word for sensitivity: high, medium, low, mixed or not_stated ([rule 4.9](#49-efsas-own-ratings)). | On a Welfare Quality only row, which EFSA does not rate. Filled on all 32 rows that come from EFSA. check_tables.py confirms both. |
+| listed_by | joined, efsa_only, wq_only or plf_only. check_tables.py confirms it follows from which source columns are filled. | Never. |
+| efsa_sensitivity | EFSA's level word for sensitivity: high, medium, low, mixed or not_stated ([rule 4.9](#49-efsas-own-ratings)). | On a Welfare Quality only row or a sensor side row, which EFSA does not rate. Filled on all 32 rows that come from EFSA. check_tables.py confirms both. |
 | efsa_specificity | EFSA's level word for specificity, with the same values. | As for efsa_sensitivity. |
 | efsa_feasibility | EFSA's level word for feasibility on farm, with the same values. | As for efsa_sensitivity. |
 | efsa_ratings_quoted | EFSA's table and PDF page, and the passages the three ratings are read from, quoted. | As for efsa_sensitivity. |
+| plf_parameter | The name of the parameter on a sensor side row, for example Rumination ([rule 4.12](#412-the-sensor-side-rows)). | On every protocol row. |
+| welfare_state | The welfare state the row measures ([rule 4.13](#413-welfare-state)). | Never. |
+| welfare_relevance | Column 1, the welfare relevance grade ([rule 4.14](#414-welfare-relevance-column-1)). check_tables.py confirms that a protocol row is established or established_input according to its measure_type. | Never. |
+| welfare_relevance_evidence | What the grade rests on: the protocol table or page for a protocol row; for a sensor side row, the passages from the three sources, quoted with page, and, where none links it, the product descriptions that frame it. | Never. |
 
 ### products.csv: the profiled sensor products
 
@@ -221,7 +241,7 @@ One row per product. There are 20: 17 in the Stygar list, which carry Stygar's v
 
 ### sensor_coverage.csv: what sensors measure (column 2 of the crosswalk)
 
-One row per indicator. Since 9 October 2026 there are 58 rows, one for each indicator. An indicator with no row here would not yet have been checked for sensors, and the Excel file would show it as not yet checked.
+One row per indicator. Since 17 October 2026 there are 81 rows, one for each indicator. An indicator with no row here would not yet have been checked for sensors, and the Excel file would show it as not yet checked.
 
 | Column | What it holds | When empty |
 |---|---|---|
@@ -261,7 +281,7 @@ One row per study or maker page that a grade since 2021 rests on, with its quali
 
 ### crosswalk.csv: what schemes require (column 3 of the crosswalk)
 
-One row per indicator per scheme. An indicator that no scheme requires still gets four rows, by rule. check_tables.py does not check that every indicator has all four rows, so the person filling the table checks that the row count is four times the number of indicators. build_output.py counts an indicator's schemes as read in full only when all four of its rows are present; a single required row already settles list 1 as No, and a required row checked by hand already settles list 2 as Yes. Since 8 October 2026 the table has all 232 rows, four for each of the 58 indicators: the four schemes were read in full against every indicator under rules 4.7 and 4.8.
+One row per indicator per scheme. An indicator that no scheme requires still gets four rows, by rule. check_tables.py does not check that every indicator has all four rows, so the person filling the table checks that the row count is four times the number of indicators. build_output.py counts an indicator's schemes as read in full only when all four of its rows are present; a single required row already settles list 1 as No, and a required row checked by hand already settles list 2 as Yes. Since 8 October 2026 the table has had four rows for each of the 58 protocol indicators, and since 17 October 2026 four for each of the 23 sensor side rows, 324 in all: the four schemes were read in full against every indicator under rules 4.7 and 4.8.
 
 | Column | What it holds | When empty |
 |---|---|---|
@@ -304,7 +324,7 @@ The EFSA rows are every animal based measure in EFSA's ABM assessment tables for
 
 The Welfare Quality rows are every measure in the version 3.2 protocol overview (PDF page 22, printed page 21). Most are animal based, and some are resource or management based, as the Scope line of each measure says. Three adjustments are made. The two lameness measures, loose housed and tied, share row I001. The one integument alterations measure is split into I004 and I005 to follow EFSA's hock and knee measures. Thermal comfort, a criterion for which the protocol defines no measure, has its own row, I039.
 
-That gives 32 EFSA rows and 32 Welfare Quality rows, 6 of them joined, so 58 rows in all: 26 efsa_only, 26 wq_only and 6 joined. Each row carries its listed_by value: joined when EFSA and Welfare Quality share the row, efsa_only when only EFSA lists it, wq_only when only Welfare Quality lists it. It is shown so that a reader who takes Welfare Quality alone as the validated set can leave out the 26 efsa_only rows without the table changing.
+That gives 32 EFSA rows and 32 Welfare Quality rows, 6 of them joined, so 58 rows in all: 26 efsa_only, 26 wq_only and 6 joined. Each row carries its listed_by value: joined when EFSA and Welfare Quality share the row, efsa_only when only EFSA lists it, wq_only when only Welfare Quality lists it. It is shown so that a reader who takes Welfare Quality alone as the validated set can leave out the 26 efsa_only rows without the table changing. These 58 are the protocol side. Since 17 October 2026 the table also has sensor side rows, coded plf_only, for parameters that sensor products say they measure ([rule 4.12](#412-the-sensor-side-rows)); a reader who wants only the protocol side can leave them out the same way.
 
 **Example.** I001 is joined: EFSA's Gait assessment, under Locomotory disorders, shares the row with Welfare Quality's Lameness. Its notes say that EFSA Table 16 defines the 3 point scale citing Welfare Quality 2009, and that the row merges the two Welfare Quality lameness measures. I039, thermal comfort, is wq_only with measure_type none.
 
@@ -490,6 +510,46 @@ unsure: the sources above do not settle it. Where the baseline is unsure because
 
 **How to check.** Read the row's since_2021_evidence keys on the sheet Evidence since 2021, open each source file named there, and confirm the product, the measure, the reference method and the result.
 
+### 4.12 The sensor side rows
+
+**Question.** What do commercial sensor products say they measure that no protocol row covers?
+
+**Rule.** Every parameter named in the AIM of a product in the Stygar list is either covered by a protocol row or has a row of its own, coded listed_by plf_only, so that no parameter is let in or kept out by judgement (Kevin's change request of 7 October 2026, and the fourth amendment in the decision log entry of that day). A parameter named in an aim is covered by a protocol row when one of that row's search words in sensor_coverage.csv matches it: the project's existing reading of which aims name which indicator (rule 4.5). Every other parameter named in an aim belongs to a parameter class, at the grain of Kevin's examples (activity, lying time, rumination, temperature, weight, location). Words join one class when they name the same quantity in other words or by another method: heat detection and milk progesterone for heat; positioning, GPS, tracking, a virtual fence, herd counting and theft alerts for location; rumen temperature and fever for body temperature. A general status a product claims (health, wellbeing, nutritional, reproductive) is a class of its own. A class is read in the animals its aims name: the automatic calf milk feeders form their own row, I082, because rule 6 of rule 4.8 reads every row in its own animals. Each class has search words that reproduce its product count, as every row does. One aim names no parameter, Mastiline Luci's "Milk analyzer", so it has no row; check_tables.py confirms that every other product in the list is named by at least one row. This gives 23 sensor side rows, I060 to I082.
+
+A sensor side row gets every column a protocol row gets, with the class as its measure: the sensor evidence of rule 4.2 and the grade since 2021 of rule 4.11, the Maroto Molina rating of rule 4.3, device needed, vendors naming it, the FARM factor and the four schemes of rules 4.4 to 4.8, the welfare state of rule 4.13 and column 1 of rule 4.14. Its EFSA ratings are empty, as on a Welfare Quality only row. For the grade since 2021 no new vendor check is made: every sensor side row is already at least Claimed in 2021, which is the most a vendor check can give (rule 4.11), so the grade is read from the other sources rule 4.11 names, already on disk.
+
+**Example.** I060, rumination: 14 aims name it (search word ruminat). Stygar Table 2 (page 7) codes rumination studies for five products in the list, among them CowManager SensOor and RumiWatch, so it is validated_commercial. No scheme requires it.
+
+**How to check.** Run `python 3_code/count_vendors.py I060`, or open the Sensors x products sheet, where every row marks the products whose aims its search words match. The product with no row is the one column left blank in every row.
+
+### 4.13 Welfare state
+
+**Question.** Which rows measure the same welfare state, so that Kevin's lists can be read once per state?
+
+**Rule.** welfare_state is read from the sources, as the decision log entry of 7 October 2026 set out. For a row from EFSA (efsa_only or joined), it is the condition or problem that EFSA's ABM table names for the measure: the sub-heading in Table 46 (for example Subclinical ketosis, PDF 75), otherwise the table's title (Table 16, lameness; Table 17, claw conditions or claw diseases; Table 27, mastitis; Table 31, restriction of movement (locomotion); Table 32, restriction of movement (social behaviour); Table 33, resting problems (lying behaviour); Table 42, comfort behaviour). Table 18 lists hock and knee alterations but repeats Table 17's title (found_along_the_way.md, section 12), so its two rows take the name of the Welfare Quality measure they share, Integument alterations. For a Welfare Quality only row, it is the Welfare Quality criterion, the protocol's own grouping of measures (for example Absence of prolonged thirst for the four water point rows); a criterion can group measures of several conditions, as Absence of disease does. For a sensor side row, it is the row's own parameter, unless its aims name a condition that an EFSA table heading names, in which case it takes that heading: I081, rumen acidosis, whose aims name rumen acidosis and SARA, is Subacute ruminal acidosis. The joined row I023, body condition scoring, sits in EFSA's Subclinical ketosis; Welfare Quality places the same measure under Absence of prolonged hunger, which its wq_criterion column shows.
+
+**Example.** I021, I022 and I023 are EFSA's three tests for subclinical ketosis, and all three carry the state Subclinical ketosis.
+
+**How to check.** Open the EFSA opinion at the table named in the row's efsa_ratings_quoted, or the Welfare Quality overview (PDF 22, printed 21), and read the heading or criterion.
+
+### 4.14 Welfare relevance (column 1)
+
+**Question.** Do the welfare sources treat the row as a measure of welfare? This is a different question from whether it can be measured, which is column (a).
+
+**Rule.** No grade is a welfare judgement made here; every grade follows from the measure type or from the words of named sources (decision log, 7 October 2026, third amendment; Manisha's decisions of 17 October 2026).
+
+Protocol rows. established when the measure_type is animal_based, because EFSA's ABM tables or the Welfare Quality protocol list it as a measure taken on the animal. established_input when it is resource_based, management_based or none: Welfare Quality lists it, but as a measure of the housing or the management, or as a criterion with no measure, which Kevin's change request calls validated protocol components rather than welfare outcomes. No protocol row is graded down from EFSA's own ratings; they stand beside the grade.
+
+Sensor side rows. Three sources only, the ones Kevin's change request names for this column, each read in full: the EFSA 2023 opinion, the Welfare Quality protocol version 3.2, and Linstädt et al. 2024, including what it says about the studies it cites. Every passage about the parameter in cattle is sorted by its own words. A link says that the parameter, or a direct synonym of it, is a measure, indicator, sign or predictor of, or is associated with, or changes with, a welfare problem, a disease or condition, pain, stress, fear, comfort, an emotional state, or welfare itself; a table that lists it as a measure used to assess a welfare problem counts. A question says that the parameter's link to welfare, or its use as an indicator of welfare or of a welfare problem, is indirect, insufficient on its own, weak, inconsistent, unclear or not fully understood. A passage that names a different parameter (for example appetite for feed intake, or GPS only as a way to measure walking speed) is neither; nor is a passage saying that the condition a parameter detects is not a hazard for some other problem.
+
+The grade, in this order: indirect_or_contested if any passage questions the link; otherwise supported if any passage links it; otherwise no_welfare_validation if the aim of a product that names it says the parameter is for health, welfare or wellbeing or for a named disease or condition, or the parameter is itself a health, welfare or condition status, or one of the four schemes requires it (requirement_status required), since the four schemes are animal welfare standards and a requirement frames the parameter as part of welfare; otherwise not_welfare_relevant. This follows Kevin's change request, which keeps not welfare relevant for parameters that no one credibly claims are welfare relevant. A product's aim that only lists the parameter beside health words, without saying it is for them, does not frame it. unsure when a passage the grade turns on is borderline under these words, with a line in open_questions.md.
+
+Column 1 is not part of the score and does not change Kevin's lists (Manisha's decision of 17 October 2026). It sits beside them, so a sensor side row on list 1 shows whether the welfare sources treat it as a welfare measure.
+
+**Example.** I075, milk yield, is indirect_or_contested: Linstädt et al. 2024 (PDF 12) say that "relying solely on milk yield is insufficient for gauging the comprehensive welfare of the herd", and EFSA 2023 (section 5.7, PDF 80) finds "no clear evidence that herd size or milk yield could be useful characteristics to identify farms at risk of poor welfare", although both also link milk yield to lameness or disease. I060, rumination, is supported: Linstädt et al. 2024 (PDF 9) report that rumination time fell as heat stress rose, and nothing in the three sources questions the link. I066, location, is not_welfare_relevant: no passage links it to welfare, no product description says it is for health or welfare, and no scheme requires it. I067, animal identification, is no_welfare_validation: no passage links it, but FARM v5 and Global Animal Partnership require it, so the welfare schemes frame it as part of welfare.
+
+**How to check.** Read the row's welfare_relevance_evidence, open each source at the page given and read the passage; then apply the order above.
+
 ## 5. The score
 
 Each factor is turned into 0 to 3 points as follows, and the five are added to a score from 0 to 15. For sensor evidence, the grade scored is the stronger of the 2021 grade and the grade since 2021 (rule 4.11).
@@ -522,13 +582,15 @@ A scheme counts as requiring an indicator only when its row's requirement_status
 
 **List 2, required but manually audited.** Kevin's "indicators required but manually audited". Per scheme row, the requirement is present (requirement_status required) and the scheme checks it by inspection or by records review (how_checked visual_inspection or records_review), not by accepting sensor data. The sensor evidence for the indicator is shown beside it. This replaces the earlier, narrower filter, which also required sensor evidence validated_commercial. When no scheme that requires the indicator checks it by inspection or records review, the list shows Unclear if a requiring scheme's how_checked is unsure, or if a scheme row is coded unsure, because either could put the indicator on the list. Where another scheme that requires it does check it by inspection or records review, the indicator is on the list, whatever the unsure row says.
 
-On 17 October 2026, with all four schemes read and the stronger of the two sensor grades used, the Read me sheet shows 9 indicators confirmed on list 1 (I002, I008, I012, I013, I021, I022, I025, I027 and I059) and 4 more Unclear because their sensor evidence is unsure (I009, I010, I039 and I056); 22 are confirmed on list 2. The 5 scheme rows coded unsure fall on four indicators (I036, I037, I038 and I048), and each of them is on list 2 through another scheme that requires it and checks it by hand, so no indicator shows Unclear on either list because of a scheme row.
+On 17 October 2026, with all four schemes read for all 81 rows and the stronger of the two sensor grades used, the Read me sheet shows 21 indicators confirmed on list 1: the 9 protocol rows I002, I008, I012, I013, I021, I022, I025, I027 and I059, and 12 sensor side rows, I060 to I066, I068 and I076 to I079. Four more are Unclear because their sensor evidence is unsure (I009, I010, I039 and I056), and 8 sensor side rows are Unclear because a scheme row is unsure (I069 to I075 and I081). 24 are confirmed on list 2: 22 protocol rows, and I067 (animal identification) and I082 (milk fed to each calf) on the sensor side. On the protocol side the 5 scheme rows coded unsure fall on four indicators (I036, I037, I038 and I048), each already on list 2 through another scheme, so they change neither list. Read per welfare state, 15 of the 45 states are on list 1 and 10 are Unclear; 15 are on list 2 and 9 are Unclear.
+
+**The lists by welfare state.** The sheet By welfare state reads both lists once per welfare state (rule 4.13). A state is on list 1 when at least one of its rows is Tested or Claimed (the stronger of the two grades) and no scheme requires any of its rows; it is No as soon as a scheme requires one of its rows, and Unclear when a scheme row of the state is unsure, or when its only candidate is a row whose sensor evidence is unsure. A state is on list 2 when at least one of its rows is on list 2, and Unclear when none is but one shows Unclear there. The sheet names the rows behind each answer, so a reader can see, for example, that subclinical ketosis is required through body condition scoring (I023) while its milk tests are not.
 
 ## 7. When the rules do not decide: unsure
 
 Any cell the rules above do not settle is coded unsure. The candidate readings go in the row's reasoning column, and a line in [open_questions.md](open_questions.md) gives the indicator, the factor and the candidates. It is resolved only by tightening the rule that failed, with a dated decision log entry. Otherwise it stays unsure in the published table, and the note says how many rows are unsure per factor. On sensor evidence, device needed and named by FARM, an unsure cell scores 0 points (section 5). A scheme row whose requirement_status is unsure does not count its scheme as requiring the indicator, and it can make Kevin's lists Unclear (section 6). An unsure how_checked cell, which is kept only for a required row whose method the scheme truly leaves open, still counts its scheme as requiring the indicator and can show Unclear on Kevin's list 2 (section 6).
 
-On 12 October 2026, seven rows are unsure on sensor evidence (I006, I009, I013, I020, I039, I057 and I058) and four on device needed (I043, I044, I047 and I059). On 17 October 2026, six rows are unsure on the grade since 2021 (I006, I010, I039, I045, I056 and I058). In crosswalk.csv, 5 of the 232 scheme rows have requirement_status unsure: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and Certified Humane. No FARM row is unsure, and no row has how_checked unsure.
+On 12 October 2026, seven rows are unsure on sensor evidence (I006, I009, I013, I020, I039, I057 and I058) and four on device needed (I043, I044, I047 and I059). On 17 October 2026, nine rows are unsure on the grade since 2021 (I006, I010, I039, I045, I056 and I058 on the protocol side; I062, I065 and I080 on the sensor side, where the 2021 grade stands either way). In crosswalk.csv, 21 of the 324 scheme rows have requirement_status unsure. Five are on the protocol side: I036 for Certified Humane, I037 for Certified Humane, I038 for RSPCA Assured, and I048 for Global Animal Partnership and Certified Humane. Sixteen are on the sensor side: I067 for RSPCA Assured and Certified Humane; I069 and I070 for RSPCA Assured; I071 for RSPCA Assured, Global Animal Partnership and Certified Humane; I072 for RSPCA Assured and Global Animal Partnership; I073 and I074 for Certified Humane; I075 for RSPCA Assured and Certified Humane; I080 for FARM; and I081 for RSPCA Assured and Certified Humane. Most turn on the same few points the reading rules do not settle: whether a general health inspection names a general health status, whether a farm's welfare outcome assessment names a welfare status, and whether acidosis named without its form names the acidosis row. No row has how_checked unsure, and no sensor side row is unsure on column 1.
 
 ## 8. Change log
 
@@ -553,3 +615,4 @@ The rows before 0.2.1 use the file and column names of their day. definitions.md
 | 2026-10-15 | 0.6 | Change of meaning: the sensor evidence grade research_only splits into research_demonstrated (a study the sources cite measured the indicator's own measure in cattle) and theoretically_measurable (only proposed, shown in another species or setting, or a substitute measure), both 1 point; none is defined as nothing in the two sources as of their dates | Kevin's change request of 7 October 2026 and the second of the three further points from the sense check in the decision_log entry of the same day; decision_log.md, 15 October 2026 |
 | 2026-10-16 | 0.7 | Change of meaning: a second sensor grade, evidence since 2021 (rule 4.11), with a new table evidence_since_2021.csv and three new columns in sensor_coverage.csv; the score and Kevin's list 1 use the stronger of the two grades. Two points are provisional pending Kevin: studies one step through a review count, and tests involving the maker count as validated with the involvement recorded | Kevin's change request of 7 October 2026 (evidence update and vendor check) and Manisha's decisions of 16 October 2026; decision_log.md, 16 October 2026 |
 | 2026-10-17 | 0.7.1 | Rule 4.11 made exact after the audit, no row's result changed: an unsure grade since 2021 makes a row unsure only when the 2021 grade is none; a measure computed from repeated values (I058) stays unsure on a test of single values, as on I006; a test report from an independent test body named on a maker's page (ICAR) is an admitted source; the one step point is marked provisional in the rule itself. Section 3 allows not_applicable for authors_independent on a maker page, and an empty since_2021_evidence where the grade rests only on a review's proposal | Audit of 17 October 2026; decision_log.md, 17 October 2026 |
+| 2026-10-17 | 0.8 | Change of meaning: the rows come from two sides. New rule 4.12 adds 23 sensor side rows (listed_by plf_only, I060 to I082), one per parameter class named in the Stygar list's aims and covered by no protocol row; rule 4.13 adds the column welfare_state; rule 4.14 adds column 1, welfare_relevance, with its evidence; indicators.csv gains plf_parameter, welfare_state, welfare_relevance and welfare_relevance_evidence. Section 6 also reads Kevin's lists per welfare state. The score and the list rules are unchanged | Kevin's change request of 7 October 2026 and its four amendments; Manisha's decisions of 17 October 2026; decision_log.md, 17 October 2026 |

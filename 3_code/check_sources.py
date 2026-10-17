@@ -10,7 +10,7 @@ In plain words
     given. For an ordinary file this script then confirms the copy is byte for byte identical.
     For the one paper whose publisher stamps every download with the date, time and
     downloader's IP address (kind binary_stamped), it compares the text with the stamp lines
-    removed. For the two web pages saved as text (kind text), a fresh copy cannot match; the
+    removed. For web pages and abstracts saved as text (kind text), a fresh copy cannot match; the
     network check confirms only that the live page still contains a set phrase.
 
 Technical detail follows.
@@ -106,7 +106,7 @@ def pdf_text_hash(data):
         for page in reader.pages:
             for line in (page.extract_text() or "").splitlines():
                 if not STAMP.search(line):
-                    # Cambridge added this words to the DOI line of each page in 2026; it is part of the stamp.
+                    # Cambridge added these words to the DOI line of each page in 2026; it is part of the stamp.
                     line = line.replace("Published online by Cambridge University Press", "")
                     lines.append(re.sub(r"\s+", " ", line).strip())
     except Exception as e:  # a damaged or non PDF file is reported, not a crash

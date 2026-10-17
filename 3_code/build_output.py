@@ -11,6 +11,7 @@ In plain words
 The sheets it writes
     Read me             the question, how to read the file, the answers so far, how to check
     Answer              one row per welfare indicator, ranked, with every factor visible
+    By welfare state    Kevin's two lists read per welfare state, so that several tests for one state count once
     Sensors x products  every indicator against all 129 products in the Stygar list
     Schemes             every indicator against the four certification schemes
     Product list        the 129 products, with what each vendor says it does
@@ -150,7 +151,24 @@ LINK_SHOWS_LABEL = {"product_page": "The product's page", "related_page": "A rel
                     "product_not_listed": "Maker's site, product not named on it", "none_found": "No maker site found"}
 EFSA_LABEL = {"high": "High", "medium": "Medium", "low": "Low", "mixed": "Mixed (EFSA gives two levels)",
               "not_stated": "Not stated by EFSA"}
-LISTED_BY_LABEL = {"joined": "EFSA and Welfare Quality", "efsa_only": "EFSA only", "wq_only": "Welfare Quality only"}
+LISTED_BY_LABEL = {"joined": "EFSA and Welfare Quality", "efsa_only": "EFSA only", "wq_only": "Welfare Quality only",
+                   "plf_only": "Sensor side only"}
+# Column 1, welfare relevance (rules.md rule 4.14). Grades for protocol rows follow from the measure type; grades
+# for sensor side rows follow from what EFSA 2023, the Welfare Quality protocol and Linstaedt et al. 2024 say.
+WELFARE_LABEL = {
+    "established": "Established: listed as an animal based welfare measure by EFSA 2023 or Welfare Quality",
+    "established_input": "Established input: listed by Welfare Quality as a resource or management measure, or a "
+                         "criterion with no measure; it describes the farm, not the animal's welfare itself",
+    "supported": "Supported: EFSA 2023, Welfare Quality or Linstaedt and colleagues 2024 link it to a welfare problem, "
+                 "condition or state, and none of them questions the link",
+    "indirect_or_contested": "Indirect or contested: one of those three sources says its link to welfare is indirect, "
+                             "insufficient on its own, inconsistent or debated",
+    "no_welfare_validation": "No welfare validation: a product's description frames it as about health or welfare, "
+                             "or a scheme requires it, but none of the three sources links it to welfare",
+    "not_welfare_relevant": "Not framed as welfare: no product's description, no scheme requirement and none of the "
+                            "three sources ties it to health or welfare",
+    "unsure": "Unclear: the written rules do not settle it (see open questions)",
+}
 NOT_YET = "Not yet checked"
 
 HEAD = Font(bold=True, color="FFFFFF")
@@ -167,6 +185,8 @@ def read(name):
 
 
 def indicator_name(r):
+    if r["listed_by"] == "plf_only":
+        return f"{r['plf_parameter']} (sensor side)"
     if r["efsa_measure"]:
         return f"{r['efsa_welfare_consequence']}: {r['efsa_measure']}"
     return r["wq_measure"] or f"{r['wq_criterion']} (Welfare Quality defines no measure)"
@@ -235,6 +255,11 @@ def compute():
                   "Sensors done, schemes not yet checked" if s else NOT_YET)
         answer.append({
             "id": iid, "name": indicator_name(ind), "listed_by": LISTED_BY_LABEL[ind["listed_by"]],
+            "side": "sensor" if ind["listed_by"] == "plf_only" else "protocol",
+            "state": ind["welfare_state"], "welfare_code": ind["welfare_relevance"],
+            "welfare": WELFARE_LABEL[ind["welfare_relevance"]].split(":")[0],
+            "welfare_why": ind["welfare_relevance_evidence"],
+            "undecided": bool(undecided), "required_n": len(required),
             "wq_name": ind["wq_measure"] if ind["listed_by"] == "joined" else "",
             "measure_type": MEASURE_TYPE_LABEL[ind["measure_type"]],
             "sensor": SENSOR_LABEL[grade] if s else NOT_YET,
@@ -267,6 +292,35 @@ def compute():
     answer.sort(key=lambda r: (-r["score"], r["id"]))
     for rank, r in enumerate(answer, start=1):
         r["rank"] = rank
+
+    states = []
+    for name in sorted({r["state"] for r in answer}, key=lambda n: min(r["id"] for r in answer if r["state"] == n)):
+        rows_ = sorted((r for r in answer if r["state"] == name), key=lambda r: r["id"])
+        instrumented = [r["id"] for r in rows_ if r["best_grade"] in COMMERCIAL]
+        required_rows = [r["id"] for r in rows_ if r["required_n"]]
+        # The state level reading of Kevin's lists (rules.md section 6).
+        if required_rows:
+            s1 = "No: required through " + ", ".join(required_rows)
+        elif any(r["undecided"] for r in rows_) and (instrumented or any(r["best_grade"] == "unsure" for r in rows_)):
+            s1 = "Unclear: a scheme may require " + ", ".join(r["id"] for r in rows_ if r["undecided"])
+        elif instrumented:
+            s1 = "Yes: Tested or Claimed through " + ", ".join(instrumented)
+        elif any(r["best_grade"] == "unsure" for r in rows_):
+            s1 = "Unclear: sensor evidence unsure for " + ", ".join(r["id"] for r in rows_ if r["best_grade"] == "unsure")
+        else:
+            s1 = "No"
+        yes2 = [r["id"] for r in rows_ if r["list2"].startswith("Yes")]
+        unclear2 = [r["id"] for r in rows_ if r["list2"].startswith("Unclear")]
+        s2 = ("Yes: through " + ", ".join(yes2) if yes2 else
+              "Unclear: " + ", ".join(unclear2) if unclear2 else "No")
+        states.append({"state": name, "ids": ", ".join(r["id"] for r in rows_), "n": len(rows_),
+                       "names": "; ".join(f"{r['id']} {r['name']}" for r in rows_),
+                       "welfare": "; ".join(sorted({r["welfare"] for r in rows_})),
+                       "best": "; ".join(f"{r['id']} {r['best']}" for r in rows_),
+                       "list1_rows": ", ".join(r["id"] for r in rows_ if r["list1"] == "Yes") or "none",
+                       "list2_rows": ", ".join(yes2) or "none", "list1": s1, "list2": s2,
+                       "side": "sensor" if all(r["side"] == "sensor" for r in rows_) else
+                               "protocol" if all(r["side"] == "protocol" for r in rows_) else "both"})
 
     matrix = []
     for ind in indicators:
@@ -302,7 +356,7 @@ def compute():
         sources = list(csv.DictReader(f))
     return {"indicators": indicators, "answer": answer, "matrix": matrix, "schemes": scheme_rows,
             "products": products, "profiled": profiled, "sources": sources, "sensors": sensors, "links": links,
-            "evidence": evidence}
+            "evidence": evidence, "states": states}
 
 
 def summary_lines(d):
@@ -311,9 +365,22 @@ def summary_lines(d):
     grades = Counter(r["grade"] for r in done)
     n_all, n_any = scheme_counts(a)
     read = f"all four schemes checked for {n_all} of {len(a)} indicators so far, at least one for {n_any}"
+    prot = [r for r in a if r["side"] == "protocol"]
+    sens = [r for r in a if r["side"] == "sensor"]
     lines = [
-        ("The welfare indicators", f"{len(a)} indicators: "
-         + ", ".join(f"{n} {LISTED_BY_LABEL[k]}" for k, n in sorted(Counter(i['listed_by'] for i in d['indicators']).items()))),
+        ("The welfare indicators", f"{len(a)} rows: {len(prot)} from the two welfare protocols ("
+         + ", ".join(f"{n} {LISTED_BY_LABEL[k]}" for k, n in sorted(Counter(i['listed_by'] for i in d['indicators']
+                                                                         if i['listed_by'] != 'plf_only').items()))
+         + f") and {len(sens)} on the sensor side, parameters that products in the Stygar list say they measure and "
+         "that no protocol row covers (2_research/rules.md, rule 4.12). "
+         f"They fall into {len(d['states'])} welfare states (rule 4.13)."),
+        ("(1) Welfare relevance", "; ".join(f"{n} {WELFARE_LABEL[k].split(':')[0].lower()}"
+                                            for k, n in sorted(Counter(r['welfare_code'] for r in a).items(),
+                                                               key=lambda kv: list(WELFARE_LABEL).index(kv[0])))
+         + ". On the sensor side alone: " + "; ".join(
+             f"{n} {WELFARE_LABEL[k].split(':')[0].lower()}"
+             for k, n in sorted(Counter(r['welfare_code'] for r in sens).items(),
+                                key=lambda kv: list(WELFARE_LABEL).index(kv[0]))) + "."),
         ("(a) Can a sensor measure it?", f"Checked for {len(done)} of {len(a)} indicators so far. "
          + "; ".join(f"{grades.get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}" for k in SENSOR_LABEL)),
         ("(a) Since 2021", "Studies and maker pages since 2021, read in October 2026: "
@@ -326,14 +393,23 @@ def summary_lines(d):
          "programme) names it. " + f"FARM is checked for {sum(1 for r in a if r['farm'] != NOT_YET)} of {len(a)} indicators so far."),
         ("(c) Already covered by schemes?", read[0].upper() + read[1:] + "."),
         ("Kevin's list 1: Tested or Claimed in column (a) or since 2021, required by no scheme",
-         f"{sum(1 for r in a if r['list1'] == 'Yes')} confirmed; {sum(1 for r in a if r['list1'].startswith('Not yet known'))} "
+         f"{sum(1 for r in a if r['list1'] == 'Yes')} confirmed ({sum(1 for r in prot if r['list1'] == 'Yes')} protocol rows, "
+         f"{sum(1 for r in sens if r['list1'] == 'Yes')} sensor side rows; column (1) shows their welfare relevance); "
+         f"{sum(1 for r in a if r['list1'].startswith('Not yet known'))} "
          f"are Tested or Claimed and wait for the scheme check; "
          f"{sum(1 for r in a if r['list1'].startswith('Unclear: sensor'))} are unclear because their sensor evidence is "
          f"unsure, and {sum(1 for r in a if r['list1'].startswith('Unclear: whether'))} because it is unclear whether a "
          "scheme requires them."),
         ("Kevin's list 2: required by a scheme, checked by hand",
-         f"{sum(1 for r in a if r['list2'].startswith('Yes'))} confirmed; {read}. Column (a) shows the sensor "
+         f"{sum(1 for r in a if r['list2'].startswith('Yes'))} confirmed "
+         f"({sum(1 for r in prot if r['list2'].startswith('Yes'))} protocol rows, "
+         f"{sum(1 for r in sens if r['list2'].startswith('Yes'))} sensor side rows); {read}. Column (a) shows the sensor "
          "evidence beside each one."),
+        ("The lists by welfare state", f"Read per welfare state (sheet By welfare state), list 1 has "
+         f"{sum(1 for s in d['states'] if s['list1'].startswith('Yes'))} states and "
+         f"{sum(1 for s in d['states'] if s['list1'].startswith('Unclear'))} unclear; list 2 has "
+         f"{sum(1 for s in d['states'] if s['list2'].startswith('Yes'))} states and "
+         f"{sum(1 for s in d['states'] if s['list2'].startswith('Unclear'))} unclear, of {len(d['states'])} states."),
     ]
     return lines
 
@@ -373,6 +449,18 @@ def write(d, path=OUTPUT):
          "industry and (c) covered by certification schemes; the written scope that followed also counted coverage by "
          "existing sensors. On 25 September he called industry acceptability and both kinds of coverage soft "
          "requirements that make adoption easier, not hard ones. The three files are in 1_sources (kevin_*.md)."),
+        ("Four columns", "Kevin's change request of 7 October 2026 asks four questions of each row: (1) does welfare science "
+         "treat it as a welfare measure (welfare relevance), (a) can a sensor measure it, (b) how easily could industry "
+         "adopt it, and (c) do the certification schemes assess it, and how. The Answer sheet has a column for each."),
+        ("Two sides", "Rows come from two sides. The protocol side is every measure in the EFSA 2023 opinion's assessment "
+         "tables and the Welfare Quality protocol. The sensor side is every kind of parameter that a product in the "
+         "Stygar list says it measures and that no protocol row covers, such as rumination, body temperature or "
+         "location. A sensor side row is in the table because products measure it, not because anyone has shown it "
+         "matters for welfare; column (1) says what the welfare sources say about it."),
+        ("Welfare states", "Some rows are different tests for one welfare state, for example three EFSA tests for "
+         "subclinical ketosis. Each row carries the state it belongs to, read from EFSA's own table headings or the "
+         "Welfare Quality criterion (rules.md, rule 4.13). The sheet By welfare state reads Kevin's lists per state, so "
+         "that one state is not counted three times."),
         ("The two lists Kevin asked for", "List 1: indicators graded Tested or Claimed in column (a) that no scheme requires. "
          "List 2: indicators a scheme requires but checks by hand (an inspector looks at the animals or the farm "
          "records). Column (a) shows the sensor evidence beside each indicator on either list."),
@@ -381,7 +469,7 @@ def write(d, path=OUTPUT):
          "sort by any of them. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
          "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
-        ("Status", "Work in progress. Every indicator has a sensor row and four scheme rows. The sensor grades rest on "
+        ("Status", "Work in progress. Every row has a sensor row, four scheme rows and a welfare relevance grade. The sensor grades rest on "
          "the 2021 baseline (Stygar and colleagues 2021, Maroto Molina and colleagues 2020) and, since 16 October 2026, "
          "on a second grade from studies and makers' pages since 2021 (2_research/rules.md, rule 4.11); two points of "
          "that rule are provisional until Kevin answers, so the ranking is provisional. A row "
@@ -391,6 +479,12 @@ def write(d, path=OUTPUT):
     ] + summary_lines(d) + [
         ("", ""),
         ("WHAT THE LABELS MEAN", ""),
+    ] + [(f"Welfare relevance: {k}", v) for k, v in WELFARE_LABEL.items()] + [
+        ("Welfare relevance: how it is read", "For the protocol rows it follows from the kind of measure. For the "
+         "sensor side rows, three sources were searched for every sentence about the parameter: the EFSA 2023 opinion, "
+         "the Welfare Quality protocol and Linstaedt and colleagues 2024, a systematic review of welfare indicators for "
+         "dairy cows, including what it says about the studies it cites. The grade follows from what those sentences "
+         "say, never from a judgement made here (2_research/rules.md, rule 4.14). It is not part of the score."),
     ] + [(f"Sensor: {k}", v) for k, v in SENSOR_LABEL.items()] + [
         ("Device needed", "The cheapest kind of equipment that measures it. Classes, in the order the score ranks them: "
          "nothing extra (3 points), one device per farm (2), one device per animal (1), a sample or a scoring by a "
@@ -429,6 +523,13 @@ def write(d, path=OUTPUT):
         ("", schemes_status(d)),
         ("", "The score is a rule of thumb used as a sort order. It is not a welfare judgement, and no review by a "
          "welfare scientist is recorded in the repository."),
+        ("", "Column (b) measures how cheaply and easily industry could adopt a measure, not whether industry would "
+         "accept it politically. A cheap camera that makes lameness visible may be less welcome to industry than an "
+         "expensive collar that raises production. A high column (b) means industry could do this cheaply, never that "
+         "industry will not object (Kevin's change request of 7 October 2026)."),
+        ("", "A sensor side row is on list 1 when a product measures it and no scheme requires it, whatever its welfare "
+         "relevance. Read column (1) beside it: a row with no welfare validation is a finding about what the market "
+         "measures, not a welfare indicator that schemes have missed."),
         ("", ""),
         ("HOW TO CHECK ANY CELL", "Every checked row of the Answer sheet has a 'Where to check' column naming the "
          "documents, with pages where a passage is cited. The documents are listed in the Sources sheet and in "
@@ -451,6 +552,8 @@ def write(d, path=OUTPUT):
     columns = [
         ("Rank", 6, "rank"), ("ID", 7, "id"), ("Welfare indicator", 34, "name"), ("Listed by", 16, "listed_by"),
         ("Welfare Quality name, if different", 22, "wq_name"), ("What is measured", 16, "measure_type"),
+        ("Welfare state (rows that test the same state share it)", 22, "state"),
+        ("(1) Welfare relevance", 16, "welfare"), ("(1) Why: what the welfare sources say", 50, "welfare_why"),
         ("EFSA's rating: sensitivity", 11, "efsa_sens"), ("EFSA's rating: specificity", 11, "efsa_spec"),
         ("EFSA's rating: feasibility on farm", 11, "efsa_feas"),
         ("(a) Can a sensor measure it?", 34, "sensor"), ("Tested products", 30, "validated"),
@@ -483,6 +586,24 @@ def write(d, path=OUTPUT):
                 cell.fill = GREY_FILL
     ws.freeze_panes = "D2"
     ws.auto_filter.ref = f"A1:{get_column_letter(len(columns))}{len(d['answer']) + 1}"
+
+    # By welfare state
+    ws = wb.create_sheet("By welfare state")
+    cols = [("Welfare state", 26, "state"), ("Rows", 6, "n"), ("Rows in this state", 46, "names"),
+            ("Protocol or sensor side", 10, "side"), ("(1) Welfare relevance of its rows", 22, "welfare"),
+            ("(a) Each row, the stronger sensor grade", 30, "best"),
+            ("Rows on Kevin's list 1", 14, "list1_rows"), ("Rows on Kevin's list 2", 14, "list2_rows"),
+            ("The state on list 1: a row is Tested or Claimed, and no scheme requires any row of the state", 30, "list1"),
+            ("The state on list 2: a scheme requires a row and checks it by hand", 30, "list2")]
+    for c, (title, width, _) in enumerate(cols, start=1):
+        cell = ws.cell(row=1, column=c, value=title)
+        cell.font, cell.fill, cell.alignment = HEAD, HEAD_FILL, WRAP
+        ws.column_dimensions[get_column_letter(c)].width = width
+    for row, s in enumerate(d["states"], start=2):
+        for c, (_, _, key) in enumerate(cols, start=1):
+            ws.cell(row=row, column=c, value=s[key]).alignment = WRAP
+    ws.freeze_panes = "B2"
+    ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{len(d['states']) + 1}"
 
     # Sensors x products
     ws = wb.create_sheet("Sensors x products")
