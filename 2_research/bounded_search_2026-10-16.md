@@ -38,7 +38,7 @@ AMENDMENT 1, written 16 October 2026 after the seven runs and before running the
  A6 rumen pH: (TITLE:pH OR TITLE:acidosis) AND (TITLE:bolus OR TITLE:boluses OR TITLE:sensor OR TITLE:sensors OR TITLE:wireless OR TITLE:continuous OR TITLE:indwelling OR TITLE:telemetric OR TITLE:validation) AND (TITLE_ABS:cow OR TITLE_ABS:cows OR TITLE_ABS:dairy OR TITLE_ABS:cattle) AND LIMITS
 ```
 
-The folder named in the protocol was a working folder; the full texts read are now in 1_sources, named ev_ and the study key, with fingerprints in manifest.csv.
+The folder named in the protocol was a working folder. The full texts behind the rows of evidence_since_2021.csv are now in 1_sources, named ev_ and the study key, with fingerprints in manifest.csv; other full texts read while screening were working copies and are not kept.
 
 ## Screening counts, mastitis and cell count groups
 

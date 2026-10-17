@@ -85,7 +85,12 @@ def sha256(data):
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Referer": "https://www.google.com/"})
     with urllib.request.urlopen(req, timeout=120) as resp:
-        return resp.status, resp.read()
+        status, data = resp.status, resp.read()
+    if not data:
+        # Some file stores (figshare) answer an empty body to a browser's headers; ask again without them.
+        with urllib.request.urlopen(urllib.request.Request(url), timeout=120) as resp:
+            status, data = resp.status, resp.read()
+    return status, data
 
 
 def pdf_text_hash(data):
@@ -101,6 +106,8 @@ def pdf_text_hash(data):
         for page in reader.pages:
             for line in (page.extract_text() or "").splitlines():
                 if not STAMP.search(line):
+                    # Cambridge added this words to the DOI line of each page in 2026; it is part of the stamp.
+                    line = line.replace("Published online by Cambridge University Press", "")
                     lines.append(re.sub(r"\s+", " ", line).strip())
     except Exception as e:  # a damaged or non PDF file is reported, not a crash
         raise ValueError(f"could not read the PDF text: {e}")
