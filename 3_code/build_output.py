@@ -528,7 +528,7 @@ def write(d, path=OUTPUT):
          "accept it politically. A cheap camera that makes lameness visible may be less welcome to industry than an "
          "expensive collar that raises production. A high column (b) means industry could do this cheaply, never that "
          "industry will not object (Kevin's change request of 7 October 2026)."),
-        ("", "A sensor side row is on list 1 when a product is tested for it or claims it and no scheme requires it, whatever its welfare "
+        ("", "A sensor side row is on list 1 when a product is tested for it or claims it, no scheme requires it and no scheme row is unclear (otherwise it shows Unclear), whatever its welfare "
          "relevance. Read column (1) beside it: a row with no welfare validation is a finding about what the market "
          "measures, not a welfare indicator that schemes have missed."),
         ("", ""),
