@@ -116,9 +116,10 @@ def stronger(a, b, b_could_be_commercial=False):
     if a == "unsure":
         return b if b in COMMERCIAL else "unsure"
     if b == "unsure":
-        # An unsure grade since 2021 never lowers the baseline; it makes the row unsure only when one of its
-        # candidate readings (open_questions.md) is commercial, so that it could put the row on list 1.
-        return "unsure" if b_could_be_commercial and a not in COMMERCIAL else a
+        # An unsure grade since 2021 never lowers the baseline. It makes the row unsure only when the 2021 grade
+        # is none and one of its candidate readings (open_questions.md) is commercial, so that it could put the
+        # row on list 1.
+        return "unsure" if b_could_be_commercial and a == "none" else a
     return max(a, b, key=GRADE_ORDER.index)
 
 
@@ -132,6 +133,17 @@ def since_candidates_commercial(iid, open_questions):
     return False
 
 
+SINCE_LABEL = {
+    "validated_commercial": "Tested: a product on sale was tested against a reference method in a study since 2021 "
+                            "(see the sheet Evidence since 2021)",
+    "commercial_unvalidated": "Claimed: the maker's current page, or a source since 2021, says a product on sale "
+                              "measures it; no test against a reference was found",
+    "research_demonstrated": "Shown in research: a study since 2021 measured it in cattle, with no product sold for it",
+    "theoretically_measurable": "Proposed only: the sources since 2021 only propose a method, show one in another "
+                                "species or setting, or offer a substitute measure",
+    "none": "Nothing found in the sources read since 2021 (rules.md, rule 4.11)",
+    "unsure": "Unclear: the written rules do not settle it (see open questions)",
+}
 LINK_TODAY_LABEL = {"works": "Works", "moved": "Moved, still works", "wrong_page": "Wrong page",
                     "broken": "Broken"}
 LINK_SHOWS_LABEL = {"product_page": "The product's page", "related_page": "A related page (see note)",
@@ -227,7 +239,7 @@ def compute():
             "measure_type": MEASURE_TYPE_LABEL[ind["measure_type"]],
             "sensor": SENSOR_LABEL[grade] if s else NOT_YET,
             "tested_how": s["validated_trait"] if s and grade == "validated_commercial" else "",
-            "since": SENSOR_LABEL[since] if s else NOT_YET,
+            "since": SINCE_LABEL[since] if s else NOT_YET,
             "since_keys": s["since_2021_evidence"] if s else "",
             "since_why": s["since_2021_reasoning"] if s else "",
             "best": SENSOR_LABEL[best].split(":")[0] if s else NOT_YET,
@@ -370,8 +382,9 @@ def write(d, path=OUTPUT):
          "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
         ("Status", "Work in progress. Every indicator has a sensor row and four scheme rows. The sensor grades rest on "
-         "the 2021 baseline (Stygar and colleagues 2021, Maroto Molina and colleagues 2020); the dated pass for later "
-         "studies, from Kevin's change request of 7 October 2026, is still to come, so the ranking is provisional. A row "
+         "the 2021 baseline (Stygar and colleagues 2021, Maroto Molina and colleagues 2020) and, since 16 October 2026, "
+         "on a second grade from studies and makers' pages since 2021 (2_research/rules.md, rule 4.11); two points of "
+         "that rule are provisional until Kevin answers, so the ranking is provisional. A row "
          "whose Row status is 'Not yet checked' would have no row in 2_research/sensor_coverage.csv."),
         ("", ""),
         ("THE ANSWERS SO FAR", ""),

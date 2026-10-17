@@ -287,7 +287,9 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
                                     f"line {number}: evidence {k} does not list {r['indicator_id']} in its indicator_ids")
         if r["since_2021_grade"] in ("validated_commercial", "commercial_unvalidated", "research_demonstrated") and not keys:
             problems.setdefault("sensor_coverage.csv", f"line {number}: a since 2021 grade above proposed needs evidence keys")
-        if r["since_2021_grade"] == "unsure" and not re.search(rf"\b{r['indicator_id']}\b", open_questions):
+        since_line = any(c[2].startswith(r["indicator_id"]) and c[3] == "sensor evidence since 2021"
+                         for c in ([x.strip() for x in l.split("|")] for l in open_questions.splitlines()) if len(c) > 4)
+        if r["since_2021_grade"] == "unsure" and not since_line:
             problems.setdefault("sensor_coverage.csv", f"line {number}: since_2021_grade is unsure but has no open question")
 
     stygar_rows = {p["row"]: p for p in stygar}

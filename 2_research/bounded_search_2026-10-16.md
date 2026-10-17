@@ -38,10 +38,18 @@ AMENDMENT 1, written 16 October 2026 after the seven runs and before running the
  A6 rumen pH: (TITLE:pH OR TITLE:acidosis) AND (TITLE:bolus OR TITLE:boluses OR TITLE:sensor OR TITLE:sensors OR TITLE:wireless OR TITLE:continuous OR TITLE:indwelling OR TITLE:telemetric OR TITLE:validation) AND (TITLE_ABS:cow OR TITLE_ABS:cows OR TITLE_ABS:dairy OR TITLE_ABS:cattle) AND LIMITS
 ```
 
+The folder named in the protocol was a working folder; the full texts read are now in 1_sources, named ev_ and the study key, with fingerprints in manifest.csv.
+
 ## Screening counts, mastitis and cell count groups
 
 ```
 SCREENING COUNTS (records screened / kept)
+G1 clinical mastitis, hitCount 73: screened 40 (first 40), kept 4.
+G2 somatic cell count, hitCount 135: screened 40 (first 40), kept 2.
+G3 bacterial culture, hitCount 22: screened 22 (all), kept 1.
+A1 clinical mastitis, title query, hitCount 21: screened 21 (all), kept 3, all already kept in G1.
+A2 somatic cell count, title query, hitCount 21: screened 21 (all), kept 2.
+Totals: 144 records screened across the five groups; 12 keeps, 8 unique studies after duplicates.
 ```
 
 ## Screening counts, ketosis, abomasum, acidosis and calcium groups
