@@ -165,7 +165,7 @@ WELFARE_LABEL = {
                              "insufficient on its own, weak, inconsistent, unclear or not fully understood",
     "no_welfare_validation": "No welfare validation: none of the three sources links it to welfare, but a product's "
                              "description says it is for health, welfare or a named condition, or it is itself a "
-                             "health or condition status, or a scheme requires it",
+                             "health, welfare or condition status, or a scheme requires it",
     "not_welfare_relevant": "Not framed as welfare: no product's description, no scheme requirement and none of the "
                             "three sources ties it to health or welfare",
     "unsure": "Unclear: the written rules do not settle it (see open questions)",
@@ -516,7 +516,7 @@ def write(d, path=OUTPUT):
          "Ties are sorted by indicator id. "
          "A sort order, not a welfare judgement. Score parts are shown in the order: sensor + device + vendors + FARM + schemes."),
         ("", ""),
-        ("WHAT THIS DOES NOT SHOW", "The sensor evidence is a baseline from two papers, Stygar et al. 2021 and Maroto "
+        ("WHAT THIS DOES NOT SHOW", "The 2021 sensor grade is a baseline from two papers, Stygar et al. 2021 and Maroto "
          "Molina et al. 2020. Products and studies are as those papers found them, and so are the links in the column Link (2021); what those links open today is in the Product list sheet; 'Nothing found' means nothing "
          "in those two papers, not nothing anywhere."),
         ("", "'Tested' means a published study tested the product for the measure, as Stygar 2021 coded it; many of "
@@ -528,7 +528,7 @@ def write(d, path=OUTPUT):
          "accept it politically. A cheap camera that makes lameness visible may be less welcome to industry than an "
          "expensive collar that raises production. A high column (b) means industry could do this cheaply, never that "
          "industry will not object (Kevin's change request of 7 October 2026)."),
-        ("", "A sensor side row is on list 1 when a product measures it and no scheme requires it, whatever its welfare "
+        ("", "A sensor side row is on list 1 when a product is tested for it or claims it and no scheme requires it, whatever its welfare "
          "relevance. Read column (1) beside it: a row with no welfare validation is a finding about what the market "
          "measures, not a welfare indicator that schemes have missed."),
         ("", ""),
