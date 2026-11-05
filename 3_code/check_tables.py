@@ -88,15 +88,21 @@ SCHEMAS = {
     "sensor_coverage.csv": {
         "columns": ["indicator_id", "sensor_evidence", "products", "validated_products", "validated_trait",
                     "study_numbers", "maroto_molina_rating", "device_needed", "vendors_naming_it", "search_words",
-                    "where_to_check", "reasoning", "since_2021_grade", "since_2021_evidence", "since_2021_reasoning"],
+                    "where_to_check", "reasoning", "since_2021_grade", "since_2021_evidence", "since_2021_reasoning",
+                    "stygar_performance", "since_2021_performance", "since_2021_performance_reasoning",
+                    "signal_purpose", "signal_purpose_evidence"],
         "codes": {"sensor_evidence": {"validated_commercial", "commercial_unvalidated", "research_demonstrated",
                                     "theoretically_measurable", "none", "unsure"},
                   "since_2021_grade": {"validated_commercial", "commercial_unvalidated", "research_demonstrated",
                                     "theoretically_measurable", "none", "unsure"},
                   "device_needed": {"routine_data", "farm_fixed", "animal_mounted", "sample_or_procedure", "none", "unsure"},
+                  "stygar_performance": {"above_threshold", "below_threshold", "not_tested"},
+                  "since_2021_performance": {"above_threshold", "below_threshold", "not_graded", "not_tested"},
+                  "signal_purpose": {"health_or_welfare", "production_only", "not_stated", "unclear", "no_product"},
                   "maroto_molina_rating": RATINGS},
         "must_fill": ["indicator_id", "sensor_evidence", "device_needed", "vendors_naming_it", "search_words",
-                      "where_to_check", "since_2021_grade", "since_2021_reasoning"],
+                      "where_to_check", "since_2021_grade", "since_2021_reasoning", "stygar_performance",
+                      "since_2021_performance", "signal_purpose", "signal_purpose_evidence"],
         "whole_numbers": ["vendors_naming_it"],
         "key": ["indicator_id"],
     },
@@ -239,6 +245,17 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
             problem = "validated_commercial needs study_numbers and validated_products"
         elif grade != "validated_commercial" and r["validated_products"].strip():
             problem = "validated_products is only filled when sensor_evidence is validated_commercial"
+        elif (grade == "validated_commercial") != (r["stygar_performance"] != "not_tested"):
+            problem = "stygar_performance is graded exactly when sensor_evidence is validated_commercial (rule 4.15)"
+        elif (r["since_2021_grade"] == "validated_commercial") != (r["since_2021_performance"] != "not_tested"):
+            problem = "since_2021_performance is graded exactly when since_2021_grade is validated_commercial (rule 4.15)"
+        elif (r["since_2021_performance"] != "not_tested") != bool(r["since_2021_performance_reasoning"].strip()):
+            problem = "since_2021_performance_reasoning is filled exactly when since_2021_performance is graded"
+        elif (r["signal_purpose"] == "no_product") != (r["vendors_naming_it"] == "0" and r["since_2021_grade"] not in {"validated_commercial", "commercial_unvalidated"}):
+            problem = "signal_purpose is no_product exactly when no product in the Stygar list names it and no product since 2021 measures it (rule 4.16)"
+        elif r["signal_purpose"] == "unclear" and not any(
+                iid in l and "signal purpose" in l and l.rstrip().endswith("| open |") for l in open_questions.splitlines()):
+            problem = "signal_purpose is unclear but has no open question"
         elif "unsure" in (grade, r["device_needed"]) and not re.search(rf"\b{iid}\b", open_questions):
             problem = "a cell is unsure, but there is no line for it in open_questions.md"
         if problem is None:

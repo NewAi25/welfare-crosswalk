@@ -1,8 +1,8 @@
 """BUILD OUTPUT: turn the research tables into the one Excel file that answers the question.
 
 In plain words
-    The research is recorded in six tables in 2_research/. This script reads them,
-    adds up the ease of adoption score exactly as 2_research/rules.md says, and writes
+    The research is recorded in six tables in 2_research/. This script reads them, ranks
+    the welfare states in the order 2_research/rules.md, section 5, sets out, and writes
     4_output/welfare_crosswalk_dairy.xlsx. Nothing in the Excel file is edited by hand:
     every value comes from the tables, the manifest or the Stygar product list, and the
     explanatory text and labels are written by this script, so the Excel file and the
@@ -10,21 +10,20 @@ In plain words
 
 The sheets it writes
     Read me             the question, how to read the file, the answers so far, how to check
-    Answer              one row per welfare indicator, ranked, with every factor visible
+    Priority            the short answer: welfare states ranked, one row each, with the kind of ask
+    Not backed by welfare science   what products measure that the welfare sources do not tie to welfare
+    Answer              one row per indicator, with every column visible
     By welfare state    Kevin's two lists read per welfare state, so that several tests for one state count once
     Sensors x products  every indicator against all 129 products in the Stygar list
     Schemes             every indicator against the four certification schemes
     Product list        the 129 products, with what each vendor says it does
+    Evidence since 2021 the studies and makers' pages behind the grades since 2021
     Sources             every document used, with its link
 
-The score, in plain words (the full rule is in 2_research/rules.md, "The score")
-    Five factors, each turned into 0 to 3 points, then added (0 to 15):
-    sensor evidence      validated product 3, product without validation 2, shown in research or proposed 1, otherwise 0
-    device needed        none extra 3, one per farm 2, one per animal 1, otherwise 0
-    vendors naming it    10 or more 3, 3 to 9 2, 1 or 2 1, none 0
-    named by FARM        with a number 3, named 2, only a related housing rule 1, otherwise 0
-    schemes requiring it all four 3, two or three 2, one 1, none 0
-    The score is a sort order, not a welfare judgement.
+The ranking, in plain words (the full rule is in 2_research/rules.md, section 5)
+    Not one number. Rows with no welfare validation, or not framed as welfare, leave the list.
+    The rest are grouped by welfare state, and each state is ranked by the validity of its best
+    test, then by the cheapest device, then by how hard the measure is to take by hand.
 
 How to run it
     python 3_code/build_output.py           write the Excel file
@@ -49,20 +48,43 @@ SCHEMES = ["RSPCA_Assured", "FARM_v5", "GAP_dairy", "Certified_Humane"]
 SCHEME_NAMES = {"RSPCA_Assured": "RSPCA Assured (UK)", "FARM_v5": "FARM v5 (US industry)",
                 "GAP_dairy": "Global Animal Partnership (US)", "Certified_Humane": "Certified Humane (US)"}
 
-# The 0 to 3 points for each factor. These five lines are the only place the ranking is set,
-# and they must match the table "The score" in 2_research/rules.md word for word.
-SENSOR_POINTS = {"validated_commercial": 3, "commercial_unvalidated": 2, "research_demonstrated": 1,
-                 "theoretically_measurable": 1}
-DEVICE_POINTS = {"routine_data": 3, "farm_fixed": 2, "animal_mounted": 1}
-FARM_POINTS = {"named_with_threshold": 3, "named": 2, "related_resource": 1}
-
-
-def vendor_points(n):
-    return 3 if n >= 10 else 2 if n >= 3 else 1 if n >= 1 else 0
-
-
-def scheme_points(n):
-    return 3 if n == 4 else 2 if n >= 2 else 1 if n == 1 else 0
+# The ranking (rules.md, section 5): the order of each key, best first. These lists are the only place the
+# ranking is set, and they must match section 5 of 2_research/rules.md.
+VALIDITY = {  # validity of a row's best test (rules.md, rule 4.15), best first
+    "tested_above": "Tested: above Stygar's high performance bar",
+    "tested_not_graded": "Tested: the results reported are not of a kind Stygar's bar covers",
+    "tested_below": "Tested: below Stygar's high performance bar",
+    "claimed": "Claimed: a product says it measures it, no test found",
+    "research": "Shown in research: measured in cattle, no product",
+    "proposed": "Proposed only",
+    "nothing": "Nothing found",
+    "unclear": "Unclear: the sensor evidence is unsure (see open questions)",
+}
+DEVICE_ORDER = ["routine_data", "farm_fixed", "animal_mounted", "sample_or_procedure", "none", "unsure"]
+BURDEN = {  # EFSA's feasibility on farm, read as the manual burden that a sensor would take away (rule 4.9)
+    "low": ("High: EFSA rates it low on feasibility by hand", 0),
+    "medium": ("Medium: EFSA rates it medium on feasibility by hand", 1),
+    "mixed": ("Mixed: EFSA gives two levels", 2),
+    "high": ("Low: EFSA rates it high on feasibility by hand", 3),
+    "not_stated": ("Not stated by EFSA", 4),
+    "": ("Not rated: not an EFSA measure", 4),
+}
+GATED_OUT = ("no_welfare_validation", "not_welfare_relevant")  # leave the priority list (rule 4.14, section 5)
+PURPOSE_LABEL = {  # what products do with the signal (rules.md, rule 4.16)
+    "health_or_welfare": "Used for health or welfare: a product's description says so",
+    "production_only": "Used only for production, fertility or herd management, as the descriptions say",
+    "not_stated": "No purpose stated: products measure it but do not say what for",
+    "unclear": "Unclear (see open questions)",
+    "no_product": "No product in the Stygar list measures it",
+}
+WORLD_LABEL = {  # the kind of ask (rules.md, section 5)
+    "A_accept": "A: a scheme requires it and a sensor exists; ask schemes to accept the sensor data",
+    "A_adopt": "A: a sensor exists and products use it for health or welfare, but no scheme requires it; ask schemes to adopt the sensor data",
+    "B": "B: no sensor product; ask for new measurement",
+    "C": "C: the signal is already on farms but no product uses it for health or welfare; ask for welfare alerts or thresholds on hardware farms already own",
+    "unclear_sensor": "Unclear: the sensor evidence is unsure",
+    "unclear_purpose": "Unclear: what products do with the signal is unsure",
+}
 
 
 # Plain English for every code, shown in the Excel file. Same meanings as 2_research/rules.md.
@@ -85,13 +107,6 @@ DEVICE_LABEL = {
     "none": "No technology named in the sources",
     "unsure": "Unclear",
 }
-FARM_LABEL = {
-    "named_with_threshold": "Named in FARM, with a number to meet",
-    "named": "Named in FARM",
-    "related_resource": "FARM has only a related housing, equipment or practice rule",
-    "not_named": "Not named in FARM",
-    "unsure": "Unclear whether FARM names it",
-}
 HOW_CHECKED_LABEL = {
     "visual_inspection": "inspector looks at the animals",
     "records_review": "inspector checks farm records",
@@ -102,7 +117,7 @@ HOW_CHECKED_LABEL = {
 MANUAL = ("visual_inspection", "records_review")
 MEASURE_TYPE_LABEL = {"animal_based": "Observed or recorded on the animal", "resource_based": "About the housing or equipment",
                       "management_based": "About farm management", "none": "No measure defined"}
-# The stronger of the 2021 baseline grade and the grade since 2021 is used for the score and Kevin's lists
+# The stronger of the 2021 baseline grade and the grade since 2021 is used for the ranking and Kevin's lists
 # (rules.md rule 4.11). Order from weakest to strongest; an unsure grade stays unsure unless the other
 # grade is commercial (Claimed or Tested), because the open question could still change the answer.
 GRADE_ORDER = ["none", "unsure", "theoretically_measurable", "research_demonstrated", "commercial_unvalidated",
@@ -193,6 +208,28 @@ def indicator_name(r):
     return r["wq_measure"] or f"{r['wq_criterion']} (Welfare Quality defines no measure)"
 
 
+def validity_of(s, grade, since, best):
+    """The validity of a row's best test (rules.md, rule 4.15)."""
+    if best == "validated_commercial":
+        perf = []
+        if grade == "validated_commercial":
+            perf.append(s["stygar_performance"])
+        if since == "validated_commercial":
+            perf.append(s["since_2021_performance"])
+        for code, level in (("above_threshold", "tested_above"), ("not_graded", "tested_not_graded"),
+                            ("below_threshold", "tested_below")):
+            if code in perf:
+                return level
+        return "tested_not_graded"
+    return {"commercial_unvalidated": "claimed", "research_demonstrated": "research",
+            "theoretically_measurable": "proposed", "none": "nothing"}.get(best, "unclear")
+
+
+def rank_key(r):
+    """Section 5 of rules.md: validity of the best test, then the cheapest device, then manual burden, then id."""
+    return (list(VALIDITY).index(r["validity_code"]), DEVICE_ORDER.index(r["device_code"]), r["burden_order"], r["id"])
+
+
 def compute():
     """Everything the Excel file shows, as plain Python data. Used for writing and for --check."""
     indicators = read("indicators.csv")
@@ -218,9 +255,7 @@ def compute():
         since = s["since_2021_grade"] if s else ""
         best = stronger(grade, since, since_candidates_commercial(iid, open_questions)) if s else ""
         vendors = int(s["vendors_naming_it"]) if s else 0
-        farm = rows.get("FARM_v5", {}).get("farm_naming", "") or ("not_named" if "FARM_v5" in rows else "")
-        points = [SENSOR_POINTS.get(best, 0), DEVICE_POINTS.get(s["device_needed"], 0) if s else 0,
-                  vendor_points(vendors), FARM_POINTS.get(farm, 0), scheme_points(len(required))]
+        validity = validity_of(s, grade, since, best) if s else "unclear"
 
         # Kevin's list 1: Tested or Claimed in column (a), and no scheme requires it.
         if required:
@@ -272,7 +307,16 @@ def compute():
             "validated": "; ".join(k.split("|", 1)[1] for k in filter(None, (x.strip() for x in s["validated_products"].split(";")))) if s else "",
             "vendors": vendors if s else NOT_YET,
             "device": DEVICE_LABEL[s["device_needed"]] if s else NOT_YET,
-            "farm": FARM_LABEL.get(farm, NOT_YET),
+            "validity_code": validity, "validity": VALIDITY[validity],
+            "purpose_code": s["signal_purpose"] if s else "", "purpose": PURPOSE_LABEL[s["signal_purpose"]] if s else NOT_YET,
+            "purpose_why": s["signal_purpose_evidence"] if s else "",
+            "since_perf_why": s["since_2021_performance_reasoning"] if s else "",
+            "device_code": s["device_needed"] if s else "unsure",
+            "burden": BURDEN[ind["efsa_feasibility"]][0], "burden_order": BURDEN[ind["efsa_feasibility"]][1],
+            "efsa_flag": (f"Sensitivity {EFSA_LABEL[ind['efsa_sensitivity']]}, specificity {EFSA_LABEL[ind['efsa_specificity']]}"
+                          if ind["efsa_sensitivity"] else "Not rated: not an EFSA measure"),
+            "gate": ("On the priority list" if ind["welfare_relevance"] not in GATED_OUT else
+                     "Left off the priority list: " + WELFARE_LABEL[ind["welfare_relevance"]].split(":")[0].lower()),
             "schemes_n": len(required) if schemes_done else NOT_YET,
             "schemes_n_shown": (len(required) if schemes_done else
                                 f"At least {len(required)} ({len(rows)} of 4 read)" if rows else NOT_YET),
@@ -286,13 +330,52 @@ def compute():
             "efsa_spec": EFSA_LABEL.get(ind["efsa_specificity"], ""),
             "efsa_feas": EFSA_LABEL.get(ind["efsa_feasibility"], ""),
             "list1": list1, "list2": list2,
-            "score": sum(points), "parts": " + ".join(str(p) for p in points), "status": status,
+            "status": status,
             "where": s["where_to_check"] if s else "", "reasoning": s["reasoning"] if s else "",
             "grade": grade, "since_grade": since, "best_grade": best,
         })
-    answer.sort(key=lambda r: (-r["score"], r["id"]))
-    for rank, r in enumerate(answer, start=1):
-        r["rank"] = rank
+    # The priority list (rules.md, section 5): gate, group by welfare state, rank the states.
+    by_id = {r["id"]: r for r in answer}
+    priority = []
+    for name in sorted({r["state"] for r in answer}):
+        passing = [r for r in answer if r["state"] == name and r["welfare_code"] not in GATED_OUT]
+        if not passing:
+            continue
+        best_row = min(passing, key=rank_key)
+        instrumented = [r for r in passing if r["best_grade"] in COMMERCIAL]
+        if not instrumented:
+            world = "unclear_sensor" if any(r["best_grade"] == "unsure" for r in passing) else "B"
+        elif any(r["required_n"] for r in passing):
+            world = "A_accept"
+        elif any(r["purpose_code"] == "health_or_welfare" for r in instrumented):
+            world = "A_adopt"
+        elif any(r["purpose_code"] == "unclear" for r in instrumented):
+            world = "unclear_purpose"
+        else:
+            world = "C"
+        flags = [f"{r['id']} {r['welfare'].lower()}" for r in passing
+                 if r["welfare_code"] in ("indirect_or_contested", "unsure")]
+        required_rows = [r for r in passing if r["required_n"]]
+        priority.append({
+            "state": name, "best_id": best_row["id"], "best_name": best_row["name"], "key": rank_key(best_row),
+            "others": "; ".join(f"{r['id']} {r['name']}" for r in sorted(passing, key=lambda r: r["id"]) if r is not best_row) or "none",
+            "welfare": best_row["welfare"], "flags": "; ".join(flags) or "none",
+            "validity": best_row["validity"], "efsa_flag": best_row["efsa_flag"], "burden": best_row["burden"],
+            "device": best_row["device"], "vendors": best_row["vendors"],
+            "schemes": ("; ".join(f"{r['id']}: {r['schemes_how']}" for r in required_rows) if required_rows
+                        else "No scheme requires any of its rows"),
+            "purpose": best_row["purpose"], "world_code": world, "world": WORLD_LABEL[world],
+        })
+    priority.sort(key=lambda p: p["key"])
+    for rank, p in enumerate(priority, start=1):
+        p["rank"] = rank
+    state_rank = {p["state"]: p["rank"] for p in priority}
+    state_world = {p["state"]: p["world"] for p in priority}
+    for r in answer:
+        r["rank"] = state_rank.get(r["state"], "") if r["welfare_code"] not in GATED_OUT else ""
+        r["world"] = state_world.get(r["state"], "") if r["welfare_code"] not in GATED_OUT else ""
+    answer.sort(key=lambda r: (r["rank"] == "", r["rank"] if r["rank"] != "" else 0, r["id"]))
+    not_backed = [r for r in sorted(answer, key=lambda r: r["id"]) if r["welfare_code"] in GATED_OUT]
 
     states = []
     for name in sorted({r["state"] for r in answer}, key=lambda n: min(r["id"] for r in answer if r["state"] == n)):
@@ -315,6 +398,8 @@ def compute():
         s2 = ("Yes: through " + ", ".join(yes2) if yes2 else
               "Unclear: " + ", ".join(unclear2) if unclear2 else "No")
         states.append({"state": name, "ids": ", ".join(r["id"] for r in rows_), "n": len(rows_),
+                       "rank": state_rank.get(name, "not on the priority list"),
+                       "world": state_world.get(name, ""),
                        "names": "; ".join(f"{r['id']} {r['name']}" for r in rows_),
                        "welfare": "; ".join(sorted({r["welfare"] for r in rows_})),
                        "best": "; ".join(f"{r['id']} {r['best']}" for r in rows_),
@@ -357,7 +442,7 @@ def compute():
         sources = list(csv.DictReader(f))
     return {"indicators": indicators, "answer": answer, "matrix": matrix, "schemes": scheme_rows,
             "products": products, "profiled": profiled, "sources": sources, "sensors": sensors, "links": links,
-            "evidence": evidence, "states": states}
+            "evidence": evidence, "states": states, "priority": priority, "not_backed": not_backed}
 
 
 def summary_lines(d):
@@ -387,11 +472,18 @@ def summary_lines(d):
         ("(a) Since 2021", "Studies and maker pages since 2021, read in October 2026: "
          + "; ".join(f"{Counter(r['since_grade'] for r in done).get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}"
                      for k in SENSOR_LABEL)
-         + ". The stronger of the two grades, used for the score and Kevin's lists: "
+         + ". The stronger of the two grades, used for the ranking and Kevin's lists: "
          + "; ".join(f"{Counter(r['best_grade'] for r in done).get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}"
                      for k in SENSOR_LABEL) + "."),
-        ("(b) How easy to adopt?", "See the Answer sheet: device needed, products whose description names it, and whether FARM (the US industry "
-         "programme) names it. " + f"FARM is checked for {sum(1 for r in a if r['farm'] != NOT_YET)} of {len(a)} indicators so far."),
+        ("The priority list", f"{len(d['priority'])} welfare states pass the welfare gate and are ranked on the sheet "
+         "Priority, by the validity of their best test, then the cheapest device, then the manual burden. Kinds of ask: "
+         + "; ".join(f"{n} {WORLD_LABEL[k].split(';')[0]}" for k, n in sorted(Counter(p['world_code'] for p in d['priority']).items(),
+                                                                        key=lambda kv: list(WORLD_LABEL).index(kv[0])))
+         + f". {len(d['not_backed'])} rows leave the list because no welfare source backs them; they are on the sheet "
+         "Not backed by welfare science."),
+        ("(b) How easy to adopt?", "The cheapest device needed and how many products name it, on the Answer sheet. FARM is "
+         "counted once, as one of the four schemes, and schemes requiring a measure no longer count toward ease of adoption: "
+         "they decide the kind of ask (2_research/rules.md, section 5)."),
         ("(c) Already covered by schemes?", read[0].upper() + read[1:] + "."),
         ("Kevin's list 1: Tested or Claimed in column (a) or since 2021, required by no scheme",
          f"{sum(1 for r in a if r['list1'] == 'Yes')} confirmed ({sum(1 for r in prot if r['list1'] == 'Yes')} protocol rows, "
@@ -465,15 +557,15 @@ def write(d, path=OUTPUT):
         ("The two lists Kevin asked for", "List 1: indicators graded Tested or Claimed in column (a) that no scheme requires. "
          "List 2: indicators a scheme requires but checks by hand (an inspector looks at the animals or the farm "
          "records). Column (a) shows the sensor evidence beside each indicator on either list."),
-        ("How to read this file", "Answer: one row per indicator, sorted by the ease of adoption score. The score is a "
-         "rule of thumb used only as a sort order, not a recommendation; every factor has its own column, so you can "
-         "sort by any of them. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
+        ("How to read this file", "Priority: the short answer, one row per welfare state, ranked. Not backed by welfare "
+         "science: what products measure that the welfare sources do not tie to welfare. Answer: one row per indicator, "
+         "with every column, in the order of the priority list. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
          "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
         ("Status", "Work in progress. Every row has a sensor row, four scheme rows and a welfare relevance grade. The sensor grades rest on "
          "the 2021 baseline (Stygar and colleagues 2021, Maroto Molina and colleagues 2020) and, since 16 October 2026, "
-         "on a second grade from studies and makers' pages since 2021 (2_research/rules.md, rule 4.11); two points of "
-         "that rule are provisional until Kevin answers, so the ranking is provisional. A row "
+         "on a second grade from studies and makers' pages since 2021 (2_research/rules.md, rule 4.11), whose two "
+         "provisional points Kevin confirmed in November 2026. A row "
          "whose Row status is 'Not yet checked' would have no row in 2_research/sensor_coverage.csv."),
         ("", ""),
         ("THE ANSWERS SO FAR", ""),
@@ -485,11 +577,30 @@ def write(d, path=OUTPUT):
          "sensor side rows, three sources were searched for every sentence about the parameter: the EFSA 2023 opinion, "
          "the Welfare Quality protocol and Linstaedt and colleagues 2024, a systematic review of welfare indicators for "
          "dairy cows, including what it says about the studies it cites. The grade follows from what those sentences "
-         "say, never from a judgement made here (2_research/rules.md, rule 4.14). It is not part of the score."),
+         "say, never from a judgement made here (2_research/rules.md, rule 4.14). It is the gate of the priority list."),
+        ("The ranking", "Not one number (2_research/rules.md, section 5). First the welfare gate: rows graded No welfare "
+         "validation or Not framed as welfare leave the list; Indirect or contested and Unclear rows stay, flagged. Then "
+         "the rows are grouped by welfare state, and each state is ranked by its best test: first the validity of that "
+         "test, then the cheapest device needed, then the manual burden, then the indicator id. There is no impact tier: "
+         "EFSA 2023 does not rank its welfare consequences by severity, prevalence or duration (its five consequences "
+         "were set by the European Commission's mandate), and the project makes no welfare judgement of its own."),
+    ] + [(f"Validity: {v.split(':')[0]}", v) for v in VALIDITY.values()] + [
+        ("Validity: Stygar's bar", "Stygar and colleagues 2021, Table 2, footnote a: a test is high performance when "
+         "every indicator reported is above the threshold, a Pearson, Spearman or concordance correlation, sensitivity, "
+         "specificity or area under the curve above 0.9, a regression coefficient or kappa above 0.81. Tests since 2021 "
+         "are graded against the same bar where they report statistics of those kinds (rule 4.15)."),
+    ] + [(f"Kind of ask: {v.split(':')[0]}", v) for v in WORLD_LABEL.values()] + [
+        ("What products do with the signal", "Read from the products' own descriptions in the Stygar list (rule 4.16): "
+         "whether a description says the measurement is for health or welfare, only for production, fertility or herd "
+         "management, or says nothing about what it is for. Where no product in the Stygar list names it but a maker's "
+         "page since 2021 does (claw conditions and bacterial culture of milk), it is read the same way from that page. A signal that farms already collect but that no product "
+         "uses for health or welfare is a kind of ask C."),
+        ("Manual burden", "EFSA's feasibility on farm read the other way round: a measure EFSA rates low on feasibility "
+         "is hard to take by hand, so a sensor adds the most there. It breaks ties after the cheapest device."),
     ] + [(f"Sensor: {k}", v) for k, v in SENSOR_LABEL.items()] + [
-        ("Device needed", "The cheapest kind of equipment that measures it. Classes, in the order the score ranks them: "
-         "nothing extra (3 points), one device per farm (2), one device per animal (1), a sample or a scoring by a "
-         "person (0), or no technology named in the sources (0), or unclear when the rules do not settle it (0). 'Nothing extra' can appear where no sensor exists, "
+        ("Device needed", "The cheapest kind of equipment that measures it. Classes, cheapest first, as the ranking "
+         "uses them: nothing extra, one device per farm, one device per animal, a sample or a scoring by a person, no "
+         "technology named in the sources, or unclear when the rules do not settle it. 'Nothing extra' can appear where no sensor exists, "
          "because the value is already taken from milk or farm records (2_research/rules.md, rule 4.4)."),
         ("Vendors naming it", "How many of the 129 products in the Stygar list contain one of the indicator's search "
          "words in their own description. A count of claims, not of proof. 'Tested products' is a separate column: a "
@@ -497,8 +608,9 @@ def write(d, path=OUTPUT):
         ("EFSA's ratings", "For indicators that come from EFSA, how EFSA's own assessment table rates the measure: "
          "sensitivity (does it catch the animals that have the problem), specificity (does it avoid flagging animals that "
          "do not) and feasibility on farm. High, Medium and Low are EFSA's own words; Mixed means EFSA gives two levels "
-         "and Not stated means EFSA gives none. 2_research/indicators.csv quotes the passage. Blank for "
-         "Welfare Quality only indicators, which EFSA does not rate."),
+         "and Not stated means EFSA gives none. 2_research/indicators.csv quotes the passage. Sensitivity and specificity "
+         "are shown as a validity flag; a measure EFSA does not rate shows Not rated, with no penalty. Feasibility is "
+         "shown as the manual burden."),
         ("Schemes: 'Unclear'", "A scheme has a requirement that may name the indicator, but the written rules do not "
          "settle whether it does. It is not counted as required. Kevin's lists show Unclear for that indicator only where "
          "the answer depends on it, for example a list 1 row graded Tested or Claimed that no other scheme requires "
@@ -511,10 +623,7 @@ def write(d, path=OUTPUT):
          "page for the product family, a dealer's page, a domain held for sale or an unrelated site. Broken: an error "
          "or no answer. Link today is the maker's current page for the product where one was found, otherwise the "
          "nearest live maker page, as the next column says. 2_research/product_links.csv holds the same, with the rule "
-         "in 2_research/rules.md, rule 4.10. The links change no grade, count or score."),
-        ("Ease of adoption score", "0 to 15, five factors of 0 to 3 added together (2_research/rules.md, section 5). "
-         "Ties are sorted by indicator id. "
-         "A sort order, not a welfare judgement. Score parts are shown in the order: sensor + device + vendors + FARM + schemes."),
+         "in 2_research/rules.md, rule 4.10. The links change no grade, count or rank."),
         ("", ""),
         ("WHAT THIS DOES NOT SHOW", "The 2021 sensor grade is a baseline from two papers, Stygar et al. 2021 and Maroto "
          "Molina et al. 2020. Products and studies are as those papers found them, and so are the links in the column Link (2021); what those links open today is in the Product list sheet; 'Nothing found' means nothing "
@@ -522,8 +631,12 @@ def write(d, path=OUTPUT):
         ("", "'Tested' means a published study tested the product for the measure, as Stygar 2021 coded it; many of "
          "those tests fell below Stygar's high performance bar, which the column 'What was tested, and how well' shows."),
         ("", schemes_status(d)),
-        ("", "The score is a rule of thumb used as a sort order. It is not a welfare judgement, and no review by a "
-         "welfare scientist is recorded in the repository."),
+        ("", "The ranking is a stated order, not a welfare judgement, and no review by a welfare scientist is recorded "
+         "in the repository. It has no impact tier, because no source used here ranks the welfare states by how much "
+         "they matter."),
+        ("", "What products do with the signal is read from their descriptions as the Stygar list printed them in "
+         "2021, and for two rows from makers' pages read in October 2026. A product may do more today than its "
+         "description said."),
         ("", "Column (b) measures how cheaply and easily industry could adopt a measure, not whether industry would "
          "accept it politically. A cheap camera that makes lameness visible may be less welcome to industry than an "
          "expensive collar that raises production. A high column (b) means industry could do this cheaply, never that "
@@ -548,13 +661,49 @@ def write(d, path=OUTPUT):
         ws.cell(row=row, column=1, value=a).font = Font(bold=True, size=14 if row == 1 else 11)
         ws.cell(row=row, column=2, value=b).alignment = WRAP
 
+    # Priority
+    ws = wb.create_sheet("Priority")
+    cols = [("Rank", 6, "rank"), ("Welfare state", 26, "state"), ("Kind of ask", 40, "world"),
+            ("Best indicator (ID)", 9, "best_id"), ("Best indicator", 34, "best_name"),
+            ("(1) Welfare relevance of the best indicator", 16, "welfare"), ("Flags: indirect, contested or unclear rows", 26, "flags"),
+            ("(a) Validity of the best test", 28, "validity"), ("EFSA validity flag", 18, "efsa_flag"),
+            ("(b) Cheapest device", 26, "device"), ("Manual burden", 18, "burden"),
+            ("Products whose description names it (of 129)", 12, "vendors"),
+            ("What products do with the signal", 28, "purpose"), ("(c) Schemes requiring a row of this state, and how they check", 40, "schemes"),
+            ("Other indicators in this state", 40, "others")]
+    for c, (title, width, _) in enumerate(cols, start=1):
+        cell = ws.cell(row=1, column=c, value=title)
+        cell.font, cell.fill, cell.alignment = HEAD, HEAD_FILL, WRAP
+        ws.column_dimensions[get_column_letter(c)].width = width
+    for row, p in enumerate(d["priority"], start=2):
+        for c, (_, _, key) in enumerate(cols, start=1):
+            ws.cell(row=row, column=c, value=p[key]).alignment = WRAP
+    ws.freeze_panes = "C2"
+    ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{len(d['priority']) + 1}"
+
+    # Not backed by welfare science
+    ws = wb.create_sheet("Not backed by welfare science")
+    cols = [("ID", 7, "id"), ("What products measure", 30, "name"), ("(1) Welfare relevance", 18, "welfare"),
+            ("(1) What the welfare sources say, and who frames it as welfare", 60, "welfare_why"),
+            ("(a) Validity of the best test", 26, "validity"), ("Products whose description names it (of 129)", 12, "vendors"),
+            ("What products do with the signal", 28, "purpose"), ("(c) Which schemes require it, and how they check", 30, "schemes_how")]
+    for c, (title, width, _) in enumerate(cols, start=1):
+        cell = ws.cell(row=1, column=c, value=title)
+        cell.font, cell.fill, cell.alignment = HEAD, HEAD_FILL, WRAP
+        ws.column_dimensions[get_column_letter(c)].width = width
+    for row, r in enumerate(d["not_backed"], start=2):
+        for c, (_, _, key) in enumerate(cols, start=1):
+            ws.cell(row=row, column=c, value=r[key]).alignment = WRAP
+    ws.freeze_panes = "B2"
+
     # Answer
     ws = wb.create_sheet("Answer")
     columns = [
-        ("Rank", 6, "rank"), ("ID", 7, "id"), ("Welfare indicator", 34, "name"), ("Listed by", 16, "listed_by"),
+        ("Priority rank of its welfare state", 8, "rank"), ("ID", 7, "id"), ("Welfare indicator", 34, "name"), ("Listed by", 16, "listed_by"),
         ("Welfare Quality name, if different", 22, "wq_name"), ("What is measured", 16, "measure_type"),
         ("Welfare state (rows that test the same state share it)", 22, "state"),
         ("(1) Welfare relevance", 16, "welfare"), ("(1) Why: what the welfare sources say", 50, "welfare_why"),
+        ("On the priority list?", 18, "gate"), ("Kind of ask for its welfare state", 30, "world"),
         ("EFSA's rating: sensitivity", 11, "efsa_sens"), ("EFSA's rating: specificity", 11, "efsa_spec"),
         ("EFSA's rating: feasibility on farm", 11, "efsa_feas"),
         ("(a) Can a sensor measure it?", 34, "sensor"), ("Tested products", 30, "validated"),
@@ -562,19 +711,20 @@ def write(d, path=OUTPUT):
         ("(a) Since 2021 (studies and maker pages read in October 2026)", 30, "since"),
         ("Evidence since 2021 (keys on the sheet Evidence since 2021)", 24, "since_keys"),
         ("Why, since 2021", 50, "since_why"),
-        ("(a) Used for the score and lists: the stronger of the two", 16, "best"),
+        ("(a) Used for the ranking and lists: the stronger of the two", 16, "best"),
+        ("(a) Validity of the best test", 26, "validity"), ("Graded against Stygar's bar since 2021: why", 40, "since_perf_why"),
+        ("EFSA validity flag", 18, "efsa_flag"), ("Manual burden (EFSA feasibility read the other way)", 18, "burden"),
+        ("What products do with the signal", 26, "purpose"), ("What products do with it: the descriptions", 40, "purpose_why"),
         ("Products whose description names it (of 129)", 14, "vendors"),
-        ("(b) Device needed", 28, "device"), ("(b) Named by FARM, the US industry programme", 22, "farm"),
+        ("(b) Device needed", 28, "device"),
         ("(c) Schemes requiring it (of 4)", 12, "schemes_n_shown"), ("(c) Which schemes, and how they check", 30, "schemes_how"),
         ("Kevin list 1: Tested or Claimed (the stronger of 2021 and since 2021), and no scheme requires it", 22, "list1"),
         ("Kevin list 2: required by a scheme, checked by hand (inspection or records)", 22, "list2"),
-        ("Ease of adoption score (0 to 15, sort order only)", 12, "score"),
-        ("Score parts (sensor + device + vendors + FARM + schemes)", 16, "parts"),
         ("Row status", 20, "status"), ("Where to check", 70, "where"), ("Reasoning", 60, "reasoning"),
     ]
     incomplete = sum(1 for r in d["answer"] if r["status"] != "Complete")
     if incomplete:
-        columns[0] = (f"Rank (provisional: {incomplete} of {len(d['answer'])} rows incomplete)", 12, "rank")
+        columns[0] = (f"Priority rank (provisional: {incomplete} of {len(d['answer'])} rows incomplete)", 12, "rank")
     for c, (title, width, _) in enumerate(columns, start=1):
         cell = ws.cell(row=1, column=c, value=title)
         cell.font, cell.fill, cell.alignment = HEAD, HEAD_FILL, WRAP
@@ -590,7 +740,8 @@ def write(d, path=OUTPUT):
 
     # By welfare state
     ws = wb.create_sheet("By welfare state")
-    cols = [("Welfare state", 26, "state"), ("Rows", 6, "n"), ("Rows in this state", 46, "names"),
+    cols = [("Welfare state", 26, "state"), ("Priority rank", 9, "rank"), ("Kind of ask", 30, "world"),
+            ("Rows", 6, "n"), ("Rows in this state", 46, "names"),
             ("Protocol or sensor side", 10, "side"), ("(1) Welfare relevance of its rows", 22, "welfare"),
             ("(a) Each row, the stronger sensor grade", 30, "best"),
             ("Rows on Kevin's list 1", 14, "list1_rows"), ("Rows on Kevin's list 2", 14, "list2_rows"),
@@ -753,7 +904,7 @@ def main(argv):
           f"schemes checked for {sum(1 for r in a if r['schemes_n'] != NOT_YET)}")
     for label, text in summary_lines(d):
         print(f"  {label}: {text}")
-    print("the ease of adoption score is a sort order, not a welfare judgement; see 2_research/rules.md")
+    print("the ranking is a stated order, not a welfare judgement; see 2_research/rules.md, section 5")
     return 0
 
 
