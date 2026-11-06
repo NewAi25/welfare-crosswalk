@@ -1,6 +1,6 @@
 # Kevin's answers and review, Slack, received between 1 and 5 November 2026
 
-Verbatim, as pasted by Manisha Sarkar on 5 November 2026 from the Slack direct messages with Kevin Xia. Four messages, in reply to the questions of 16 October 2026 (evidence since 2021) and the update of 19 October 2026. Slack showed times but not dates in the paste. In the first message Kevin quotes three of Manisha's questions before his answer to each. In the third message Kevin says his own comments are in bold; the paste kept the text but not the bold, and his comments are the points set one level further in, as they were in the paste.
+Verbatim, as pasted by Manisha Sarkar on 5 November 2026 from the Slack direct messages with Kevin Xia: four messages. Slack showed times but not dates in the paste; the "Message of" labels are added to separate the messages. The paste kept the text and its indentation but not its bold formatting.
 
 **Message of 6:45 PM**
 

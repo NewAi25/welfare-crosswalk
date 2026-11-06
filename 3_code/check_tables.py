@@ -251,8 +251,11 @@ def check_links(tables, open_questions):  # noqa: C901 (one check per rule, kept
             problem = "since_2021_performance is graded exactly when since_2021_grade is validated_commercial (rule 4.15)"
         elif (r["since_2021_performance"] != "not_tested") != bool(r["since_2021_performance_reasoning"].strip()):
             problem = "since_2021_performance_reasoning is filled exactly when since_2021_performance is graded"
-        elif (r["signal_purpose"] == "no_product") != (r["vendors_naming_it"] == "0" and r["since_2021_grade"] not in {"validated_commercial", "commercial_unvalidated"}):
-            problem = "signal_purpose is no_product exactly when no product in the Stygar list names it and no product since 2021 measures it (rule 4.16)"
+        elif r["signal_purpose"] == "no_product" and not (r["vendors_naming_it"] == "0" and r["since_2021_grade"] not in {"validated_commercial", "commercial_unvalidated"}):
+            problem = "signal_purpose is no_product only when no product in the Stygar list names it and no product since 2021 measures it (rule 4.16)"
+        elif (r["vendors_naming_it"] == "0" and r["since_2021_grade"] not in {"validated_commercial", "commercial_unvalidated"}
+              and r["signal_purpose"] not in {"no_product", "unclear"}):
+            problem = "with no product in the Stygar list and none since 2021, signal_purpose is no_product, or unclear where a product is a candidate (rule 4.16)"
         elif r["signal_purpose"] == "unclear" and not any(
                 iid in l and "signal purpose" in l and l.rstrip().endswith("| open |") for l in open_questions.splitlines()):
             problem = "signal_purpose is unclear but has no open question"
