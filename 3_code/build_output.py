@@ -23,7 +23,7 @@ The sheets it writes
 The ranking, in plain words (the full rule is in 2_research/rules.md, section 5)
     Not one number. Rows with no welfare validation, or not framed as welfare, leave the list.
     The rest are grouped by welfare state, and each state is ranked by the validity of its best
-    test, then by the cheapest device, then by how hard the measure is to take by hand.
+    test, then by the device that test needs, then by how hard the measure is to take by hand.
 
 How to run it
     python 3_code/build_output.py           write the Excel file
@@ -227,7 +227,7 @@ def validity_of(s, grade, since, best):
 
 
 def rank_key(r):
-    """Section 5 of rules.md: validity of the best test, then the cheapest device, then manual burden, then id."""
+    """Section 5 of rules.md: validity of the best test, then the device the row needs, then manual burden, then id."""
     return (list(VALIDITY).index(r["validity_code"]), DEVICE_ORDER.index(r["device_code"]), r["burden_order"], r["id"])
 
 
@@ -572,7 +572,7 @@ def write(d, path=OUTPUT):
         ("Status", "Work in progress. Every row has a sensor row, four scheme rows and a welfare relevance grade. The sensor grades rest on "
          "the 2021 baseline (Stygar and colleagues 2021, Maroto Molina and colleagues 2020) and, since 16 October 2026, "
          "on a second grade from studies and makers' pages since 2021 (2_research/rules.md, rule 4.11), whose two "
-         "provisional points Kevin confirmed in November 2026. A row "
+         "provisional points Kevin's answers of November 2026 settled, the second with a condition (rule 4.11). A row "
          "whose Row status is 'Not yet checked' would have no row in 2_research/sensor_coverage.csv."),
         ("", ""),
         ("THE ANSWERS SO FAR", ""),
@@ -606,7 +606,7 @@ def write(d, path=OUTPUT):
          "page since 2021 does (claw conditions and bacterial culture of milk), it is read the same way from that page. A signal that farms already collect but that no product "
          "uses for health or welfare is a kind of ask C."),
         ("Manual burden", "EFSA's feasibility on farm read the other way round: a measure EFSA rates low on feasibility "
-         "is hard to take by hand, so a sensor adds the most there. It breaks ties after the cheapest device."),
+         "is hard to take by hand, so a sensor adds the most there. It breaks ties after the device."),
     ] + [(f"Sensor: {k}", v) for k, v in SENSOR_LABEL.items()] + [
         ("Device needed", "The cheapest kind of equipment that measures it. Classes, cheapest first, as the ranking "
          "uses them: nothing extra, one device per farm, one device per animal, a sample or a scoring by a person, no "
