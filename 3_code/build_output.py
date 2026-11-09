@@ -23,7 +23,7 @@ The sheets it writes
 The ranking, in plain words (the full rule is in 2_research/rules.md, section 5)
     Not one number. Rows with no welfare validation, or not framed as welfare, leave the list.
     The rest are grouped by welfare state, and each state is ranked by the validity of its best
-    test, then by the device that test needs, then by how hard the measure is to take by hand.
+    test, then by the device the row needs, then by how hard the measure is to take by hand.
 
 How to run it
     python 3_code/build_output.py           write the Excel file
@@ -483,7 +483,7 @@ def summary_lines(d):
          + "; ".join(f"{Counter(r['best_grade'] for r in done).get(k, 0)} {SENSOR_LABEL[k].split(':')[0].lower()}"
                      for k in SENSOR_LABEL) + "."),
         ("The priority list", f"{len(d['priority'])} welfare states pass the welfare gate and are ranked on the sheet "
-         "Priority, by the validity of their best test, then the device it needs, then the manual burden. Kinds of ask: "
+         "Priority, by the validity of their best test, then the device the row needs, then the manual burden. Kinds of ask: "
          + "; ".join(f"{n} {WORLD_LABEL[k].split(';')[0]}" for k, n in sorted(Counter(p['world_code'] for p in d['priority']).items(),
                                                                         key=lambda kv: list(WORLD_LABEL).index(kv[0])))
          + f". {len(d['not_backed'])} rows leave the list because no welfare source backs them; they are on the sheet "
@@ -588,7 +588,7 @@ def write(d, path=OUTPUT):
         ("The ranking", "Not one number (2_research/rules.md, section 5). First the welfare gate: rows graded No welfare "
          "validation or Not framed as welfare leave the list; Indirect or contested and Unclear rows stay, flagged. Then "
          "the rows are grouped by welfare state, and each state is ranked by its best test: first the validity of that "
-         "test, then the device that test needs, then the manual burden, then the indicator id. There is no impact tier: "
+         "test, then the device the row needs, then the manual burden, then the indicator id. There is no impact tier: "
          "EFSA 2023 does not rank its welfare consequences by severity, prevalence or duration (its five consequences "
          "were set by the European Commission's mandate); Welfare Quality orders its criteria only within each "
          "principle; and the project makes no welfare judgement of its own."),

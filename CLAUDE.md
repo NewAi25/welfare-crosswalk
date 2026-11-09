@@ -55,7 +55,7 @@ Public repository NewAi25/welfare-crosswalk. Run `gh auth switch --user NewAi25`
 
 ## Kevin
 
-Mentor time is one to three hours in total. The scope questions are answered in his Slack reply of 25 September; the questions put to him since are recorded in decision_log.md, and nothing in the tables is settled by asking him. The Friday update is one line and a link on Slack, with no question. Help requests, such as a paywalled paper or a welfare science look at the final table, go to the Sentient Futures request help channel.
+Mentor time is one to three hours in total. The scope questions are answered in his Slack reply of 25 September; the questions put to him since are quoted in 1_sources/kevin_slack_review_2026-11.md. No unsure cell is resolved by asking him (hard rule 2); his answers on rule 4.11 were written into the rule with a dated decision_log.md entry. The Friday update is one line and a link on Slack, with no question. Help requests, such as a paywalled paper or a welfare science look at the final table, go to the Sentient Futures request help channel.
 
 ## Fixed citations
 
