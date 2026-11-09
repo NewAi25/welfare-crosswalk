@@ -6,7 +6,7 @@ The project builds a table whose rows are the welfare indicators: the signs of a
 
 ## Why only two of the source documents are in the repository
 
-There are 74 documents in the manifest: the 15 described in the tables below, and 59 added on 16 and 17 October 2026 for the evidence since 2021, the cross check of the baseline and column 1, described in the section on them at the end. Two of the 74 are stored in this repository: the Stygar 2021 paper and the spreadsheet published with it. The other 72 are listed with a link and a fingerprint. For most of them, a copy you download from the link gives the same fingerprint, which proves it is the identical document (see below); the FARM manual must be saved from a web browser. Some cannot be proved that way, and the tables and the section at the end say which. Cambridge University Press stamps every download of the Maroto Molina paper with the date, the time and the downloader's IP address, so your copy will not match the fingerprint; the check instead compares its text, with the stamp lines removed, against the text the research read. The ICAR web page and the Wieck essay are snapshots: a copy saved today will not match, and the check only confirms that a set phrase is still on the live page.
+There are 74 documents in the manifest: the 15 described in the tables below, and 59 added on 16 and 17 October 2026 for the evidence since 2021, the cross check of the baseline and column 1, described in the section on them at the end. Two of the 74 are stored in this repository: the Stygar 2021 paper and the spreadsheet published with it. The other 72 are listed with a link and a fingerprint. For most of them, a copy you download from the link gives the same fingerprint, which proves it is the identical document (see below); three (the FARM manual and the Lee 2025 and Fuentes 2026 papers) must be saved from a web browser. Some cannot be proved that way, and the tables and the section at the end say which. Cambridge University Press stamps every download of the Maroto Molina paper with the date, the time and the downloader's IP address, so your copy will not match the fingerprint; the check instead compares its text, with the stamp lines removed, against the text the research read. The saved web pages and abstracts, among them the ICAR web page and the Wieck essay, are snapshots: a copy saved today will not match, and the check only confirms that a set phrase is still on the live page.
 
 A licence is the owner's statement of what others may do with a document. Three licences matter here.
 
@@ -26,9 +26,9 @@ Open the link in the last column of the tables below. It is the exact address th
 python 3_code/check_sources.py --download
 ```
 
-It saves each missing document under the right name, except the two saved web pages, which are checked against their live pages instead; it never overwrites a file, and then proves each copy with its fingerprint. Any site that refuses it is listed with its link, to open in a web browser.
+It saves each missing document under the right name, except the 26 saved web pages and abstracts, which are checked against their live pages instead; it never overwrites a file, and then proves each copy with its fingerprint. Any site that refuses it is listed with its link, to open in a web browser.
 
-One site, the FARM programme, refuses downloads made by a program. Open its link in an ordinary web browser and save the file from there.
+Three documents cannot be fetched by a program: the FARM manual and the Lee 2025 and Fuentes 2026 papers. Open their links in an ordinary web browser and save the files from there.
 
 ## How to prove your copy is the same document
 
@@ -40,7 +40,7 @@ To check, run this from the top folder of the repository:
 python 3_code/check_sources.py --local
 ```
 
-It works out the fingerprint of every file in this folder and compares it with the manifest. A document you have not downloaded is reported as `absent`, and a saved web page that is not the author's snapshot as `not snapshot`; neither is an error. Run it without `--local` and it also visits the link of every document you have in this folder (except the FARM manual, whose site refuses scripted requests) and checks that the address still serves the same document; for the two saved web pages it checks that the live page still contains a set phrase, even if you have no copy. Cambridge University Press stamps each download of the Maroto Molina paper with the date, the time and the downloader's IP address, so a fresh download never has the same bytes as the copy the research read. For that one file the check compares the text with the stamp lines removed, both for your own downloaded copy and for the copy at the link. A match proves the document text is the same; it does not make the file byte for byte identical. The script is [`3_code/check_sources.py`](../3_code/check_sources.py); its first lines explain it in plain words.
+It works out the fingerprint of every file in this folder and compares it with the manifest. A document you have not downloaded is reported as `absent`, and a saved web page that is not the author's snapshot as `not snapshot`; neither is an error. Run it without `--local` and it also visits the link of every document you have in this folder (except those three, whose sites refuse scripted requests) and checks that the address still serves the same document; for the saved web pages and abstracts it checks that the live page still contains a set phrase, even if you have no copy. Cambridge University Press stamps each download of the Maroto Molina paper with the date, the time and the downloader's IP address, so a fresh download never has the same bytes as the copy the research read. For that one file the check compares the text with the stamp lines removed, both for your own downloaded copy and for the copy at the link. A match proves the document text is the same; it does not make the file byte for byte identical. The script is [`3_code/check_sources.py`](../3_code/check_sources.py); its first lines explain it in plain words.
 
 ## Kevin's question
 
@@ -83,7 +83,7 @@ The Stygar spreadsheet comes inside a zip file. Download the zip, open it, and s
 
 ## The certification schemes (column (c))
 
-Column 3 is done: on 8 October 2026 all four schemes were read in full for all 58 indicators ([`decision_log.md`](../2_research/decision_log.md)). The documents were fingerprinted first, so the reading rests on fixed versions.
+Column (c) is done: all four schemes were read in full for the 58 protocol indicators on 8 October 2026 and for the 23 sensor side rows on 17 October 2026 ([`decision_log.md`](../2_research/decision_log.md)). The documents were fingerprinted first, so the reading rests on fixed versions.
 
 | Document | What it is | Used for | Licence | Here or link only | Link |
 |---|---|---|---|---|---|

@@ -35,7 +35,7 @@ What it checks
        the maker, name and 2021 link copied exactly, and a current link exactly where one
        was found;
        every since_2021_grade is a sensor evidence code, every evidence key it cites exists in
-       evidence_since_2021.csv and names that indicator, and a commercial grade since 2021
+       evidence_since_2021.csv and names that indicator, and a grade since 2021 above Proposed only
        cites at least one piece of evidence.
 
 How to run it

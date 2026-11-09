@@ -1,6 +1,6 @@
 # Decisions
 
-Every judgement not covered by 2_research/rules.md is entered here, dated, before it is applied. Entries are never edited or deleted, so older entries use the file and column names of their day; the entry of 2 October 2026 on the reorganisation gives the old and new names. The predecessor repository's decisions are in github.com/NewAi25/plf-audit, notes/decisions.md, and are not repeated.
+Every judgement not covered by 2_research/rules.md is entered here, dated, before it is applied. Entries are never edited or deleted, so older entries use the file and column names of their day; the entry of 2 October 2026 on the reorganisation gives the old and new names. The predecessor project's decisions are not repeated, and nothing here depends on them.
 
 ## 2026-09-25: repository created from plf-audit
 
@@ -462,3 +462,11 @@ The entry above says most descriptions naming rumination or feeding list health 
 ## 2026-11-09: every page explains itself
 
 Manisha decided on 9 November 2026 that the World A, B and C labels stay, that a plain name sits beside each, and that every page explains its own labels, so that a reader never has to open a second file to see what a label means. The priority table, the write up, the one page entry, the Priority and Not backed sheets of the Excel file and the README now do. The write up is cut to under 1,500 words, counting its tables, by tightening and by dropping the device column from its short table, which the priority table keeps. Rules version 0.9.5 gives the labels as the outputs show them. No grade, rank or count changes.
+
+## 2026-11-09: a read of the whole repository for stale text, and location
+
+Manisha asked on 9 November 2026 for the whole repository to be checked for places that still describe an earlier decision as current. Four read-only passes by AI agents covered the READMEs and CLAUDE.md, rules.md, the code and every sheet of the Excel file, and the free text in the tables, logs and notes. No rank or count was found wrong. The stale text they found is corrected, among it old grade names and factor numbers in table cells, column numbers in the manifest, statements that the update pass had not started, and links to source files that are not in the public repository. The write up was also rewritten to read as a normal submission.
+
+Location. The answer to decision A of 5 November 2026 kept rows unsure on column 1 because removing them would assume an answer the rules do not give. For I066, location, both candidate grades in its open line leave the list, so that reason does not apply. Manisha decided on 9 November 2026 to remove it. Section 5 of rules.md now says an unsure row leaves when every candidate grade would remove it. I072 keeps its place, because its candidates both stay. There are now 46 states on the list, six rows off it, and 12 unclear kinds of ask. Ranks 20 and below move up by one.
+
+Loose ends closed here. No spot check by Manisha has been done or logged, although earlier entries and the audit log describe one as following each push. The read of rows I001 to I030 against rule wording 0.1.4, queued on 30 September 2026, is not recorded as done as a separate pass. The file named notes/scoping_2026-09-29.md in entries of 29 and 30 September is now literature_check_2026-09-29.md. Manisha decided on 7 October and 5 November 2026 to keep the change request and the review of November among the published kevin_*.md files. The points marked to be raised with Kevin, on World A, rumination and the order of the keys, have no recorded answer from him.

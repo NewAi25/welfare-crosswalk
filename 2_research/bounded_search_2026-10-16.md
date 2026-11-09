@@ -1,6 +1,6 @@
 # Bounded search for the milk and metabolic rows, 16 October 2026
 
-Part of the evidence since 2021 (rules.md, rule 4.11). No review found by the literature check of 29 September 2026 covers the milk and metabolic rows, so a bounded search of Europe PMC was run. The protocol below was written before the search, and an amendment was written before the extra queries were run. The search was run and the records screened by AI agents working from fixed instructions. The studies a grade rests on are in [evidence_since_2021.csv](evidence_since_2021.csv), with their full text or abstract in 1_sources.
+Part of the evidence since 2021 (rules.md, rule 4.11). No review found by the literature check of 29 September 2026 covers the milk and metabolic rows, so a bounded search of Europe PMC was run. The protocol below was written before the search, and an amendment was written before the extra queries were run. The search was run and the records screened by AI agents working from fixed instructions. The studies a grade rests on are in [evidence_since_2021.csv](evidence_since_2021.csv), with their full text or abstract listed in 1_sources/manifest.csv with a link and fingerprint.
 
 ## Protocol, as written
 
@@ -38,7 +38,7 @@ AMENDMENT 1, written 16 October 2026 after the seven runs and before running the
  A6 rumen pH: (TITLE:pH OR TITLE:acidosis) AND (TITLE:bolus OR TITLE:boluses OR TITLE:sensor OR TITLE:sensors OR TITLE:wireless OR TITLE:continuous OR TITLE:indwelling OR TITLE:telemetric OR TITLE:validation) AND (TITLE_ABS:cow OR TITLE_ABS:cows OR TITLE_ABS:dairy OR TITLE_ABS:cattle) AND LIMITS
 ```
 
-The folder named in the protocol was a working folder. The full texts behind the rows of evidence_since_2021.csv are now in 1_sources, named ev_ and the study key, with fingerprints in manifest.csv; other full texts read while screening were working copies and are not kept.
+The folder named in the protocol was a working folder. The full texts behind the rows of evidence_since_2021.csv are listed in manifest.csv with a link and fingerprint, named ev_ and the study key, and the files stay off the public repository; other full texts read while screening were working copies and are not kept.
 
 ## Screening counts, mastitis and cell count groups
 

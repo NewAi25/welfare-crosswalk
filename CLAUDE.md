@@ -18,7 +18,7 @@ This repository stands alone. Every fact, rule and decision it rests on is in it
 ## Deliverables
 
 1. [4_output/welfare_crosswalk_dairy.xlsx](4_output/welfare_crosswalk_dairy.xlsx). It is built only by `python 3_code/build_output.py`, never edited by hand, and so is [4_output/priority_table.md](4_output/priority_table.md), the short table.
-2. The four research tables in 2_research, complete for dairy. crosswalk.csv has one row per indicator per scheme for the four schemes (RSPCA Assured, FARM v5, Global Animal Partnership, Certified Humane), with the requirement quoted and its section and page.
+2. The six research tables in 2_research, complete for dairy. crosswalk.csv has one row per indicator per scheme for the four schemes (RSPCA Assured, FARM v5, Global Animal Partnership, Certified Humane), with the requirement quoted and its section and page.
 3. A write up of about 1,500 words and a one page entry in the format of Kevin's list, both in 4_output.
 
 Future scope: a poultry unit, same tables and rules, broilers, or laying hens if that is where the sources are (Manisha's decision of 9 November 2026; decision_log.md).
@@ -39,13 +39,13 @@ Future scope: a poultry unit, same tables and rules, broilers, or laying hens if
 
 ## The batch routine
 
-Work in batches of ten rows.
+Work in batches.
 
-1. Start the session by reading decision_log.md, open_questions.md and the README section "Answers so far", and say what done looks like for the session.
-2. Fill ten rows, each with the evidence behind it, following rules.md.
+1. Start the session by reading decision_log.md, open_questions.md and the README section "Answers", and say what done looks like for the session.
+2. Make the changes, each with the evidence behind it, following rules.md.
 3. Run the checks with `PYTHONIOENCODING=utf-8`: `python 3_code/check_tables.py`, `python 3_code/count_vendors.py` (it only compares; `--write <ids>` saves a fresh count) and `python 3_code/check_sources.py --local`.
 4. Rebuild the Excel file with `python 3_code/build_output.py`, then confirm with `python 3_code/build_output.py --check`.
-5. Update the README section "Answers so far" from the Read me sheet and the tables.
+5. Update the README section "Answers" from the Read me sheet and the tables.
 6. Commit the batch, naming it in the message. Run the audit skill (/audit), which launches the research-auditor agent on everything that differs from origin/master. Fix every finding, commit, and audit again until it returns AUDIT: PASS.
 7. On PASS, add the row to audit_log.md, commit it as `Audit: PASS for <short hash>`, and push.
 8. Manisha spot checks ten rows of the pushed batch against the source pages before the next batch starts. Each spot check is logged in decision_log.md with its date and the rows read; a spot check that is not logged is never described as done. Anything she finds is corrected with a decision_log.md entry and audited again.

@@ -1,40 +1,34 @@
-# Which dairy welfare signs to push for when steering farm sensors
+# Which dairy cow welfare indicators are ready for farm sensors?
 
-Manisha Sarkar. Sentient Futures incubator, mentor Kevin Xia. November 2026.
+Manisha Sarkar. Sentient Futures Project Incubator, mentored by Kevin Xia. November 2026.
 
-## The question
+## Question
 
-Farms can now buy sensors that watch cows, and welfare labels send inspectors to check how cows are kept. Kevin Xia's list of research projects asks for a crosswalk, a table lining up validated welfare indicators, what commercial sensors measure, and what certification schemes, the standards behind welfare labels, require and audit. In his words, the goal is to be able to say "these are the priority welfare indicators to push for when steering PLF". PLF is precision livestock farming: sensors and data analysis used on farms.
+Which welfare indicators for dairy cows should we push for first when steering precision livestock farming?
 
-The full ranked list is in the [priority table](priority_table.md) and the evidence in the [Excel file](welfare_crosswalk_dairy.xlsx).
+## Why this matters
 
-## What was done
+Precision livestock farming means using sensors, cameras and data analysis on farms. Dairy farms can already buy these systems, and some are sold as welfare tools. Certification schemes, the standards behind welfare labels, send inspectors to check farms. Welfare scientists keep their own lists of what should be measured. These three lists have grown up separately, so it was hard to see which welfare problems sensors can already pick up, which of those anyone requires, and where a sensor could save an inspector's work.
 
-The table has 81 rows. Fifty eight are measures from two welfare protocols: the 2023 opinion on dairy cows from EFSA, the European Food Safety Authority, and the Welfare Quality assessment protocol. The other 23 are things sensors on sale say they measure that no protocol covers, such as rumination (chewing the cud) or body temperature.
+## Method
 
-The sensor evidence starts from Stygar and colleagues 2021, a review that found 129 sensor technologies on the market, of which 18 had been externally validated, meaning tested on data from herds not used to develop them. Studies and makers' pages since 2021 sit beside that baseline. Four schemes were read in full against every row: RSPCA Assured, FARM version 5 (the US dairy industry's own programme), Global Animal Partnership and Certified Humane.
+I built a table for dairy cows with 81 rows. Fifty eight come from two welfare protocols: the 2023 opinion on dairy cows from the European Food Safety Authority (EFSA) and the Welfare Quality protocol. The other 23 are things sensors say they measure that neither protocol covers, such as rumination (chewing the cud) or body temperature.
 
-Every value follows a written rule and names its source. A value the rules do not settle is marked unclear, never guessed. No welfare judgement was made.
+For each row I recorded whether the welfare sources treat it as a sign of welfare, whether a sensor can measure it, how the sensor did when tested, what device it needs, and what certification schemes require. The sensor evidence starts from the 2021 review by Stygar and colleagues, which found 129 technologies on the market, of which 18 had been externally validated, meaning tested on data from herds not used to develop them. I added studies and makers' pages from 2021 onward. Four schemes were read in full: RSPCA Assured, FARM version 5 (the US dairy industry's own programme), Global Animal Partnership and Certified Humane.
 
-## How the ranking works
+Every value follows a written rule and cites its source. If the rules could not settle a value, it is marked unclear. I made no welfare judgements.
 
-An earlier version added five factors into a score. Kevin's review said the ranking was invalid once it held rows that are not welfare validated, and it caught FARM being counted twice. Four ordered steps replace the score, drawn from his review and from a summary he forwarded of an exchange with Claude.
+The ranking works in steps. First, 6 rows that the welfare sources I read do not link to welfare came off the list. Rows with a questioned or unclear link stayed, with a flag. Next, I grouped rows into welfare states, so that three tests of one condition count once. That gives 52 states, and 46 remain on the list.
 
-The first step is a gate. Five rows that the welfare sources read here do not tie to welfare leave the list. Rows whose link to welfare is questioned or unclear stay, with a flag.
+Each state is then ranked by its best sensor test. I used the bar Stygar and colleagues set for high performance, where every result a study reports has to pass, for example a correlation above 0.9. A correlation measures how closely two sets of readings move together. Ties are broken by the cheapest device needed, and then by how hard the measure is to take by hand, using EFSA's feasibility ratings. A measure that is hard to take by hand is where a sensor helps most.
 
-The second step groups the rows into welfare states, so that three tests for one condition count once. There are 52 states, of which 47 pass the gate. Each carries forward its best test.
+Ten of the studies involved the maker of the product. I checked them against a written conflict of interest test, and three count.
 
-The third step ranks the states. First comes how well the best test did. The bar is the one Stygar and colleagues use for high performance, and every result a study reports must meet it: a correlation, which measures how closely two sets of readings move together, above 0.9, for example. Next comes the cheapest device the measure needs. Last comes how hard the measure is to take by hand, read from EFSA's feasibility ratings, because that is where a sensor adds the most.
+The list cannot tell you which problem matters most to the cow. EFSA does not rank its welfare consequences, and Welfare Quality only orders its criteria within each of its four principles. Using either across this table would have needed a welfare judgement.
 
-The fourth step says what to ask for; the key under the results table explains each kind.
+## Results
 
-Of ten studies makers took part in, three count under a written conflict of interest test.
-
-The list has no measure of how much each state matters to the cow. EFSA does not rank its welfare consequences, and Welfare Quality orders its criteria only within each of its four principles, so using either across this table would need a welfare judgement. The list says where the evidence and the equipment are ready, not which problem hurts cows most.
-
-## What it found
-
-These are the eleven states whose best sensor has a counted test, in a published study or a test report. Mastitis is inflammation of the udder. Subclinical ketosis and subacute ruminal acidosis are metabolic disorders.
+The table shows the eleven states whose best sensor has a test that counts, in a published study or a test report. Mastitis is inflammation of the udder. Subclinical ketosis and subacute ruminal acidosis are metabolic disorders. A flag means the welfare sources question how much the measure says about welfare.
 
 | Rank | Welfare state | Best test | Kind of ask |
 |---|---|---|---|
@@ -43,8 +37,8 @@ These are the eleven states whose best sensor has a counted test, in a published
 | 3 | Resting problems (lying time) | Passed | World A: add to schemes |
 | 4 | Rumination | Passed | World C: add welfare alerts |
 | 5 | Standing (flagged) | Passed | Unclear: a scheme may require it |
-| 6 | Subclinical ketosis | Cannot be graded yet | World A: accept sensor data |
-| 7 | Subacute ruminal acidosis | Cannot be graded yet | Unclear: a scheme may require it |
+| 6 | Subclinical ketosis | Cannot be graded | World A: accept sensor data |
+| 7 | Subacute ruminal acidosis | Cannot be graded | Unclear: a scheme may require it |
 | 8 | Mastitis | Fell short | World A: accept sensor data |
 | 9 | Lameness | Fell short | World A: accept sensor data |
 | 10 | General health status (flagged) | Fell short | Unclear: a scheme may require it |
@@ -58,30 +52,28 @@ These are the eleven states whose best sensor has a counted test, in a published
 | World C: add welfare alerts | A product collects the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare. |
 | Unclear: a scheme may require it | A sensor exists, but a scheme's wording may or may not name the state. |
 
-Passed, fell short and cannot be graded refer to the bar above. Flagged means the welfare sources question the link to welfare. The World labels come from Kevin's forwarded summary.
+Across all 46 states, 4 are World A: accept sensor data, 6 are World A: add to schemes, 4 are World C, 20 are World B and 12 are unclear. The World labels came out of my mentor's review.
 
-The main finding is a mismatch. On the ranked list, the five states whose sensors passed the bar are not ones any scheme is known to require, though for standing a scheme's wording may name it. The four states schemes do require, with a sensor on offer, have weaker evidence: subclinical ketosis cannot yet be graded, mastitis and lameness fell short of the bar, and feed availability is only claimed by a product.
+The main result is a mismatch. The five states whose sensors passed the bar are not known to be required by any scheme, although one scheme's wording may cover standing. Schemes do require four states that have a sensor on offer, but the evidence there is weaker. Subclinical ketosis cannot be graded, mastitis and lameness fell short, and feed availability is only claimed by a product.
 
-Kevin's list item names two valuable cells. The first, indicators already measured by sensors but required by no scheme, a set he said could be large, holds 21 rows, with 12 more unclear; three of the 21 are rows the welfare sources do not back. The second, indicators required by schemes but checked by hand, holds 24 rows. No scheme's numbered standards accept sensor data as the way an inspector checks any row.
+Sensors measure or claim to measure 21 rows that no scheme requires, and 12 more are unclear. Four of the 21 are rows the welfare sources do not back. Schemes require another 24 rows but check them by hand, with an inspector looking at the cows or reading farm records. No scheme's numbered standards accept sensor data as the way an inspector checks anything.
 
-Five things products measure are not backed by the welfare sources read here, among them individual water intake, which passed the bar.
+Six things products measure have no backing in the welfare sources I read. Individual water intake is one of them, even though its sensor passed the bar.
 
 ## Recommendations
 
-These do not weigh one welfare problem against another.
+Start with signals that products already collect. Feeding time, feed intake and rumination all passed the bar, and no description in the 2021 product list says they are for welfare, although most descriptions of rumination or feeding time mention health or welfare alongside. One maker's page now says that tracking rumination and eating time helps "overall cow health and welfare", so part of this gap may already be closing. On farms that own the devices, welfare alerts or thresholds would need new software and no new hardware. I have no cost data and no record of what farms own, so this needs checking with farmers and makers.
 
-Start with the signals products already collect. Feeding time, feed intake and rumination all passed the bar, and no description in the 2021 product list says they are for welfare, though most naming rumination or feeding time list health or welfare beside them. One maker's page now says tracking rumination and eating time helps "overall cow health and welfare", so part of this gap may be closing. On farms that own the devices, alerts or thresholds would need new software, not new hardware. The table holds no cost data and no record of what farms own.
+Next, ask schemes to adopt lying time. Its sensors passed the bar, and EFSA rates it low on feasibility. The other five states in that group need better evidence first, because their sensors fell short or have no test that counts.
 
-Next, ask schemes to adopt lying time, the one state in World A: add to schemes whose sensors passed the bar. EFSA rates it low on feasibility. The other five states in that group need better evidence first: their sensors fell short of the bar or have no counted test.
+I would not yet ask schemes to accept sensor data for what they already require. Independent validation should come first. Lameness is the clearest case, since all four schemes require it and check it by hand, so a sensor that passed would open the way in every scheme. Subclinical ketosis is less clear. A 2025 test of a milk analyser by ICAR, the International Committee for Animal Recording, reports strong results for milk fat and protein, but the report does not say what its regression lines plot, so I could not grade it. What the schemes require for this state is a score of how much fat a cow carries, while the tested sensor reads milk.
 
-Do not yet ask schemes to accept sensor data for what they already require. Ask first for independent validation against the bar. Lameness is the clearest case: all four schemes require it and check it by hand, so a sensor that passed would open the ask in every scheme. For subclinical ketosis, a 2025 test by ICAR, the International Committee for Animal Recording, of an analyser for milk fat and protein reports strong results, but does not say what its regression lines (trends fitted through its readings) plot, so it cannot yet be graded. What the schemes require is a score of how much fat a cow carries, while the tested sensor reads milk.
+Schemes could also clarify their wording for the eight states where a sensor exists and a rule may name the state.
 
-Ask the schemes to clarify their wording for the eight states where a sensor exists and a rule may name the state but does not say so plainly.
+For the 20 states where no product is graded as measuring them, the ask is new measurement. Social and comfort behaviour are the closest, since they have been measured in cattle in research.
 
-Finally, for the 20 states where no product is graded as measuring the state, ask for new measurement, starting with what is closest. Social behaviour and comfort behaviour have been measured in cattle in research, but no product in the sources read offers them.
+## Limitations and next steps
 
-## What this does not show
+The sensor evidence rests on a 2021 baseline and the sources I read since then, not the whole market. What products do with a signal comes from their one line descriptions and, for two rows, makers' pages, so it does not show what happens on farms. Welfare relevance for the sensor rows rests on three documents. Of the questions the rules could not settle, 54 are still open and are published as open.
 
-The sensor evidence rests on a 2021 baseline and named sources since, not the whole market. What products do with a signal comes from their one line descriptions, and for two rows from makers' pages, not from farms. The welfare relevance of the sensor rows rests on three documents. Of the questions the rules could not settle, 54 remain open.
-
-The checks were done by scripts and by an AI agent. No welfare scientist has reviewed the table. Poultry is future scope.
+AI agents did much of the reading and all of the checking against sources so far, working to written rules. No welfare scientist has reviewed the table. Poultry is the natural next unit, using the same tables and rules.
