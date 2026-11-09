@@ -62,10 +62,10 @@ The World A, B and C labels come from a summary of an exchange with Claude that 
 
 | Kind of ask | What it means | What to do |
 |---|---|---|
-| World A: accept sensor data | A scheme requires a row of this state, and a product measures a row of it. | Ask schemes to accept the sensor data. |
-| World A: add to schemes | Products use the sensor for health or welfare, but no scheme requires the state. | Ask schemes to adopt the sensor data. |
+| World A: accept sensor data | A scheme requires part of this state, and a product measures or claims to measure part of it. | Ask schemes to accept the sensor data. |
+| World A: add to schemes | A product's description says the sensor is for health or welfare, but no scheme requires the state. | Ask schemes to adopt the sensor data. |
 | World B: new measurement needed | No product is graded as measuring the state. | Ask for new measurement. |
-| World C: add welfare alerts | Products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare. | Ask for welfare alerts or thresholds on that signal. |
+| World C: add welfare alerts | At least one product collects the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare. | Ask for welfare alerts or thresholds on that signal. |
 | Unclear: a scheme may require it | A sensor exists, and a scheme's wording may name the state, but the rules do not settle whether it does. | Settle the scheme's wording first. |
 | Unclear: sensor evidence | The rules do not settle whether a sensor measures it. | Settle the sensor evidence first. |
 | Unclear: what products use it for | A sensor exists, but a product's description can be read either way. | Settle what products use it for first. |
@@ -74,21 +74,36 @@ The World A, B and C labels come from a summary of an exchange with Claude that 
 
 | Column | Value | What it means |
 |---|---|---|
-| Welfare state | | The condition or problem measured, read from EFSA's table headings or the Welfare Quality protocol. Several tests of one condition count once. |
-| Best indicator | | The test that comes first for this state. The code in brackets is its row in the full Excel file. |
-| Best test | Passed the bar | At least one product's test met the bar in full. The bar is the one Stygar and colleagues 2021, a review of dairy sensors, use for high performance: every result a study reports must meet it, for example a correlation above 0.9. |
+| Welfare state | | The condition or problem measured, read from EFSA's table headings or the Welfare Quality protocol, a published method for assessing welfare on farms. For a row that comes from what sensors say they measure, it is that measurement. Several tests of one condition count once. |
+| Best indicator, ID | | The test that comes first for this state. The code, such as I061, is its row in the full Excel file. |
+| Best test | Passed the bar | At least one product's test met the bar in full. The bar is the one Stygar and colleagues 2021, a review of dairy sensors, use for high performance: every result a study reports must meet it, for example a correlation, which measures how closely two sets of readings move together, above 0.9. |
 | Best test | Tested, cannot be graded yet | A product was tested, but the results available do not settle whether it meets the bar. |
 | Best test | Tested, fell short of the bar | A product was tested and did not meet the bar. |
-| Best test | Claimed, no counted test | A product says it measures this, and no test that counts was found. |
+| Best test | Claimed, no counted test | A product says it measures this, and no test that counts was found. A test does not count if it is on a different measure or fails the written conflict of interest test. |
 | Best test | Shown in research, no product | A study measured it in cattle, and no product claims it. |
 | Best test | Proposed only | The sources only propose a method, show one in another species or setting, or offer a related measure in its place. |
 | Best test | Nothing found | The sources read name no method. |
 | Best test | Unclear | The written rules do not settle it. |
-| Device needed | | The cheapest kind of equipment for the best indicator. |
+| Device needed | | The cheapest kind of equipment for the best indicator. None named means the sensor sources name none; Unclear means the rules do not settle it. |
 | Hard to take by hand? | High, Medium, Mixed, Low | EFSA's rating of how feasible the measure is on a farm, read the other way round, because a measure that is hard to take by hand is where a sensor adds the most. |
 | Hard to take by hand? | Not rated | EFSA does not rate it. Such rows come after rated ones when this column breaks a tie. |
 | Flag | indirect or contested | A welfare source questions how much the row says about welfare. |
 | Flag | unclear | The written rules do not settle whether the welfare sources treat the row as a sign of welfare. |
+
+## Words used in the rows
+
+| Word | What it means |
+|---|---|
+| Subclinical | Without outward signs. |
+| Mastitis | Inflammation of the udder. |
+| Ketosis, ruminal acidosis, hypocalcaemia, displaced abomasum | Metabolic disorders of dairy cows, as EFSA groups them. Hypocalcaemia is low blood calcium; the abomasum is the fourth stomach. |
+| Dystocia | Difficult calving. |
+| Oestrus | Heat, the fertile period. |
+| Rumination | Chewing the cud. |
+| Agonistic interactions | Aggressive encounters between cows. |
+| Allo-grooming | Cows grooming each other. |
+| Integument, hock | The skin and coat; the joint of the hind leg. |
+| Qualitative behaviour assessment | An assessor describes the overall demeanour of the herd. |
 
 ## What products measure that the welfare sources do not back
 

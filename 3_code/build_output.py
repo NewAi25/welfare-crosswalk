@@ -83,16 +83,16 @@ PURPOSE_LABEL = {  # what products do with the signal (rules.md, rule 4.16)
 # The World letters come from the summary Kevin Xia forwarded with his review; the plain names sit beside them.
 ASK_KEY = {
     "A_accept": ("World A: accept sensor data",
-                 "A scheme requires a row of this state, and a product measures a row of it",
+                 "A scheme requires part of this state, and a product measures or claims to measure part of it",
                  "ask schemes to accept the sensor data"),
     "A_adopt": ("World A: add to schemes",
-                "Products use the sensor for health or welfare, but no scheme requires the state",
+                "A product's description says the sensor is for health or welfare, but no scheme requires the state",
                 "ask schemes to adopt the sensor data"),
     "B": ("World B: new measurement needed",
           "No product is graded as measuring the state",
           "ask for new measurement"),
     "C": ("World C: add welfare alerts",
-          "Products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare",
+          "At least one product collects the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare",
           "ask for welfare alerts or thresholds on that signal"),
     "unclear_scheme": ("Unclear: a scheme may require it",
                        "A sensor exists, and a scheme's wording may name the state, but the rules do not settle whether it does",
@@ -714,7 +714,10 @@ def write(d, path=OUTPUT):
     ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{len(d['priority']) + 1}"
     notes = [("How to read this sheet", ""),
              ("Kind of ask", "Each cell says what it means. The World A, B and C labels come from a summary of an exchange with Claude that the project's mentor, Kevin Xia, forwarded with his review; the plain name beside each is this project's."),
-             ("Stygar's bar", "Stygar and colleagues 2021, a review of dairy sensors, count a test as high performance when every result it reports meets the criteria, for example a correlation above 0.9."),
+             ("Stygar's bar", "Stygar and colleagues 2021, a review of dairy sensors, count a test as high performance when every result it reports meets the criteria, for example a correlation, how closely two sets of readings move together, above 0.9. Their full test is that criterion for every result, including a regression intercept and slope."),
+             ("(1), (a), (b), (c)", "The four questions asked of each row: (1) do the welfare sources treat it as a measure of welfare; (a) can a sensor measure it; (b) how easily could industry adopt it; (c) do schemes assess it."),
+             ("Established, Supported", "Established: a welfare protocol lists it as a measure taken on the animal. Established input: a welfare protocol lists it as a measure of housing or management. Supported: a welfare source links it to a welfare problem and none questions the link."),
+             ("Of 129", "The 129 products listed by Stygar and colleagues 2021, called the 2021 product list."),
              ("EFSA validity flag", "EFSA, the European Food Safety Authority, rates some measures for sensitivity and specificity. The flag shows those ratings and does not change the rank."),
              ("Manual burden", "EFSA's rating of how feasible the measure is on a farm, read the other way round: a measure that is hard to take by hand is where a sensor adds the most."),
              ("Flags", "Indirect or contested: a welfare source questions how much the row says about welfare. Unclear: the written rules do not settle it."),
@@ -736,7 +739,7 @@ def write(d, path=OUTPUT):
     for row, r in enumerate(d["not_backed"], start=2):
         for c, (_, _, key) in enumerate(cols, start=1):
             ws.cell(row=row, column=c, value=r[key]).alignment = WRAP
-    ws.cell(row=len(d["not_backed"]) + 3, column=2, value="These rows left the priority list because the three welfare sources read do not tie them to "
+    ws.cell(row=len(d["not_backed"]) + 3, column=2, value="These rows left the priority list because the three welfare sources read (EFSA's 2023 opinion on dairy cows, the Welfare Quality protocol and the 2024 review by Linstädt and colleagues) do not tie them to "
             "welfare. No welfare validation: no source links it, though a product's description or a scheme treats it as about health or "
             "welfare. Not framed as welfare: none of them does. A link may exist in a source not read here.").alignment = WRAP
     ws.freeze_panes = "B2"
@@ -948,21 +951,33 @@ def table_text(d):
         lines.append(f"| {label} | {meaning}. | {ask[0].upper() + ask[1:]}. |")
     lines += ["", "## What the other columns mean", "",
               "| Column | Value | What it means |", "|---|---|---|",
-              "| Welfare state | | The condition or problem measured, read from EFSA's table headings or the Welfare Quality protocol. Several tests of one condition count once. |",
-              "| Best indicator | | The test that comes first for this state. The code in brackets is its row in the full Excel file. |",
-              "| Best test | Passed the bar | At least one product's test met the bar in full. The bar is the one Stygar and colleagues 2021, a review of dairy sensors, use for high performance: every result a study reports must meet it, for example a correlation above 0.9. |",
+              "| Welfare state | | The condition or problem measured, read from EFSA's table headings or the Welfare Quality protocol, a published method for assessing welfare on farms. For a row that comes from what sensors say they measure, it is that measurement. Several tests of one condition count once. |",
+              "| Best indicator, ID | | The test that comes first for this state. The code, such as I061, is its row in the full Excel file. |",
+              "| Best test | Passed the bar | At least one product's test met the bar in full. The bar is the one Stygar and colleagues 2021, a review of dairy sensors, use for high performance: every result a study reports must meet it, for example a correlation, which measures how closely two sets of readings move together, above 0.9. |",
               "| Best test | Tested, cannot be graded yet | A product was tested, but the results available do not settle whether it meets the bar. |",
               "| Best test | Tested, fell short of the bar | A product was tested and did not meet the bar. |",
-              "| Best test | Claimed, no counted test | A product says it measures this, and no test that counts was found. |",
+              "| Best test | Claimed, no counted test | A product says it measures this, and no test that counts was found. A test does not count if it is on a different measure or fails the written conflict of interest test. |",
               "| Best test | Shown in research, no product | A study measured it in cattle, and no product claims it. |",
               "| Best test | Proposed only | The sources only propose a method, show one in another species or setting, or offer a related measure in its place. |",
               "| Best test | Nothing found | The sources read name no method. |",
               "| Best test | Unclear | The written rules do not settle it. |",
-              "| Device needed | | The cheapest kind of equipment for the best indicator. |",
+              "| Device needed | | The cheapest kind of equipment for the best indicator. None named means the sensor sources name none; Unclear means the rules do not settle it. |",
               "| Hard to take by hand? | High, Medium, Mixed, Low | EFSA's rating of how feasible the measure is on a farm, read the other way round, because a measure that is hard to take by hand is where a sensor adds the most. |",
               "| Hard to take by hand? | Not rated | EFSA does not rate it. Such rows come after rated ones when this column breaks a tie. |",
               "| Flag | indirect or contested | A welfare source questions how much the row says about welfare. |",
-              "| Flag | unclear | The written rules do not settle whether the welfare sources treat the row as a sign of welfare. |", ""]
+              "| Flag | unclear | The written rules do not settle whether the welfare sources treat the row as a sign of welfare. |", "",
+              "## Words used in the rows", "",
+              "| Word | What it means |", "|---|---|",
+              "| Subclinical | Without outward signs. |",
+              "| Mastitis | Inflammation of the udder. |",
+              "| Ketosis, ruminal acidosis, hypocalcaemia, displaced abomasum | Metabolic disorders of dairy cows, as EFSA groups them. Hypocalcaemia is low blood calcium; the abomasum is the fourth stomach. |",
+              "| Dystocia | Difficult calving. |",
+              "| Oestrus | Heat, the fertile period. |",
+              "| Rumination | Chewing the cud. |",
+              "| Agonistic interactions | Aggressive encounters between cows. |",
+              "| Allo-grooming | Cows grooming each other. |",
+              "| Integument, hock | The skin and coat; the joint of the hind leg. |",
+              "| Qualitative behaviour assessment | An assessor describes the overall demeanour of the herd. |", ""]
     lines += ["## What products measure that the welfare sources do not back", "",
               "These rows left the list because the welfare sources read do not tie them to welfare. A link may exist in a source not read here. "
               "No welfare validation means none of the three sources read links it to welfare, though a product's description or a scheme treats it as about health or welfare. "
