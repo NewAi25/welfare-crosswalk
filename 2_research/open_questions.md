@@ -1,6 +1,6 @@
 # Open questions
 
-One line per cell the rules in [rules.md](rules.md) do not settle: the indicator, the column, the candidate readings and the source passages. A question is resolved only by a dated entry in [decision_log.md](decision_log.md) that tightens a rule or settles how an existing rule reads; until then the cell stays unsure, unclear or not_graded in the published table. A resolved line stays here with its resolution.
+One line per cell the rules in [rules.md](rules.md) do not settle: the indicator, the column, the candidate readings and the source passages. A question is resolved only by tightening a rule with a dated entry in [decision_log.md](decision_log.md); until then the cell stays unsure, unclear or not_graded in the published table. Two early lines, on the Maroto Molina rating of I057 and I058 and on I037, were closed by a dated reading of an existing rule. A resolved line stays here with its resolution.
 
 | Date | Indicator | Column | Candidates | Sources | Resolution |
 |---|---|---|---|---|---|
