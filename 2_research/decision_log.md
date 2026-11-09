@@ -430,3 +430,11 @@ Rumination (I060). That entry listed four counted tests. There are five: Pichlba
 Lying time (I012). The RumiWatch Spearman at 10 minutes is 0.99, not 0.97 to 0.99; 0.97 was a data logger's. The row now also gives its 1 minute results, which pass.
 
 Wording. The same entry said links to Kevin's file are labelled his messages; two links in rule 4.11 still read his words, and now do not. The three worlds are attributed to the Claude summary in section 2 of rules.md as well as in section 5. CLAUDE.md no longer says that nothing in the tables is settled by asking Kevin: no unsure cell is resolved by asking him, and his answers on rule 4.11 were written into the rule. The ranking is described throughout as using the device the row needs, not the device the test used. The ICAR Brolis cells give the four slopes and say the significant slope is on three series. On I075, the GEA and Lely lists alert on milk yield and DeLaval's displays it.
+
+## 2026-11-09: poultry as future scope, and the final outputs
+
+Manisha decided on 9 November 2026 that poultry is future scope, so the dairy unit stands on its own as the deliverable for item 13. Kevin agreed earlier to broilers, or maybe laying hens, as a second unit, and did not answer the question of whether poultry could wait until after the incubation. CLAUDE.md and the README now say so.
+
+Three outputs are added to 4_output. priority_table.md is the short table Kevin asked for; build_output.py writes it from the tables, and --check compares it, so the push gate refuses a table that does not match. write_up.md gives the method, findings and recommendations. one_page_entry.md follows the format of Kevin's list, with the project status in place of his estimate of hours, because nothing in this repository records the hours spent. The recommendations follow from the kinds of ask and the test results in the table, and do not weigh one welfare problem against another.
+
+Two sentences of the entry of 9 November 2026 on the second confirmation audit are corrected here. On I075, Lely's alert lists use milk yield, GEA has a list that displays cows with a milk decline, and DeLaval's cow monitoring list displays milk yield. On I060, Lee 2025 ties a precision of 0.85 to "a grazing collar"; it does not name the study. The findings record gains a note on one value in Pichlbauer and colleagues 2024.

@@ -3,7 +3,8 @@
 In plain words
     The research is recorded in six tables in 2_research/. This script reads them, ranks
     the welfare states in the order 2_research/rules.md, section 5, sets out, and writes
-    4_output/welfare_crosswalk_dairy.xlsx. Nothing in the Excel file is edited by hand:
+    4_output/welfare_crosswalk_dairy.xlsx and the short table 4_output/priority_table.md.
+    Nothing in either is edited by hand:
     every value comes from the tables, the manifest or the Stygar product list, and the
     explanatory text and labels are written by this script, so the Excel file and the
     tables can never disagree.
@@ -44,6 +45,7 @@ from openpyxl.utils import get_column_letter
 ROOT = Path(__file__).resolve().parent.parent
 TABLES = ROOT / "2_research"
 OUTPUT = ROOT / "4_output" / "welfare_crosswalk_dairy.xlsx"
+TABLE = ROOT / "4_output" / "priority_table.md"
 SCHEMES = ["RSPCA_Assured", "FARM_v5", "GAP_dairy", "Certified_Humane"]
 SCHEME_NAMES = {"RSPCA_Assured": "RSPCA Assured (UK)", "FARM_v5": "FARM v5 (US industry)",
                 "GAP_dairy": "Global Animal Partnership (US)", "Certified_Humane": "Certified Humane (US)"}
@@ -569,7 +571,7 @@ def write(d, path=OUTPUT):
          "with every column, in the order of the priority list. Sensors x products: for each indicator, which of the 129 products in the Stygar 2021 list "
          "contain one of the indicator's search words in their own description, and which a published study tested. Schemes: what each certification scheme "
          "requires. Product list and Sources: where everything comes from."),
-        ("Status", "Work in progress. Every row has a sensor row, four scheme rows and a welfare relevance grade. The sensor grades rest on "
+        ("Status", "The dairy unit; poultry is future scope. Every row has a sensor row, four scheme rows and a welfare relevance grade. The sensor grades rest on "
          "the 2021 baseline (Stygar and colleagues 2021, Maroto Molina and colleagues 2020) and, since 16 October 2026, "
          "on a second grade from studies and makers' pages since 2021 (2_research/rules.md, rule 4.11), whose two "
          "provisional points Kevin's answers of November 2026 settled, the second with a condition (rule 4.11). A row "
@@ -879,6 +881,62 @@ def write(d, path=OUTPUT):
     wb.save(path)
 
 
+def table_text(d):
+    """The short priority table, as a page of text. Written to 4_output/priority_table.md."""
+    short_validity = {"tested_above": "Passed the bar", "tested_not_graded": "Tested, cannot be graded yet",
+                      "tested_below": "Tested, fell short of the bar", "claimed": "Claimed, no test found",
+                      "research": "Shown in research, no product", "proposed": "Proposed only",
+                      "nothing": "Nothing found", "unclear": "Unclear"}
+    short_device = {"routine_data": "Nothing extra (already in records)", "farm_fixed": "One per farm or barn",
+                    "animal_mounted": "One per animal", "sample_or_procedure": "A sample or a scoring",
+                    "none": "None named", "unsure": "Unclear"}
+    short_ask = {"A_accept": "A, accept: ask schemes to accept sensor data",
+                 "A_adopt": "A, adopt: ask schemes to adopt sensor data",
+                 "B": "B: ask for new measurement", "C": "C: ask for welfare alerts on signals farms already have",
+                 "unclear_scheme": "Unclear: a scheme may require it", "unclear_sensor": "Unclear: sensor evidence",
+                 "unclear_purpose": "Unclear: what products use it for"}
+
+    def indicator(name):
+        short = name.split(": ")[-1].replace(" (sensor side)", "")
+        return short[0].upper() + short[1:]
+
+    asks = Counter(p["world_code"] for p in d["priority"])
+    lines = ["# Priority table, dairy cows", "",
+             "The short answer: which welfare states to push for when steering precision livestock farming, and what to ask for. "
+             "This page is written by a script from the research tables and is never edited by hand. "
+             "The full evidence, row by row with its sources, is in [welfare_crosswalk_dairy.xlsx](welfare_crosswalk_dairy.xlsx). "
+             "The method and recommendations are in [write_up.md](write_up.md), and the rules are in "
+             "[rules.md](../2_research/rules.md), section 5.", "",
+             "The ranking is a stated sort order. It is not a welfare judgement, and it does not say how much each state matters to the cow: "
+             "EFSA does not rank its welfare consequences, and Welfare Quality orders its criteria only within each of its principles.", "",
+             f"{len(d['priority'])} welfare states are ranked: {asks['A_accept']} A, accept; {asks['A_adopt']} A, adopt; "
+             f"{asks['C']} C; {asks['B']} B; and {asks['unclear_scheme'] + asks['unclear_sensor'] + asks['unclear_purpose']} unclear.", "",
+             "| Rank | Welfare state | Best indicator | Best test | Device needed | Hard to take by hand? | Kind of ask | Flag |",
+             "|---|---|---|---|---|---|---|---|"]
+    for p in d["priority"]:
+        validity, device, _, iid = p["key"]
+        flag = "" if p["flags"] == "none" else p["flags"]
+        lines.append(f"| {p['rank']} | {p['state']} | {indicator(p['best_name'])} ({iid}) | {short_validity[list(VALIDITY)[validity]]} | "
+                     f"{short_device[DEVICE_ORDER[device]]} | {p['burden'].split(':')[0]} | {short_ask[p['world_code']]} | {flag} |")
+    lines += ["", "## What products measure that the welfare sources do not back", "",
+              "These rows left the list at the gate: the welfare sources read do not tie them to welfare. "
+              "A link may exist in a source not read here.", "",
+              "| ID | What products measure | Welfare relevance | Best test |", "|---|---|---|---|"]
+    for r in d["not_backed"]:
+        lines.append(f"| {r['id']} | {r['name'].replace(' (sensor side)', '')} | {r['welfare']} | {short_validity[r['validity_code']]} |")
+    lines += ["", "## How to read the columns", "",
+              "**Best test** is how the best sensor test for the state did. The bar is the one Stygar and colleagues 2021 use for high performance, "
+              "and every result a study reports must meet it. Cannot be graded yet means the results available do not settle it. "
+              "**Device needed** is the cheapest kind of equipment for the best indicator. "
+              "**Hard to take by hand?** reads EFSA's rating of how feasible the measure is on a farm the other way round, "
+              "because a measure that is hard to take by hand is where a sensor adds the most; Not rated means EFSA does not rate it, with no penalty. "
+              "**Kind of ask** is what the state supports. A, accept: a scheme requires the state and a sensor exists. "
+              "A, adopt: products use the sensor for health or welfare but no scheme requires it. "
+              "B: no sensor product. C: the signal is on farms but no product says it is for health or welfare. "
+              "**Flag** names rows whose link to welfare a source questions, or which the rules leave unclear. The Priority sheet of the Excel file gives more columns.", ""]
+    return "\n".join(lines)
+
+
 def check(d):
     """Rebuild in memory and compare every cell value with the saved Excel file."""
     if not OUTPUT.exists():
@@ -902,7 +960,10 @@ def check(d):
                 if ra != rb:
                     print(f"sheet {name!r} is out of date; run python 3_code/build_output.py")
                     return 1
-    print(f"{OUTPUT.name}: matches the tables")
+    if not TABLE.exists() or TABLE.read_text(encoding="utf-8") != table_text(d):
+        print(f"{TABLE.name} is out of date; run python 3_code/build_output.py")
+        return 1
+    print(f"{OUTPUT.name} and {TABLE.name}: match the tables")
     return 0
 
 
@@ -911,8 +972,9 @@ def main(argv):
     if "--check" in argv:
         return check(d)
     write(d)
+    TABLE.write_text(table_text(d), encoding="utf-8", newline="\n")
     a = d["answer"]
-    print(f"wrote {OUTPUT.relative_to(ROOT)}")
+    print(f"wrote {OUTPUT.relative_to(ROOT)} and {TABLE.relative_to(ROOT)}")
     print(f"indicators: {len(a)}; sensor evidence filled for {sum(1 for r in a if r['grade'])}; "
           f"schemes checked for {sum(1 for r in a if r['schemes_n'] != NOT_YET)}")
     for label, text in summary_lines(d):
