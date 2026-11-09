@@ -82,8 +82,8 @@ PURPOSE_LABEL = {  # what products do with the signal (rules.md, rule 4.16)
 WORLD_LABEL = {  # the kind of ask (rules.md, section 5)
     "A_accept": "A: a scheme requires it and a sensor exists; ask schemes to accept the sensor data",
     "A_adopt": "A: a sensor exists and products use it for health or welfare, but no scheme requires it; ask schemes to adopt the sensor data",
-    "B": "B: no sensor product; ask for new measurement",
-    "C": "C: products on sale collect the signal, but no description in the 2021 product list says it is for health or welfare; ask for welfare alerts or thresholds on that signal",
+    "B": "B: no product is graded as measuring the state; ask for new measurement",
+    "C": "C: products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare; ask for welfare alerts or thresholds on that signal",
     "unclear_scheme": "Unclear: a sensor exists, and a scheme may require the state (a scheme row is unsure)",
     "unclear_sensor": "Unclear: the sensor evidence is unsure",
     "unclear_purpose": "Unclear: what products do with the signal is unsure",
@@ -605,8 +605,8 @@ def write(d, path=OUTPUT):
         ("What products do with the signal", "Read from the products' own descriptions in the Stygar list (rule 4.16): "
          "whether a description says the measurement is for health or welfare, only for production, fertility or herd "
          "management, or says nothing about what it is for. Where no product in the Stygar list names it but a maker's "
-         "page since 2021 does (claw conditions and bacterial culture of milk), it is read the same way from that page. A signal products collect that no description in the 2021 list "
-         "ties to health or welfare is a kind of ask C."),
+         "page since 2021 does (claw conditions and bacterial culture of milk), it is read the same way from that page. A signal products collect, that no scheme requires and no description "
+         "in the 2021 list ties to health or welfare, is a kind of ask C."),
         ("Manual burden", "EFSA's feasibility on farm read the other way round: a measure EFSA rates low on feasibility "
          "is hard to take by hand, so a sensor adds the most there. It breaks ties after the device."),
     ] + [(f"Sensor: {k}", v) for k, v in SENSOR_LABEL.items()] + [
@@ -887,12 +887,12 @@ def table_text(d):
                       "tested_below": "Tested, fell short of the bar", "claimed": "Claimed, no counted test",
                       "research": "Shown in research, no product", "proposed": "Proposed only",
                       "nothing": "Nothing found", "unclear": "Unclear"}
-    short_device = {"routine_data": "Nothing extra (already in records)", "farm_fixed": "One per farm or barn",
+    short_device = {"routine_data": "Nothing extra where records are kept", "farm_fixed": "One per farm or barn",
                     "animal_mounted": "One per animal", "sample_or_procedure": "A sample or a scoring",
                     "none": "None named", "unsure": "Unclear"}
     short_ask = {"A_accept": "A, accept: ask schemes to accept sensor data",
                  "A_adopt": "A, adopt: ask schemes to adopt sensor data",
-                 "B": "B: ask for new measurement", "C": "C: ask for welfare alerts on signals products already collect",
+                 "B": "B: ask for new measurement", "C": "C: ask for welfare alerts on signals products collect",
                  "unclear_scheme": "Unclear: a scheme may require it", "unclear_sensor": "Unclear: sensor evidence",
                  "unclear_purpose": "Unclear: what products use it for"}
 
@@ -932,7 +932,7 @@ def table_text(d):
               "because a measure that is hard to take by hand is where a sensor adds the most; Not rated means EFSA does not rate it; such rows come after rated ones when this column breaks a tie. "
               "**Kind of ask** is what the state supports. A, accept: a scheme requires the state and a sensor exists. "
               "A, adopt: products use the sensor for health or welfare but no scheme requires it. "
-              "B: the sources read name no sensor product. C: products on sale collect the signal, but no description in the 2021 product list says it is for health or welfare. "
+              "B: no product is graded as measuring the state. C: products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare. "
               "**Flag** names rows whose link to welfare a source questions, or which the rules leave unclear. The Priority sheet of the Excel file gives more columns.", ""]
     return "\n".join(lines)
 
