@@ -6,7 +6,7 @@
 #   3. every source file present matches its fingerprint, or for the stamped paper its text (when pypdf
 #      is installed; without it a changed stamped copy is a warning); a saved web page that is not the
 #      snapshot is reported, not refused (3_code/check_sources.py --local);
-#   4. the Excel file in 4_output matches the tables (3_code/build_output.py --check);
+#   4. the Excel file and the priority table in 4_output match the tables (3_code/build_output.py --check);
 #   5. the committed 2_research/audit_log.md has a row whose Result column is PASS for the
 #      commit being pushed, or for its parent when the pushed commit changes nothing but the
 #      audit log (that is the commit that records the PASS).
@@ -41,7 +41,7 @@ done
 [ -n "$PY" ] || { echo "push gate: no working python3 or python found"; exit 1; }
 "$PY" 3_code/check_tables.py || { echo "push gate: check_tables.py failed"; exit 1; }
 "$PY" 3_code/check_sources.py --local || { echo "push gate: check_sources.py failed"; exit 1; }
-"$PY" 3_code/build_output.py --check || { echo "push gate: the Excel file is out of date"; exit 1; }
+"$PY" 3_code/build_output.py --check || { echo "push gate: the Excel file or the priority table is out of date"; exit 1; }
 
 head=$(git rev-parse --short=7 "$pushed")
 parent=$(git rev-parse -q --verify --short=7 "$pushed~1" 2>/dev/null)
