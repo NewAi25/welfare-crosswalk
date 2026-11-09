@@ -75,7 +75,7 @@ The World A, B and C labels come from a summary of an exchange with Claude that 
 | Column | Value | What it means |
 |---|---|---|
 | Welfare state | | The condition or problem measured, read from EFSA's table headings or the Welfare Quality protocol, a published method for assessing welfare on farms. For a row that comes from what sensors say they measure, it is that measurement. Several tests of one condition count once. |
-| Best indicator, ID | | The test that comes first for this state. The code, such as I061, is its row in the full Excel file. |
+| Best indicator | | The test that comes first for this state. The code, such as I061, is its row in the full Excel file. |
 | Best test | Passed the bar | At least one product's test met the bar in full. The bar is the one Stygar and colleagues 2021, a review of dairy sensors, use for high performance: every result a study reports must meet it, for example a correlation, which measures how closely two sets of readings move together, above 0.9. |
 | Best test | Tested, cannot be graded yet | A product was tested, but the results available do not settle whether it meets the bar. |
 | Best test | Tested, fell short of the bar | A product was tested and did not meet the bar. |
@@ -84,7 +84,7 @@ The World A, B and C labels come from a summary of an exchange with Claude that 
 | Best test | Proposed only | The sources only propose a method, show one in another species or setting, or offer a related measure in its place. |
 | Best test | Nothing found | The sources read name no method. |
 | Best test | Unclear | The written rules do not settle it. |
-| Device needed | | The cheapest kind of equipment for the best indicator. None named means the sensor sources name none; Unclear means the rules do not settle it. |
+| Device needed | | The cheapest kind of equipment for the best indicator. None named means neither Stygar and colleagues 2021 nor Maroto Molina and colleagues 2020, the two sources this column reads, name one, though a maker's page since 2021 may; Unclear means the rules do not settle it. |
 | Hard to take by hand? | High, Medium, Mixed, Low | EFSA's rating of how feasible the measure is on a farm, read the other way round, because a measure that is hard to take by hand is where a sensor adds the most. |
 | Hard to take by hand? | Not rated | EFSA does not rate it. Such rows come after rated ones when this column breaks a tie. |
 | Flag | indirect or contested | A welfare source questions how much the row says about welfare. |
