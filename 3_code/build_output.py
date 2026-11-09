@@ -103,7 +103,7 @@ SENSOR_LABEL = {
     "unsure": "Unclear: the written rules do not settle it (see open questions)",
 }
 DEVICE_LABEL = {
-    "routine_data": "Nothing extra: already in milk records or farm records",
+    "routine_data": "Nothing extra, where milk or farm records are kept",
     "farm_fixed": "One device per farm or barn (camera, scale, trough meter)",
     "animal_mounted": "One device per animal (collar, ear tag, bolus)",
     "sample_or_procedure": "A sample or a scoring by a person",
