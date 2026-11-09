@@ -79,15 +79,32 @@ PURPOSE_LABEL = {  # what products do with the signal (rules.md, rule 4.16)
     "unclear": "Unclear (see open questions)",
     "no_product": "No product in the Stygar list measures it",
 }
-WORLD_LABEL = {  # the kind of ask (rules.md, section 5)
-    "A_accept": "A: a scheme requires it and a sensor exists; ask schemes to accept the sensor data",
-    "A_adopt": "A: a sensor exists and products use it for health or welfare, but no scheme requires it; ask schemes to adopt the sensor data",
-    "B": "B: no product is graded as measuring the state; ask for new measurement",
-    "C": "C: products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare; ask for welfare alerts or thresholds on that signal",
-    "unclear_scheme": "Unclear: a sensor exists, and a scheme may require the state (a scheme row is unsure)",
-    "unclear_sensor": "Unclear: the sensor evidence is unsure",
-    "unclear_purpose": "Unclear: what products do with the signal is unsure",
+# The kinds of ask (rules.md, section 5): the label a reader sees, what it means, and what to ask for.
+# The World letters come from the summary Kevin Xia forwarded with his review; the plain names sit beside them.
+ASK_KEY = {
+    "A_accept": ("World A: accept sensor data",
+                 "A scheme requires a row of this state, and a product measures a row of it",
+                 "ask schemes to accept the sensor data"),
+    "A_adopt": ("World A: add to schemes",
+                "Products use the sensor for health or welfare, but no scheme requires the state",
+                "ask schemes to adopt the sensor data"),
+    "B": ("World B: new measurement needed",
+          "No product is graded as measuring the state",
+          "ask for new measurement"),
+    "C": ("World C: add welfare alerts",
+          "Products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare",
+          "ask for welfare alerts or thresholds on that signal"),
+    "unclear_scheme": ("Unclear: a scheme may require it",
+                       "A sensor exists, and a scheme's wording may name the state, but the rules do not settle whether it does",
+                       "settle the scheme's wording first"),
+    "unclear_sensor": ("Unclear: sensor evidence",
+                       "The rules do not settle whether a sensor measures it",
+                       "settle the sensor evidence first"),
+    "unclear_purpose": ("Unclear: what products use it for",
+                        "A sensor exists, but a product's description can be read either way",
+                        "settle what products use it for first"),
 }
+WORLD_LABEL = {code: f"{label}. {meaning}; {ask}" for code, (label, meaning, ask) in ASK_KEY.items()}
 
 
 # Plain English for every code, shown in the Excel file. Same meanings as 2_research/rules.md.
@@ -486,7 +503,7 @@ def summary_lines(d):
                      for k in SENSOR_LABEL) + "."),
         ("The priority list", f"{len(d['priority'])} welfare states pass the welfare gate and are ranked on the sheet "
          "Priority, by the validity of their best test, then the device the row needs, then the manual burden. Kinds of ask: "
-         + "; ".join(f"{n} {WORLD_LABEL[k].split(';')[0]}" for k, n in sorted(Counter(p['world_code'] for p in d['priority']).items(),
+         + "; ".join(f"{n} {ASK_KEY[k][0]}" for k, n in sorted(Counter(p['world_code'] for p in d['priority']).items(),
                                                                         key=lambda kv: list(WORLD_LABEL).index(kv[0])))
          + f". {len(d['not_backed'])} rows leave the list because no welfare source backs them; they are on the sheet "
          "Not backed by welfare science."),
@@ -601,7 +618,7 @@ def write(d, path=OUTPUT):
          "regression intercept and slope not significantly different from 0 and 1; and zero inside the Bland-Altman "
          "limits of agreement. Tests since 2021 are graded by the same full test, every result in every setting counting "
          "(rule 4.15)."),
-    ] + [(f"Kind of ask: {v.split(':')[0]}", v) for v in WORLD_LABEL.values()] + [
+    ] + [(f"Kind of ask: {ASK_KEY[k][0]}", v) for k, v in WORLD_LABEL.items()] + [
         ("What products do with the signal", "Read from the products' own descriptions in the Stygar list (rule 4.16): "
          "whether a description says the measurement is for health or welfare, only for production, fertility or herd "
          "management, or says nothing about what it is for. Where no product in the Stygar list names it but a maker's "
@@ -695,6 +712,16 @@ def write(d, path=OUTPUT):
             ws.cell(row=row, column=c, value=p[key]).alignment = WRAP
     ws.freeze_panes = "C2"
     ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{len(d['priority']) + 1}"
+    notes = [("How to read this sheet", ""),
+             ("Kind of ask", "Each cell says what it means. The World A, B and C labels come from a summary of an exchange with Claude that the project's mentor, Kevin Xia, forwarded with his review; the plain name beside each is this project's."),
+             ("Stygar's bar", "Stygar and colleagues 2021, a review of dairy sensors, count a test as high performance when every result it reports meets the criteria, for example a correlation above 0.9."),
+             ("EFSA validity flag", "EFSA, the European Food Safety Authority, rates some measures for sensitivity and specificity. The flag shows those ratings and does not change the rank."),
+             ("Manual burden", "EFSA's rating of how feasible the measure is on a farm, read the other way round: a measure that is hard to take by hand is where a sensor adds the most."),
+             ("Flags", "Indirect or contested: a welfare source questions how much the row says about welfare. Unclear: the written rules do not settle it."),
+             ("Scheme", "A certification scheme, the standards behind a welfare label.")]
+    for row, (term, meaning) in enumerate(notes, start=len(d["priority"]) + 3):
+        ws.cell(row=row, column=2, value=term).font = Font(bold=True)
+        ws.cell(row=row, column=3, value=meaning or None).alignment = WRAP
 
     # Not backed by welfare science
     ws = wb.create_sheet("Not backed by welfare science")
@@ -709,6 +736,9 @@ def write(d, path=OUTPUT):
     for row, r in enumerate(d["not_backed"], start=2):
         for c, (_, _, key) in enumerate(cols, start=1):
             ws.cell(row=row, column=c, value=r[key]).alignment = WRAP
+    ws.cell(row=len(d["not_backed"]) + 3, column=2, value="These rows left the priority list because the three welfare sources read do not tie them to "
+            "welfare. No welfare validation: no source links it, though a product's description or a scheme treats it as about health or "
+            "welfare. Not framed as welfare: none of them does. A link may exist in a source not read here.").alignment = WRAP
     ws.freeze_panes = "B2"
 
     # Answer
@@ -882,7 +912,7 @@ def write(d, path=OUTPUT):
 
 
 def table_text(d):
-    """The short priority table, as a page of text. Written to 4_output/priority_table.md."""
+    """The short priority table, as a page that explains itself. Written to 4_output/priority_table.md."""
     short_validity = {"tested_above": "Passed the bar", "tested_not_graded": "Tested, cannot be graded yet",
                       "tested_below": "Tested, fell short of the bar", "claimed": "Claimed, no counted test",
                       "research": "Shown in research, no product", "proposed": "Proposed only",
@@ -890,11 +920,6 @@ def table_text(d):
     short_device = {"routine_data": "Nothing extra where records are kept", "farm_fixed": "One per farm or barn",
                     "animal_mounted": "One per animal", "sample_or_procedure": "A sample or a scoring",
                     "none": "None named", "unsure": "Unclear"}
-    short_ask = {"A_accept": "A, accept: ask schemes to accept sensor data",
-                 "A_adopt": "A, adopt: ask schemes to adopt sensor data",
-                 "B": "B: ask for new measurement", "C": "C: ask for welfare alerts on signals products collect",
-                 "unclear_scheme": "Unclear: a scheme may require it", "unclear_sensor": "Unclear: sensor evidence",
-                 "unclear_purpose": "Unclear: what products use it for"}
 
     def indicator(name):
         short = name.split(": ")[-1].replace(" (sensor side)", "")
@@ -902,38 +927,50 @@ def table_text(d):
 
     asks = Counter(p["world_code"] for p in d["priority"])
     lines = ["# Priority table, dairy cows", "",
-             "The short answer: the welfare states in the order of the ranking, and the kind of ask each one supports. "
-             "This page is written by a script from the research tables and is never edited by hand. "
-             "The full evidence, row by row with its sources, is in [welfare_crosswalk_dairy.xlsx](welfare_crosswalk_dairy.xlsx). "
-             "The method and recommendations are in [write_up.md](write_up.md), and the rules are in "
-             "[rules.md](../2_research/rules.md), section 5.", "",
-             "The ranking is a stated sort order. It is not a welfare judgement, and it does not say how much each state matters to the cow: "
-             "EFSA does not rank its welfare consequences, and Welfare Quality orders its criteria only within each of its principles.", "",
-             f"{len(d['priority'])} welfare states are ranked: {asks['A_accept']} A, accept; {asks['A_adopt']} A, adopt; "
-             f"{asks['C']} C; {asks['B']} B; and {asks['unclear_scheme'] + asks['unclear_sensor'] + asks['unclear_purpose']} unclear.", "",
+             "Which signs of dairy cow welfare are ready to push for when farm sensors are being steered, and what to ask for. "
+             "Each row is one welfare state, such as lameness. Everything needed to read this page is explained under the tables. "
+             "A script writes this page from the research tables; it is never edited by hand.", "",
+             "The order is a stated sort order. It is not a welfare judgement, and it does not say how much each state matters to the cow: "
+             "EFSA, the European Food Safety Authority, does not rank its welfare consequences, and the Welfare Quality protocol orders its criteria only within each of its principles.", "",
+             f"{len(d['priority'])} welfare states are ranked: {asks['A_accept']} {ASK_KEY['A_accept'][0]}; {asks['A_adopt']} {ASK_KEY['A_adopt'][0]}; "
+             f"{asks['C']} {ASK_KEY['C'][0]}; {asks['B']} {ASK_KEY['B'][0]}; and {asks['unclear_scheme'] + asks['unclear_sensor'] + asks['unclear_purpose']} unclear.", "",
              "| Rank | Welfare state | Best indicator | Best test | Device needed | Hard to take by hand? | Kind of ask | Flag |",
              "|---|---|---|---|---|---|---|---|"]
     for p in d["priority"]:
         validity, device, _, iid = p["key"]
         flag = "" if p["flags"] == "none" else p["flags"]
         lines.append(f"| {p['rank']} | {p['state']} | {indicator(p['best_name'])} ({iid}) | {short_validity[list(VALIDITY)[validity]]} | "
-                     f"{short_device[DEVICE_ORDER[device]]} | {p['burden'].split(':')[0]} | {short_ask[p['world_code']]} | {flag} |")
-    lines += ["", "## What products measure that the welfare sources do not back", "",
-              "These rows left the list at the gate: the welfare sources read do not tie them to welfare. "
-              "A link may exist in a source not read here.", "",
+                     f"{short_device[DEVICE_ORDER[device]]} | {p['burden'].split(':')[0]} | {ASK_KEY[p['world_code']][0]} | {flag} |")
+    lines += ["", "## What each kind of ask means", "",
+              "The World A, B and C labels come from a summary of an exchange with Claude that the project's mentor, Kevin Xia, forwarded with his review. A scheme is a certification scheme, the standards behind a welfare label.", "",
+              "| Kind of ask | What it means | What to do |", "|---|---|---|"]
+    for code, (label, meaning, ask) in ASK_KEY.items():
+        lines.append(f"| {label} | {meaning}. | {ask[0].upper() + ask[1:]}. |")
+    lines += ["", "## What the other columns mean", "",
+              "| Column | Value | What it means |", "|---|---|---|",
+              "| Welfare state | | The condition or problem measured, read from EFSA's table headings or the Welfare Quality protocol. Several tests of one condition count once. |",
+              "| Best indicator | | The test that comes first for this state. The code in brackets is its row in the full Excel file. |",
+              "| Best test | Passed the bar | At least one product's test met the bar in full. The bar is the one Stygar and colleagues 2021, a review of dairy sensors, use for high performance: every result a study reports must meet it, for example a correlation above 0.9. |",
+              "| Best test | Tested, cannot be graded yet | A product was tested, but the results available do not settle whether it meets the bar. |",
+              "| Best test | Tested, fell short of the bar | A product was tested and did not meet the bar. |",
+              "| Best test | Claimed, no counted test | A product says it measures this, and no test that counts was found. |",
+              "| Best test | Shown in research, no product | A study measured it in cattle, and no product claims it. |",
+              "| Best test | Proposed only | The sources only propose a method, show one in another species or setting, or offer a related measure in its place. |",
+              "| Best test | Nothing found | The sources read name no method. |",
+              "| Best test | Unclear | The written rules do not settle it. |",
+              "| Device needed | | The cheapest kind of equipment for the best indicator. |",
+              "| Hard to take by hand? | High, Medium, Mixed, Low | EFSA's rating of how feasible the measure is on a farm, read the other way round, because a measure that is hard to take by hand is where a sensor adds the most. |",
+              "| Hard to take by hand? | Not rated | EFSA does not rate it. Such rows come after rated ones when this column breaks a tie. |",
+              "| Flag | indirect or contested | A welfare source questions how much the row says about welfare. |",
+              "| Flag | unclear | The written rules do not settle whether the welfare sources treat the row as a sign of welfare. |", ""]
+    lines += ["## What products measure that the welfare sources do not back", "",
+              "These rows left the list because the welfare sources read do not tie them to welfare. A link may exist in a source not read here. "
+              "No welfare validation means none of the three sources read links it to welfare, though a product's description or a scheme treats it as about health or welfare. "
+              "Not framed as welfare means none of them does.", "",
               "| ID | What products measure | Welfare relevance | Best test |", "|---|---|---|---|"]
     for r in d["not_backed"]:
         lines.append(f"| {r['id']} | {r['name'].replace(' (sensor side)', '')} | {r['welfare']} | {short_validity[r['validity_code']]} |")
-    lines += ["", "## How to read the columns", "",
-              "**Best test** is how the best sensor test for the state did. The bar is the one Stygar and colleagues 2021 use for high performance, "
-              "and every result a study reports must meet it. Cannot be graded yet means the results available do not settle it. "
-              "**Device needed** is the cheapest kind of equipment for the best indicator. "
-              "**Hard to take by hand?** reads EFSA's rating of how feasible the measure is on a farm the other way round, "
-              "because a measure that is hard to take by hand is where a sensor adds the most; Not rated means EFSA does not rate it; such rows come after rated ones when this column breaks a tie. "
-              "**Kind of ask** is what the state supports. A, accept: a scheme requires the state and a sensor exists. "
-              "A, adopt: products use the sensor for health or welfare but no scheme requires it. "
-              "B: no product is graded as measuring the state. C: products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare. "
-              "**Flag** names rows whose link to welfare a source questions, or which the rules leave unclear. The Priority sheet of the Excel file gives more columns.", ""]
+    lines.append("")
     return "\n".join(lines)
 
 

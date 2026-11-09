@@ -458,3 +458,7 @@ One sentence of the entry headed audit corrections to e535326 is corrected: of t
 ## 2026-11-09: last audit correction
 
 The entry above says most descriptions naming rumination or feeding list health or welfare beside them. That holds for rumination (14 of 14) and feeding time (19 of 20), not for feed intake (0 of 15), and the write up now says so. The Excel label for routine_data now also says Nothing extra applies where milk or farm records are kept. No grade, rank, count or rule changes.
+
+## 2026-11-09: every page explains itself
+
+Manisha decided on 9 November 2026 that the World A, B and C labels stay, that a plain name sits beside each, and that every page explains its own labels, so that a reader never has to open a second file to see what a label means. The priority table, the write up, the one page entry, the Priority and Not backed sheets of the Excel file and the README now do. The write up is cut to under 1,500 words, counting its tables, by tightening and by dropping the device column from its short table, which the priority table keeps. Rules version 0.9.5 gives the labels as the outputs show them. No grade, rank or count changes.

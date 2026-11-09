@@ -19,3 +19,5 @@ Unoccupied: each column existed separately; the crosswalk did not.
 Decomposition: one species per unit. Poultry can reuse the same tables and rules.
 
 Files: [priority table](priority_table.md), [write up](write_up.md), [full evidence](welfare_crosswalk_dairy.xlsx).
+
+Key. World A, B and C come from a summary Kevin forwarded with his review. World A: accept sensor data means a scheme requires the state and a sensor exists. World A: add to schemes means products use the sensor for health or welfare but no scheme requires the state. World B: new measurement needed means no product is graded as measuring the state. World C: add welfare alerts means products collect the signal and no scheme requires it, but no description in the 2021 product list says it is for health or welfare. The high performance bar is the one Stygar and colleagues 2021 use: every result a study reports must meet it, for example a correlation above 0.9. Instrumented means a product measures it. A scheme is a certification scheme, the standards behind a welfare label.
