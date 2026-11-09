@@ -623,7 +623,7 @@ def write(d, path=OUTPUT):
          "EFSA 2023 does not rank its welfare consequences by severity, prevalence or duration (its five consequences "
          "were set by the European Commission's mandate); Welfare Quality orders its criteria only within each "
          "principle; and the project makes no welfare judgement of its own."),
-    ] + [(f"Validity: {v}", v) for v in VALIDITY.values()] + [
+    ] + [(f"Validity, level {n}", v) for n, v in enumerate(VALIDITY.values(), start=1)] + [
         ("Validity: Stygar's bar", "Stygar and colleagues 2021, page 4 and Table 2, footnote a: a test is high "
          "performance when every indicator the study reports meets the criteria: a Pearson, Spearman or concordance "
          "correlation, sensitivity, specificity or area under the curve above 0.9; R squared or kappa above 0.81; a "
@@ -733,7 +733,7 @@ def write(d, path=OUTPUT):
              ("EFSA validity flag", "EFSA, the European Food Safety Authority, rates some measures for sensitivity and specificity. The flag shows those ratings and does not change the rank."),
              ("Manual burden", "EFSA's rating of how feasible the measure is on a farm, read the other way round: a measure that is hard to take by hand is where a sensor adds the most."),
              ("Flags", "Indirect or contested: a welfare source questions how much the row says about welfare. Unclear: the written rules do not settle it."),
-             ("Scheme", "A certification scheme, the standards behind a welfare label.")]
+             ("Scheme", "A certification scheme, the standards farms are audited against.")]
     for row, (term, meaning) in enumerate(notes, start=len(d["priority"]) + 3):
         ws.cell(row=row, column=2, value=term).font = Font(bold=True)
         ws.cell(row=row, column=3, value=meaning or None).alignment = WRAP
@@ -957,7 +957,7 @@ def table_text(d):
         lines.append(f"| {p['rank']} | {p['state']} | {indicator(p['best_name'])} ({iid}) | {short_validity[list(VALIDITY)[validity]]} | "
                      f"{short_device[DEVICE_ORDER[device]]} | {p['burden'].split(':')[0]} | {ASK_KEY[p['world_code']][0]} | {flag} |")
     lines += ["", "## What each kind of ask means", "",
-              "The World A, B and C labels come from a summary of an exchange with Claude that the project's mentor, Kevin Xia, forwarded with his review. A scheme is a certification scheme, the standards behind a welfare label.", "",
+              "The World A, B and C labels come from a summary of an exchange with Claude that the project's mentor, Kevin Xia, forwarded with his review. A scheme is a certification scheme, the standards farms are audited against.", "",
               "| Kind of ask | What it means | What to do |", "|---|---|---|"]
     for code, (label, meaning, ask) in ASK_KEY.items():
         lines.append(f"| {label} | {meaning}. | {ask[0].upper() + ask[1:]}. |")

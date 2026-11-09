@@ -57,7 +57,7 @@ The order is a stated sort order. It is not a welfare judgement, and it does not
 
 ## What each kind of ask means
 
-The World A, B and C labels come from a summary of an exchange with Claude that the project's mentor, Kevin Xia, forwarded with his review. A scheme is a certification scheme, the standards behind a welfare label.
+The World A, B and C labels come from a summary of an exchange with Claude that the project's mentor, Kevin Xia, forwarded with his review. A scheme is a certification scheme, the standards farms are audited against.
 
 | Kind of ask | What it means | What to do |
 |---|---|---|
