@@ -70,9 +70,9 @@ For 20 states no product is graded as measuring the state.
 
 ## Recommendations
 
-These follow from the table. They do not weigh one welfare problem against another.
+These do not weigh one welfare problem against another.
 
-Start with the signals products already collect. Feeding time, feed intake and rumination all passed the bar, and no description in the 2021 product list says they are for welfare, though most naming rumination or feeding time list health or welfare beside them. One DeLaval page now says tracking rumination and eating time helps "overall cow health and welfare", so this gap may be closing. On farms that own the devices, alerts or thresholds would need new software, not new hardware. The table holds no cost data and no record of what farms own. Feeding time is flagged at rank 1.
+Start with the signals products already collect. Feeding time, feed intake and rumination all passed the bar, and no description in the 2021 product list says they are for welfare, though most naming rumination or feeding time list health or welfare beside them. One DeLaval page now says tracking rumination and eating time helps "overall cow health and welfare", so this gap may be closing. On farms that own the devices, alerts or thresholds would need new software, not new hardware. The table holds no cost data and no record of what farms own.
 
 Next, ask schemes to adopt lying time, the one state in World A: add to schemes whose sensors passed the bar. EFSA rates it low on feasibility, so it is hard to take by hand. The other five states in that group need better evidence first: their sensors fell short of the bar or have no counted test.
 
